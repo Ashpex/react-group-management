@@ -11,6 +11,7 @@ body {
   background-color: #565459;
 
   scroll-behavior: smooth;
+  background-color: #ffffff;
 }
 
 ::-webkit-scrollbar {

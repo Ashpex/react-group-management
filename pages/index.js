@@ -1,5 +1,6 @@
 import Head from "next/head";
-import Image from "next/image";
+import ClassroomCards from "../src/components/ClassroomCards";
+import Navbar from "../src/components/navbar";
 
 export default function Home() {
   return (
@@ -10,10 +11,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <div>
-          <p className="text-red-500">123</p>
-        </div>
+      <header>
+        <Navbar />
+      </header>
+
+      <main className="mt-4">
+        <ClassroomCards />
       </main>
     </div>
   );
