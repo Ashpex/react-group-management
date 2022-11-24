@@ -1,8 +1,5 @@
 .navbar {
   border-bottom: 0.0625rem solid #e0e0e0;
-  //   position: fixed;
-  //   top: 0;
-  //   z-index: 986;
   transform: none;
   transition: transform cubic-bezier(0.4, 0, 0.2, 1) 240ms;
   width: 100%;
@@ -14,8 +11,4 @@
   align-items: center;
   justify-content: space-between;
   font-size: 1.5rem;
-}
-
-.icon {
-  font-size: 2rem;
 }
