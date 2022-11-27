@@ -23,12 +23,8 @@ import { useRouter } from "next/router";
 function Navbar() {
   const [value, setValue] = useState("newfeed");
   const [openJoinClassDialog, setOpenJoinClassDialog] = useState(false);
-  const [openCreateClassDialog, setOpenCreateClassDialog] = useState(true);
+  const [openCreateClassDialog, setOpenCreateClassDialog] = useState(false);
   const router = useRouter();
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
   const handleCloseJoinClassDialog = () => {
     setOpenJoinClassDialog(false);
@@ -114,7 +110,9 @@ function Navbar() {
             menuItem={[
               {
                 label: "Thông tin cá nhân",
-                onClick: () => {},
+                onClick: () => {
+                  router.push("/user-profile");
+                },
               },
               {
                 label: "Đăng xuất",
