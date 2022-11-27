@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-
+import { useLocation } from "react-router-dom";
 import styles from "./style.module.scss";
+import getGoogleUrl from "../../src/utils/getGoogleUrl";
 
 function LoginPage() {
   return (
@@ -73,6 +74,7 @@ function LoginPage() {
 
             <div className="mt-[30px]">
               <button
+                href={getGoogleUrl("/")}
                 className={`${styles.btn} ${styles["btn-google"]} flex items-center justify-center gap-4`}
               >
                 <img
