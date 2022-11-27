@@ -29,7 +29,13 @@ function IconButtonCustom({ iconButton, menuItem }) {
         TransitionComponent={Fade}
       >
         {menuItem?.map((item, index) => (
-          <MenuItem key={index} onClick={item.onClick}>
+          <MenuItem
+            key={index}
+            onClick={() => {
+              item.onClick();
+              handleClose();
+            }}
+          >
             {item.label}
           </MenuItem>
         ))}
