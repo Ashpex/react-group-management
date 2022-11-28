@@ -1,8 +1,9 @@
 import { Avatar, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { getSession } from "next-auth/react";
 import React from "react";
 
-function MemberPage() {
+function MemberPage({ session }) {
   return (
     <Box className="flex justify-center">
       <Box className="w-[808px] p-[24px]">
@@ -198,3 +199,20 @@ function MemberPage() {
 }
 
 export default MemberPage;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
