@@ -2,15 +2,37 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddIcon from "@mui/icons-material/Add";
-
+import { signOut } from "next-auth/react";
 import styles from "./style.module.scss";
-import { Avatar, IconButton, Tab, Tabs } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Tab,
+  Tabs,
+  TextField,
+} from "@mui/material";
 import IconButtonCustom from "../IconButtonCustom";
 import { useRouter } from "next/router";
 
 function Navbar() {
   const [value, setValue] = useState("newfeed");
+  const [openJoinClassDialog, setOpenJoinClassDialog] = useState(false);
+  const [openCreateClassDialog, setOpenCreateClassDialog] = useState(false);
   const router = useRouter();
+
+  const handleCloseJoinClassDialog = () => {
+    setOpenJoinClassDialog(false);
+  };
+
+  const handleCloseCreateClassDialog = () => {
+    setOpenCreateClassDialog(false);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -68,11 +90,15 @@ function Navbar() {
             menuItem={[
               {
                 label: "Tạo lớp học",
-                onClick: () => {},
+                onClick: () => {
+                  setOpenCreateClassDialog(true);
+                },
               },
               {
                 label: "Tham gia lớp học",
-                onClick: () => {},
+                onClick: () => {
+                  setOpenJoinClassDialog(true);
+                },
               },
             ]}
           />
@@ -84,16 +110,194 @@ function Navbar() {
             menuItem={[
               {
                 label: "Thông tin cá nhân",
-                onClick: () => {},
+                onClick: () => {
+                  router.push("/user-profile");
+                },
               },
               {
                 label: "Đăng xuất",
-                onClick: () => {},
+                onClick: () => {
+                  signOut();
+                  localStorage.removeItem("user");
+                  localStorage.removeItem("accessToken");
+                },
               },
             ]}
           />
         </Box>
       </Box>
+
+      {/* dialog join classroom */}
+      <Dialog
+        open={openJoinClassDialog}
+        onClose={() => setOpenJoinClassDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        sx={{
+          "& .MuiDialog-paper": {
+            width: "50vw",
+            borderRadius: "10px",
+          },
+        }}
+      >
+        <DialogTitle>Tham gia lớp học</DialogTitle>
+        <DialogContent>
+          <DialogContentText></DialogContentText>
+          <TextField
+            label="Mã lớp"
+            fullWidth
+            autoFocus
+            margin="dense"
+            id="name"
+            variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "6px",
+              },
+
+              "& .MuiOutlinedInput-input": {
+                padding: "10px",
+                fontSize: "16px",
+              },
+            }}
+          />
+        </DialogContent>
+
+        <DialogActions
+          sx={{
+            paddingLeft: "24px",
+            paddingRight: "24px",
+          }}
+        >
+          <Button variant="outlined" onClick={handleCloseJoinClassDialog}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleCloseJoinClassDialog}
+            sx={{
+              backgroundColor: "#1976d2 !important",
+              color: "#fff",
+            }}
+          >
+            Subscribe
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* dialog create classroom */}
+      <Dialog
+        open={openCreateClassDialog}
+        onClose={() => setOpenCreateClassDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        sx={{
+          "& .MuiDialog-paper": {
+            width: "50vw",
+            borderRadius: "10px",
+          },
+        }}
+      >
+        <DialogTitle>Tạo lớp học</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Tên lớp học (bắt buộc)"
+            fullWidth
+            autoFocus
+            margin="dense"
+            id="name"
+            variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "6px",
+              },
+
+              "& .MuiOutlinedInput-input": {
+                padding: "10px",
+                fontSize: "16px",
+              },
+            }}
+          />
+
+          <TextField
+            label="Phần"
+            fullWidth
+            autoFocus
+            margin="dense"
+            id="name"
+            variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "6px",
+              },
+
+              "& .MuiOutlinedInput-input": {
+                padding: "10px",
+                fontSize: "16px",
+              },
+            }}
+          />
+
+          <TextField
+            label="Chủ đề"
+            fullWidth
+            autoFocus
+            margin="dense"
+            id="name"
+            variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "6px",
+              },
+
+              "& .MuiOutlinedInput-input": {
+                padding: "10px",
+                fontSize: "16px",
+              },
+            }}
+          />
+
+          <TextField
+            label="Phòng"
+            fullWidth
+            autoFocus
+            margin="dense"
+            id="name"
+            variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "6px",
+              },
+
+              "& .MuiOutlinedInput-input": {
+                padding: "10px",
+                fontSize: "16px",
+              },
+            }}
+          />
+        </DialogContent>
+
+        <DialogActions
+          sx={{
+            paddingLeft: "24px",
+            paddingRight: "24px",
+          }}
+        >
+          <Button variant="outlined" onClick={handleCloseCreateClassDialog}>
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleCloseCreateClassDialog}
+            sx={{
+              backgroundColor: "#1976d2 !important",
+              color: "#fff",
+            }}
+          >
+            Tạo
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

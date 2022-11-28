@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
+import { getSession, signIn } from "next-auth/react";
 import { useLocation } from "react-router-dom";
 import styles from "./style.module.scss";
 import getGoogleUrl from "../../src/utils/getGoogleUrl";
@@ -104,3 +105,20 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
