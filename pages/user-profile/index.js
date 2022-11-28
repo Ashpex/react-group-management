@@ -1,4 +1,5 @@
 import { Avatar, Box, TextField, Typography } from "@mui/material";
+import { getSession } from "next-auth/react";
 import React from "react";
 
 function UserProfile() {
@@ -147,3 +148,20 @@ function UserProfile() {
 }
 
 export default UserProfile;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}

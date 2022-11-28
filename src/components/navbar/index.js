@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddIcon from "@mui/icons-material/Add";
-
+import { signOut } from "next-auth/react";
 import styles from "./style.module.scss";
 import {
   Avatar,
@@ -116,7 +116,11 @@ function Navbar() {
               },
               {
                 label: "Đăng xuất",
-                onClick: () => {},
+                onClick: () => {
+                  signOut();
+                  localStorage.removeItem("user");
+                  localStorage.removeItem("accessToken");
+                },
               },
             ]}
           />
