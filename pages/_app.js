@@ -19,6 +19,7 @@ function MyApp({ Component, pageProps }) {
 
       <Navbar />
       <Component {...pageProps} />
+      <script type="module" src="milsymbol-2.0.0/src/milsymbol.js"></script>
     </div>
   );
 }

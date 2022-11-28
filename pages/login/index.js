@@ -24,6 +24,7 @@ function LoginPage() {
           </div>
         </div>
       </div>
+
       <div className="w-[50vw] h-full bg-[#e2e3ea] flex items-center justify-start">
         <div
           className={`${styles["border-right-screen"]} py-[30px] pl-[60px] pr-[100px]`}

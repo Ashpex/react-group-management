@@ -2,8 +2,44 @@
 import React from "react";
 
 import styles from "./style.module.scss";
+import { useState } from "react";
+import { InvertColorsOff } from "@mui/icons-material";
+import API_URL from "../../src/api/url";
+import axiosClient from "../../src/api/axiosClient";
 
 function RegisterPage() {
+  const [name, setName] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [confirmPassword, setConfirmPassword] = useState(null);
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    if (id === "email") {
+      setEmail(value);
+    }
+    if (id === "password") {
+      setPassword(value);
+    }
+    if (id === "confirm-password") {
+      setConfirmPassword(value);
+    }
+    if (id === "name") {
+      setName(value);
+    }
+    console.log(name, email, password, confirmPassword);
+  };
+  const handleSubmit = () => {
+    let obj = {
+      name: name,
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
+    };
+    console.log(obj);
+    const response = axiosClient.post("/auth/register", obj).then((res) => {
+      console.log(res);
+    });
+  };
   return (
     <div className="w-screen h-screen overflow-hidden flex">
       <div className="w-[50vw] h-full bg-[#007E94] flex items-center justify-end">
@@ -31,12 +67,29 @@ function RegisterPage() {
 
           <form action="" className="w-full mt-[40px]">
             <div>
+              <label htmlFor="name" className={styles.label}>
+                EMAIL
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={name || ""}
+                onChange={(e) => handleInputChange(e)}
+                id="name"
+                className={`${styles.textfield} mt-[8px]`}
+                placeholder="Name"
+              />
+            </div>
+
+            <div>
               <label htmlFor="email" className={styles.label}>
                 EMAIL
               </label>
               <input
                 type="text"
                 name="email"
+                value={email || ""}
+                onChange={(e) => handleInputChange(e)}
                 id="email"
                 className={`${styles.textfield} mt-[8px]`}
                 placeholder="Email"
@@ -50,6 +103,8 @@ function RegisterPage() {
               <input
                 type="password"
                 name="password"
+                value={password || ""}
+                onChange={(e) => handleInputChange(e)}
                 id="password"
                 className={`${styles.textfield} mt-[8px]`}
                 placeholder="Password"
@@ -63,6 +118,8 @@ function RegisterPage() {
               <input
                 type="password"
                 name="confirm-password"
+                value={confirmPassword || ""}
+                onChange={(e) => handleInputChange(e)}
                 id="confirm-password"
                 className={`${styles.textfield} mt-[8px]`}
                 placeholder="Confirm Password"
@@ -71,6 +128,8 @@ function RegisterPage() {
 
             <div className="mt-[30px]">
               <button
+                type="submit"
+                onClick={handleSubmit}
                 className={`${styles.btn} ${styles["btn-login"]} uppercase `}
               >
                 sign up
