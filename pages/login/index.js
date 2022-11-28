@@ -1,9 +1,51 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 
 import styles from "./style.module.scss";
 
 function LoginPage() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
+  //  const { status } = useSession();
+
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     //   signIn("okta");
+  //   } else if (status === "authenticated") {
+  //     router.push("/");
+  //   }
+  // }, [router, status]);
+
+  //   useEffect(() => {
+  //     // const accessToken = localStorage.getItem("accessToken");
+  //     // if (accessToken) {
+  //     //   router.push("/");
+  //     // }
+
+  //     if (session) {
+  //       console.log(123);
+  //       router.push("/");
+  //     }
+  //   }, [status]);
+
+  //   console.log({ session });
+
+  //   const router = useRouter();
+  //   const { status } = useSession();
+
+  //   useEffect(() => {
+  //     if (status === "unauthenticated") {
+  //       console.log("No JWT");
+  //       console.log(status);
+  //       void signIn("okta");
+  //     } else if (status === "authenticated") {
+  //       return router.push("/");
+  //     }
+  //   }, [status]);
+
   return (
     <div className="w-screen h-screen overflow-hidden flex">
       <div className="w-[50vw] h-full bg-[#007E94] flex items-center justify-end">
@@ -74,6 +116,10 @@ function LoginPage() {
             <div className="mt-[30px]">
               <button
                 className={`${styles.btn} ${styles["btn-google"]} flex items-center justify-center gap-4`}
+                onClick={(e) => {
+                  //   e.preventDefault();
+                  signIn();
+                }}
               >
                 <img
                   src="/images/google.png"

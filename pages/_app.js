@@ -1,8 +1,18 @@
 import Head from "next/head";
 import Navbar from "../src/components/navbar";
+import { SessionProvider } from "next-auth/react";
+
 import "../styles/globals.css";
+import { useEffect, useState } from "react";
 
 function MyApp({ Component, pageProps }) {
+  const [accessToken, setAccessToken] = useState("");
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    setAccessToken(accessToken);
+  }, []);
+
   return (
     <div>
       <Head>
@@ -13,10 +23,29 @@ function MyApp({ Component, pageProps }) {
         <title>Classroom</title>
       </Head>
 
-      <Navbar />
-      <Component {...pageProps} />
+      {accessToken && <Navbar />}
+      <SessionProvider session={pageProps.session}>
+        <Component {...pageProps} />
+      </SessionProvider>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
 }
 
 export default MyApp;
