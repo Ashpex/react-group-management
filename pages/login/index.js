@@ -1,10 +1,53 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { getSession, signIn } from "next-auth/react";
+import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 
 import styles from "./style.module.scss";
+import Link from "next/link";
+
+const LoginSchema = yup.object().shape({
+  email: yup
+    .string()
+    .required("Vui lòng nhập email")
+    .email("Email không hợp lệ"),
+  password: yup.string().required("Vui lòng nhập password"),
+});
 
 function LoginPage({ session }) {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: yupResolver(LoginSchema),
+  });
+
+  const onSubmit = async (data) => {
+    console.log({ data });
+    //   try {
+    //     const res = await axios.post(
+    //       `${process.env.REACT_APP_API_URL}/auth/login`,
+    //       {
+    //         username: data.username,
+    //         password: data.password,
+    //       }
+    //     );
+    //     const { accessToken } = res.data;
+    //     localStorage.setItem("accessToken", accessToken);
+    //     navigate("/");
+    //   } catch (err) {
+    //     console.log(err);
+    //     setFetchError(err.response.data);
+    //   }
+  };
+
   if (!session) {
     return (
       <div className="w-screen h-screen overflow-hidden flex">
@@ -26,8 +69,11 @@ function LoginPage({ session }) {
           </div>
         </div>
         <div className="w-[50vw] h-full bg-[#e2e3ea] flex items-center justify-start">
-          <div
+          <form
             className={`${styles["border-right-screen"]} py-[30px] pl-[60px] pr-[100px]`}
+            onSubmit={handleSubmit((data) => {
+              onSubmit(data);
+            })}
           >
             <p className="text-[30px] font-[400]">Login to your account</p>
 
@@ -37,12 +83,16 @@ function LoginPage({ session }) {
                   EMAIL
                 </label>
                 <input
+                  {...register("email")}
                   type="text"
                   name="email"
                   id="email"
                   className={`${styles.textfield} mt-[8px]`}
                   placeholder="Email"
                 />
+                {errors?.email && (
+                  <p className="text-red-500">{errors?.email?.message}</p>
+                )}
               </div>
 
               <div className="mt-[42px]">
@@ -50,12 +100,16 @@ function LoginPage({ session }) {
                   PASSWORD
                 </label>
                 <input
+                  {...register("password")}
                   type="password"
                   name="password"
                   id="password"
                   className={`${styles.textfield} mt-[8px]`}
                   placeholder="Password"
                 />
+                {errors?.password && (
+                  <p className="text-red-500">{errors?.password?.message}</p>
+                )}
               </div>
 
               <div className="flex mt-[30px]">
@@ -97,10 +151,14 @@ function LoginPage({ session }) {
                 <p className="font-[400] text-[14px]">
                   Don&apos;t have an account?
                 </p>
-                <p className="font-[600] text-[14px] text-[#007E94]">Sign Up</p>
+                <Link href={"/register"}>
+                  <p className="font-[600] text-[14px] text-[#007E94]">
+                    Sign Up
+                  </p>
+                </Link>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     );
