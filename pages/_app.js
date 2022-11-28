@@ -1,5 +1,7 @@
 import Head from "next/head";
 import Navbar from "../src/components/navbar";
+import { SessionProvider } from "next-auth/react";
+
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
@@ -13,8 +15,10 @@ function MyApp({ Component, pageProps }) {
         <title>Classroom</title>
       </Head>
 
-      <Navbar />
-      <Component {...pageProps} />
+      {pageProps.session && <Navbar />}
+      <SessionProvider session={pageProps.session}>
+        <Component {...pageProps} />
+      </SessionProvider>
     </div>
   );
 }
