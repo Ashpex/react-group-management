@@ -15,7 +15,7 @@ httpRequest.get = (url, params) => {
     method: "get",
     url,
     params,
-  });
+  }).then((res) => res.data);
 };
 
 httpRequest.post = (url, data, token) => {
@@ -26,7 +26,7 @@ httpRequest.post = (url, data, token) => {
     headers: {
       Authorization: token,
     },
-  });
+  }).then((res) => res.data);
 };
 
 httpRequest.put = (url, data, token) => {
@@ -37,7 +37,7 @@ httpRequest.put = (url, data, token) => {
     headers: {
       Authorization: token,
     },
-  });
+  }).then((res) => res.data);
 };
 
 httpRequest.delete = (url, data, token) => {
@@ -48,7 +48,7 @@ httpRequest.delete = (url, data, token) => {
     headers: {
       Authorization: token,
     },
-  });
+  }).then((res) => res.data);
 };
 
 export default httpRequest;

@@ -44,10 +44,18 @@ function LoginPage({ session }) {
 
     try {
       const res = await httpRequest.post("/auth/login", user);
-      await signIn("credentials", {
-        redirect: true,
-        ...res.data.data,
-      });
+
+      const isVerified = res.data.verified;
+      if (isVerified) {
+        await signIn("credentials", {
+          redirect: true,
+          ...res.data,
+        });
+        localStorage.setItem("user", JSON.stringify(res.data));
+        localStorage.setItem("token", res.data.token);
+      } else {
+        setError("Tài khoản chưa được xác thực");
+      }
       setError("");
     } catch (error) {
       setError(error.response.data.message);

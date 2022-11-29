@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Navbar from "../src/components/navbar";
+import Navbar from "../src/components/Navbar";
 import { SessionProvider } from "next-auth/react";
 
 import "../styles/globals.css";

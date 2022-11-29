@@ -10,8 +10,6 @@ export default NextAuth({
     CredentialsProvider({
       async authorize(credentials, req) {
         if (credentials) {
-          delete credentials.redirect;
-
           return credentials;
         }
         return null;

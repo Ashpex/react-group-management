@@ -1,8 +1,12 @@
 import { Avatar, Box, TextField, Typography } from "@mui/material";
 import { getSession } from "next-auth/react";
-import React from "react";
+import React, { useState } from "react";
 
-function UserProfile() {
+function UserProfile({ session }) {
+  const { user } = session;
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
+
   return (
     <Box className="flex justify-center">
       <Box className="w-[808px] p-[24px]">
@@ -47,7 +51,10 @@ function UserProfile() {
               </Typography>
 
               <Box className="flex-1 flex justify-center items-center">
-                <Avatar sx={{ width: 50, height: 50 }}>H</Avatar>
+                <Avatar
+                  sx={{ width: 50, height: 50 }}
+                  src={user?.image ?? "/images/avatar.jpg"}
+                ></Avatar>
               </Box>
             </Box>
 
@@ -69,7 +76,7 @@ function UserProfile() {
                   fontWeight: 550,
                 }}
               >
-                Username
+                Email
               </Typography>
 
               <Box className="flex-1">
@@ -92,6 +99,8 @@ function UserProfile() {
                       },
                     },
                   }}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Box>
             </Box>
@@ -114,7 +123,7 @@ function UserProfile() {
                   fontWeight: 550,
                 }}
               >
-                Password
+                Name
               </Typography>
 
               <Box className="flex-1">
@@ -137,6 +146,8 @@ function UserProfile() {
                       },
                     },
                   }}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </Box>
             </Box>
