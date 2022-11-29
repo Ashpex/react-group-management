@@ -19,6 +19,20 @@ import {
 } from "@mui/material";
 import IconButtonCustom from "../IconButtonCustom";
 import { useRouter } from "next/router";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import httpRequest from "../../api/httpRequest";
+
+const CreateClassSchema = yup.object().shape({
+  name: yup.string().required("Vui lòng nhập tên lớp"),
+  description: yup.string().required("Vui lòng nhập mô tả"),
+});
+
+const JoinClassSchema = yup.object().shape({
+  name: yup.string().required("Vui lòng nhập tên lớp"),
+  description: yup.string().required("Vui lòng nhập mô tả"),
+});
 
 function Navbar() {
   const [value, setValue] = useState("newfeed");
@@ -26,10 +40,18 @@ function Navbar() {
   const [openCreateClassDialog, setOpenCreateClassDialog] = useState(false);
   const router = useRouter();
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
-  console.log({
-    session,
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+    },
+    resolver: yupResolver(CreateClassSchema),
   });
 
   const handleCloseJoinClassDialog = () => {
@@ -43,6 +65,15 @@ function Navbar() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
     router.push(newValue);
+  };
+
+  const handleCreateClass = async (data) => {
+    // console.log({ data });
+    // try {
+    //   const res = await httpRequest.post("/group", data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
@@ -112,7 +143,12 @@ function Navbar() {
 
         <Box>
           <IconButtonCustom
-            iconButton={<Avatar alt="Remy Sharp" src="/images/avatar.jpg" />}
+            iconButton={
+              <Avatar
+                alt="Remy Sharp"
+                src={session?.user?.image ?? "/images/avatar.jpg"}
+              />
+            }
             menuItem={[
               {
                 label: "Thông tin cá nhân",
@@ -125,7 +161,7 @@ function Navbar() {
                 onClick: () => {
                   signOut();
                   localStorage.removeItem("user");
-                  localStorage.removeItem("accessToken");
+                  localStorage.removeItem("token");
                 },
               },
             ]}
@@ -207,6 +243,9 @@ function Navbar() {
         <DialogTitle>Tạo lớp học</DialogTitle>
         <DialogContent>
           <TextField
+            {...register("name")}
+            error={!!errors.name}
+            helperText={errors.name?.message}
             label="Tên lớp học (bắt buộc)"
             fullWidth
             autoFocus
@@ -226,45 +265,10 @@ function Navbar() {
           />
 
           <TextField
-            label="Phần"
-            fullWidth
-            autoFocus
-            margin="dense"
-            id="name"
-            variant="outlined"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "6px",
-              },
-
-              "& .MuiOutlinedInput-input": {
-                padding: "10px",
-                fontSize: "16px",
-              },
-            }}
-          />
-
-          <TextField
-            label="Chủ đề"
-            fullWidth
-            autoFocus
-            margin="dense"
-            id="name"
-            variant="outlined"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "6px",
-              },
-
-              "& .MuiOutlinedInput-input": {
-                padding: "10px",
-                fontSize: "16px",
-              },
-            }}
-          />
-
-          <TextField
-            label="Phòng"
+            {...register("description")}
+            error={!!errors.description}
+            helperText={errors.description?.message}
+            label="Mô tả"
             fullWidth
             autoFocus
             margin="dense"
@@ -294,7 +298,7 @@ function Navbar() {
           </Button>
           <Button
             variant="contained"
-            onClick={handleCloseCreateClassDialog}
+            onClick={handleSubmit(handleCreateClass)}
             sx={{
               backgroundColor: "#1976d2 !important",
               color: "#fff",

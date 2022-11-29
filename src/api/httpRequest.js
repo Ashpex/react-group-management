@@ -11,14 +11,19 @@ const httpRequest = axios.create({
 });
 
 httpRequest.get = (url, params) => {
+  const token = localStorage.getItem("token");
   return httpRequest({
-    method: "get",
+    method: "GET",
     url,
     params,
-  }).then((res) => res.data);
+    headers: {
+      Authorization: token,
+    },
+  });
 };
 
-httpRequest.post = (url, data, token) => {
+httpRequest.post = (url, data) => {
+  const token = localStorage.getItem("token");
   return httpRequest({
     method: "post",
     url,
@@ -29,7 +34,8 @@ httpRequest.post = (url, data, token) => {
   }).then((res) => res.data);
 };
 
-httpRequest.put = (url, data, token) => {
+httpRequest.put = (url, data) => {
+  const token = localStorage.getItem("token");
   return httpRequest({
     method: "put",
     url,
@@ -40,7 +46,8 @@ httpRequest.put = (url, data, token) => {
   }).then((res) => res.data);
 };
 
-httpRequest.delete = (url, data, token) => {
+httpRequest.delete = (url, data) => {
+  const token = localStorage.getItem("token");
   return httpRequest({
     method: "delete",
     url,
