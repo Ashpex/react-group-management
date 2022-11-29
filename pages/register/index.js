@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
+import { yupResolver } from "@hookform/resolvers/yup";
 import styles from "./style.module.scss";
 import { getSession, signIn } from "next-auth/react";
 import { ToastContainer, toast } from "react-toastify";
@@ -56,7 +56,7 @@ function RegisterPage() {
         router.push("/");
       }, 3000);
 
-      toast(res?.data?.message, {
+      toast.success(res?.data?.message, {
         autoClose: 3000,
       });
     } catch (err) {

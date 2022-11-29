@@ -1,11 +1,66 @@
-import { Avatar, Box, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { getSession } from "next-auth/react";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import httpRequest from "../../src/api/httpRequest";
+
+const InfoSchema = yup.object().shape({
+  name: yup.string().required("Vui lòng nhập tên"),
+  email: yup
+    .string()
+    .required("Vui lòng nhập email")
+    .email("Email không hợp lệ"),
+});
 
 function UserProfile({ session }) {
   const { user } = session;
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
+  const [error, setError] = useState("");
+  const [isFetching, setIsFetching] = useState(false);
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      name: user.name,
+      email: user.email,
+    },
+    resolver: yupResolver(InfoSchema),
+  });
+
+  const updateInfo = async (data) => {
+    setIsFetching(true);
+
+    try {
+      const res = await httpRequest.post("/user/profile", {
+        name: data.name,
+        email: data.email,
+      });
+
+      toast.success(res?.data?.message, {
+        autoClose: 3000,
+      });
+
+      session.user.name = data.name;
+      session.user.email = data.email;
+    } catch (err) {
+      setError(err?.response?.data?.message);
+    }
+    setIsFetching(false);
+  };
 
   return (
     <Box className="flex justify-center">
@@ -30,7 +85,7 @@ function UserProfile({ session }) {
 
           <Box>
             <Box
-              className="h-[60px] p-[8px] pl-[16px] flex items-center gap-[12px]"
+              className="h-[80px] p-[8px] pl-[16px] flex items-center gap-[12px]"
               sx={{
                 borderBottom: "0.0625rem solid #e0e0e0",
               }}
@@ -59,7 +114,7 @@ function UserProfile({ session }) {
             </Box>
 
             <Box
-              className="h-[60px] p-[8px] pl-[16px] pr-0 flex items-center gap-[20px]"
+              className="h-[80px] p-[8px] pl-[16px] pr-0 flex items-center gap-[20px]"
               sx={{
                 borderBottom: "0.0625rem solid #e0e0e0",
               }}
@@ -81,6 +136,9 @@ function UserProfile({ session }) {
 
               <Box className="flex-1">
                 <TextField
+                  {...register("email")}
+                  error={!!errors.email}
+                  helperText={errors?.email?.message}
                   fullWidth
                   sx={{
                     "& .MuiOutlinedInput-input": {
@@ -99,14 +157,12 @@ function UserProfile({ session }) {
                       },
                     },
                   }}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Box>
             </Box>
 
             <Box
-              className="h-[60px] p-[8px] pl-[16px] pr-0 flex items-center gap-[20px]"
+              className="h-[80px] p-[8px] pl-[16px] pr-0 flex items-center gap-[20px]"
               sx={{
                 borderBottom: "0.0625rem solid #e0e0e0",
               }}
@@ -128,6 +184,9 @@ function UserProfile({ session }) {
 
               <Box className="flex-1">
                 <TextField
+                  {...register("name")}
+                  error={!!errors.name}
+                  helperText={errors?.name?.message}
                   fullWidth
                   sx={{
                     "& .MuiOutlinedInput-input": {
@@ -146,14 +205,40 @@ function UserProfile({ session }) {
                       },
                     },
                   }}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
                 />
               </Box>
+            </Box>
+
+            {error && (
+              <Box className="mt-6 flex justify-center">
+                <Typography className="text-red-900 font-semibold">
+                  {error}
+                </Typography>
+              </Box>
+            )}
+
+            <Box className="mt-4 flex justify-center">
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: "#1976d2 !important",
+                  color: "#fff",
+                }}
+                onClick={handleSubmit(updateInfo)}
+                disabled={isFetching}
+                className={isFetching ? "cursor-not-allowed opacity-60" : ""}
+              >
+                {isFetching ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Cập nhật"
+                )}
+              </Button>
             </Box>
           </Box>
         </Box>
       </Box>
+      <ToastContainer />
     </Box>
   );
 }
