@@ -15,8 +15,8 @@ function MyApp({ Component, pageProps }) {
         <title>Classroom</title>
       </Head>
 
-      {pageProps.session && <Navbar />}
       <SessionProvider session={pageProps.session}>
+        {pageProps.session && <Navbar />}
         <Component {...pageProps} />
       </SessionProvider>
     </div>

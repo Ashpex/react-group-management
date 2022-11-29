@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddIcon from "@mui/icons-material/Add";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import styles from "./style.module.scss";
 import {
   Avatar,
@@ -25,6 +25,12 @@ function Navbar() {
   const [openJoinClassDialog, setOpenJoinClassDialog] = useState(false);
   const [openCreateClassDialog, setOpenCreateClassDialog] = useState(false);
   const router = useRouter();
+
+  const { data: session, status } = useSession();
+
+  console.log({
+    session,
+  });
 
   const handleCloseJoinClassDialog = () => {
     setOpenJoinClassDialog(false);

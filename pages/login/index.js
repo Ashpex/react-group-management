@@ -1,12 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useState } from "react";
 import { getSession, signIn } from "next-auth/react";
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 import styles from "./style.module.scss";
 import Link from "next/link";
+import { CircularProgress } from "@mui/material";
+import httpRequest from "../../src/api/httpRequest";
 
 const LoginSchema = yup.object().shape({
   email: yup
@@ -29,28 +31,29 @@ function LoginPage({ session }) {
     resolver: yupResolver(LoginSchema),
   });
 
-  const onSubmit = async (data) => {
-    //   try {
-    //     const res = await axios.post(
-    //       `${process.env.REACT_APP_API_URL}/auth/login`,
-    //       {
-    //         username: data.username,
-    //         password: data.password,
-    //       }
-    //     );
-    //     const { accessToken } = res.data;
-    //     localStorage.setItem("accessToken", accessToken);
-    //     navigate("/");
-    //   } catch (err) {
-    //     console.log(err);
-    //     setFetchError(err.response.data);
-    //   }
+  const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState("");
 
-    signIn("credentials", {
-      redirect: true,
+  const onSubmit = async (data) => {
+    setIsFetching(true);
+
+    const user = {
       email: data.email,
       password: data.password,
-    });
+    };
+
+    try {
+      const res = await httpRequest.post("/auth/login", user);
+      await signIn("credentials", {
+        redirect: true,
+        ...res.data.data,
+      });
+      setError("");
+    } catch (error) {
+      setError(error.response.data.message);
+    }
+
+    setIsFetching(false);
   };
 
   if (!session) {
@@ -112,8 +115,10 @@ function LoginPage({ session }) {
                   className={`${styles.textfield} mt-[8px]`}
                   placeholder="Password"
                 />
-                {errors?.password && (
-                  <p className="text-red-500">{errors?.password?.message}</p>
+                {(errors?.password || error) && (
+                  <p className="text-red-500">
+                    {errors?.password?.message || error}
+                  </p>
                 )}
               </div>
 
@@ -126,19 +131,31 @@ function LoginPage({ session }) {
 
               <div className="mt-[30px]">
                 <button
-                  className={`${styles.btn} ${styles["btn-login"]} uppercase `}
+                  className={`${styles.btn} ${styles["btn-login"]} uppercase ${
+                    isFetching ? "cursor-not-allowed opacity-60" : ""
+                  }`}
+                  disabled={isFetching}
                 >
-                  sign in
+                  {isFetching ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    "sign in"
+                  )}
                 </button>
               </div>
 
               <div className="mt-[30px]">
                 <button
-                  className={`${styles.btn} ${styles["btn-google"]} flex items-center justify-center gap-4`}
+                  className={`${styles.btn} ${
+                    styles["btn-google"]
+                  } flex items-center justify-center gap-4 ${
+                    isFetching ? "cursor-not-allowed opacity-60" : ""
+                  }`}
                   onClick={(e) => {
                     e.preventDefault();
                     signIn();
                   }}
+                  disabled={isFetching}
                 >
                   <img
                     src="/images/google.png"
