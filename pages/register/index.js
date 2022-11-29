@@ -5,7 +5,12 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import styles from "./style.module.scss";
-import { getSession } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import httpRequests from "../../src/api/httpRequest";
+import { CircularProgress } from "@mui/material";
+import { useRouter } from "next/router";
 
 const RegisterSchema = yup.object().shape({
   name: yup.string().required("Vui lòng nhập tên"),
@@ -18,7 +23,9 @@ const RegisterSchema = yup.object().shape({
 });
 
 function RegisterPage() {
-  const [passwordNotMatch, setPasswordNotMatch] = useState(false);
+  const [error, setError] = useState("");
+  const [isFetching, setIsFetching] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -35,24 +42,27 @@ function RegisterPage() {
   });
 
   const onSubmit = async (data) => {
-    console.log({ data });
+    setIsFetching(true);
+    try {
+      const res = await httpRequests.post("/auth/register", {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
+      localStorage.setItem("token", res?.data?.data?.token);
+      setIsFetching(false);
 
-    // try {
-    //   const res = await axios.post(
-    //     `${process.env.REACT_APP_API_URL}/auth/register`,
-    //     {
-    //       username: data.username,
-    //       password: data.password,
-    //     }
-    //   );
-    //   const { accessToken } = res.data;
-    //   localStorage.setItem("accessToken", accessToken);
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
 
-    //   alert("You have successfully signed up!");
-    //   navigate("/signin");
-    // } catch (err) {
-    //   setError(err.response.data);
-    // }
+      toast(res?.data?.message, {
+        autoClose: 3000,
+      });
+    } catch (err) {
+      setError(err.message);
+      setIsFetching(false);
+    }
   };
 
   return (
@@ -85,9 +95,9 @@ function RegisterPage() {
             onSubmit={handleSubmit((data) => {
               if (data.password === data.repeatPassword) {
                 onSubmit(data);
-                setPasswordNotMatch(false);
+                setError("");
               } else {
-                setPasswordNotMatch(true);
+                setError("Password and repeat password are not the same");
               }
             })}
           >
@@ -147,25 +157,37 @@ function RegisterPage() {
                 className={`${styles.textfield} mt-[8px]`}
                 placeholder="Confirm Password"
               />
-              {errors?.repeatPassword ||
-                (passwordNotMatch && (
-                  <p className="text-red-500">
-                    {errors?.repeatPassword?.message || "Password not match"}
-                  </p>
-                ))}
+              {(errors?.repeatPassword || error) && (
+                <p className="text-red-500">
+                  {errors?.repeatPassword?.message || error}
+                </p>
+              )}
             </div>
 
             <div className="mt-[15px]">
               <button
-                className={`${styles.btn} ${styles["btn-login"]} uppercase `}
+                className={`${styles.btn} ${styles["btn-login"]} uppercase ${
+                  isFetching ? "cursor-not-allowed opacity-60" : ""
+                }`}
+                disabled={isFetching}
               >
-                sign up
+                {isFetching ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  "sign up"
+                )}
               </button>
             </div>
 
             <div className="mt-[15px]">
               <button
-                className={`${styles.btn} ${styles["btn-google"]} flex items-center justify-center gap-4`}
+                className={`${styles.btn} ${
+                  styles["btn-google"]
+                } flex items-center justify-center gap-4 ${
+                  isFetching ? "cursor-not-allowed opacity-60" : ""
+                }`}
+                onClick={() => signIn()}
+                disabled={isFetching}
               >
                 <img
                   src="/images/google.png"
@@ -188,6 +210,7 @@ function RegisterPage() {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }
