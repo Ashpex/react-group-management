@@ -30,7 +30,6 @@ function LoginPage({ session }) {
   });
 
   const onSubmit = async (data) => {
-    console.log({ data });
     //   try {
     //     const res = await axios.post(
     //       `${process.env.REACT_APP_API_URL}/auth/login`,
@@ -46,6 +45,12 @@ function LoginPage({ session }) {
     //     console.log(err);
     //     setFetchError(err.response.data);
     //   }
+
+    signIn("credentials", {
+      redirect: true,
+      email: data.email,
+      password: data.password,
+    });
   };
 
   if (!session) {
