@@ -11,7 +11,7 @@ export default function MenuNavbar({ classId, currentTab, setCurrentTab }) {
   };
 
   return (
-    <Box className="fixed top-0 w-full">
+    <Box className="fixed top-0">
       <Box className="flex items-center justify-center h-[60px]">
         <Tabs
           value={currentTab}

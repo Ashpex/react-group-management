@@ -16,7 +16,7 @@ function NewfeedPage({ session }) {
 
   return (
     <div>
-      <Box>
+      <Box className="flex w-full justify-center">
         <MenuNavbar
           classId={classId}
           currentTab={currentTab}
