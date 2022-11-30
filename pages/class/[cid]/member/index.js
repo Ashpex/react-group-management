@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Avatar, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { getSession } from "next-auth/react";
