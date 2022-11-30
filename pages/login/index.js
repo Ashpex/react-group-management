@@ -1,10 +1,69 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useState } from "react";
 import { getSession, signIn } from "next-auth/react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 
 import styles from "./style.module.scss";
+import Link from "next/link";
+import { CircularProgress } from "@mui/material";
+import httpRequest from "../../src/api/httpRequest";
+
+const LoginSchema = yup.object().shape({
+  email: yup
+    .string()
+    .required("Vui lòng nhập email")
+    .email("Email không hợp lệ"),
+  password: yup.string().required("Vui lòng nhập password"),
+});
 
 function LoginPage({ session }) {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: yupResolver(LoginSchema),
+  });
+
+  const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState("");
+
+  const onSubmit = async (data) => {
+    setIsFetching(true);
+
+    const user = {
+      email: data.email,
+      password: data.password,
+    };
+
+    try {
+      const res = await httpRequest.post("/auth/login", user);
+
+      const isVerified = res.data.verified;
+      if (isVerified) {
+        await signIn("credentials", {
+          redirect: true,
+          ...res.data,
+        });
+        localStorage.setItem("user", JSON.stringify(res.data));
+        localStorage.setItem("token", res.data.token);
+      } else {
+        setError("Tài khoản chưa được xác thực");
+      }
+      setError("");
+    } catch (error) {
+      setError(error.response.data.message);
+    }
+
+    setIsFetching(false);
+  };
+
   if (!session) {
     return (
       <div className="w-screen h-screen overflow-hidden flex">
@@ -26,8 +85,11 @@ function LoginPage({ session }) {
           </div>
         </div>
         <div className="w-[50vw] h-full bg-[#e2e3ea] flex items-center justify-start">
-          <div
+          <form
             className={`${styles["border-right-screen"]} py-[30px] pl-[60px] pr-[100px]`}
+            onSubmit={handleSubmit((data) => {
+              onSubmit(data);
+            })}
           >
             <p className="text-[30px] font-[400]">Login to your account</p>
 
@@ -37,12 +99,16 @@ function LoginPage({ session }) {
                   EMAIL
                 </label>
                 <input
+                  {...register("email")}
                   type="text"
                   name="email"
                   id="email"
                   className={`${styles.textfield} mt-[8px]`}
                   placeholder="Email"
                 />
+                {errors?.email && (
+                  <p className="text-red-500">{errors?.email?.message}</p>
+                )}
               </div>
 
               <div className="mt-[42px]">
@@ -50,12 +116,18 @@ function LoginPage({ session }) {
                   PASSWORD
                 </label>
                 <input
+                  {...register("password")}
                   type="password"
                   name="password"
                   id="password"
                   className={`${styles.textfield} mt-[8px]`}
                   placeholder="Password"
                 />
+                {(errors?.password || error) && (
+                  <p className="text-red-500">
+                    {errors?.password?.message || error}
+                  </p>
+                )}
               </div>
 
               <div className="flex mt-[30px]">
@@ -67,19 +139,31 @@ function LoginPage({ session }) {
 
               <div className="mt-[30px]">
                 <button
-                  className={`${styles.btn} ${styles["btn-login"]} uppercase `}
+                  className={`${styles.btn} ${styles["btn-login"]} uppercase ${
+                    isFetching ? "cursor-not-allowed opacity-60" : ""
+                  }`}
+                  disabled={isFetching}
                 >
-                  sign in
+                  {isFetching ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    "sign in"
+                  )}
                 </button>
               </div>
 
               <div className="mt-[30px]">
                 <button
-                  className={`${styles.btn} ${styles["btn-google"]} flex items-center justify-center gap-4`}
+                  className={`${styles.btn} ${
+                    styles["btn-google"]
+                  } flex items-center justify-center gap-4 ${
+                    isFetching ? "cursor-not-allowed opacity-60" : ""
+                  }`}
                   onClick={(e) => {
                     e.preventDefault();
                     signIn();
                   }}
+                  disabled={isFetching}
                 >
                   <img
                     src="/images/google.png"
@@ -97,10 +181,14 @@ function LoginPage({ session }) {
                 <p className="font-[400] text-[14px]">
                   Don&apos;t have an account?
                 </p>
-                <p className="font-[600] text-[14px] text-[#007E94]">Sign Up</p>
+                <Link href={"/register"}>
+                  <p className="font-[600] text-[14px] text-[#007E94]">
+                    Sign Up
+                  </p>
+                </Link>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     );

@@ -1,8 +1,9 @@
 import Head from "next/head";
-import Navbar from "../src/components/navbar";
+import Navbar from "../src/components/Navbar";
 import { SessionProvider } from "next-auth/react";
 
 import "../styles/globals.css";
+import MenuProvider from "../src/provider/MenuProvider";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -15,9 +16,11 @@ function MyApp({ Component, pageProps }) {
         <title>Classroom</title>
       </Head>
 
-      {pageProps.session && <Navbar />}
       <SessionProvider session={pageProps.session}>
-        <Component {...pageProps} />
+        {pageProps.session && <Navbar />}
+        <MenuProvider>
+          <Component {...pageProps} />
+        </MenuProvider>
       </SessionProvider>
     </div>
   );
