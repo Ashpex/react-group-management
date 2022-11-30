@@ -1,11 +1,9 @@
 import { getSession } from "next-auth/react";
 import React from "react";
 
-function ClassExercise() {
-  return <div>ClassExercise</div>;
+export default function ClassDetailPage({ session }) {
+  return <div>ClassDetailPage</div>;
 }
-
-export default ClassExercise;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);

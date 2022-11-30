@@ -6,15 +6,18 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import IconButtonCustom from "../IconButtonCustom";
 import styles from "./styles.module.scss";
 import { Colors } from "../../shared/colors";
+import Link from "next/link";
 
-function ClassroomCardItem() {
+function ClassroomCardItem({ group }) {
   return (
     <Box className={`${styles.card}`}>
       <Box className={`flex-[2] ${styles.background}`}>
         <Box className="flex items-center justify-between">
-          <Typography className={styles["class-title"]}>
-            202209-PTUDWNC-19_3
-          </Typography>
+          <Link href={`/class/${group.id}/member`}>
+            <Typography className={`${styles["class-title"]} underline`}>
+              {group?.name}
+            </Typography>
+          </Link>
 
           <IconButtonCustom
             iconButton={
@@ -29,7 +32,7 @@ function ClassroomCardItem() {
           />
         </Box>
         <Typography className={styles["class-description"]}>
-          Phát triển ứng dụng web nâng cao
+          {group?.description}
         </Typography>
       </Box>
       <Box className="flex-[3]">

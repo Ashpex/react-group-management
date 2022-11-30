@@ -3,6 +3,7 @@ import Navbar from "../src/components/Navbar";
 import { SessionProvider } from "next-auth/react";
 
 import "../styles/globals.css";
+import MenuProvider from "../src/provider/MenuProvider";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -17,7 +18,9 @@ function MyApp({ Component, pageProps }) {
 
       <SessionProvider session={pageProps.session}>
         {pageProps.session && <Navbar />}
-        <Component {...pageProps} />
+        <MenuProvider>
+          <Component {...pageProps} />
+        </MenuProvider>
       </SessionProvider>
     </div>
   );

@@ -27,6 +27,7 @@ import * as yup from "yup";
 import httpRequest from "../../api/httpRequest";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
 
 const CreateClassSchema = yup.object().shape({
   name: yup.string().required("Vui lòng nhập tên lớp"),
@@ -39,7 +40,6 @@ const JoinClassSchema = yup.object().shape({
 });
 
 function Navbar() {
-  const [currentTab, setCurrentTab] = useState("newfeed");
   const [openJoinClassDialog, setOpenJoinClassDialog] = useState(false);
   const [openCreateClassDialog, setOpenCreateClassDialog] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
@@ -70,11 +70,6 @@ function Navbar() {
     setOpenCreateClassDialog(false);
   };
 
-  const handleChange = (event, newValue) => {
-    setCurrentTab(newValue);
-    router.push(newValue);
-  };
-
   const handleCreateClass = async (data) => {
     setIsFetching(true);
     try {
@@ -103,38 +98,9 @@ function Navbar() {
           >
             <MenuIcon sx={{ fontSize: 24 }} />
           </IconButton>
-          <p>Classroom</p>
-        </Box>
-
-        <Box>
-          <Tabs
-            value={currentTab}
-            onChange={handleChange}
-            sx={{
-              overflow: "visible !important",
-              "& .MuiTabs-scroller": {
-                overflow: "visible !important",
-              },
-              "& .MuiTabs-indicator": {
-                backgroundColor: "#c26401",
-                position: "absolute",
-                bottom: -9,
-              },
-              "& .MuiTab-root": {
-                color: "#5f6368",
-                fontWeight: 550,
-                fontSize: "14px",
-                textTransform: "none",
-              },
-              "& .Mui-selected": {
-                color: "#c26401 !important",
-              },
-            }}
-          >
-            <Tab label="Bảng tin" value={"newfeed"} />
-            <Tab label="Bài tập trên lớp" value={"class-exercise"} />
-            <Tab label="Mọi người" value={"member"} />
-          </Tabs>
+          <Link href={"/"}>
+            <p>Classroom</p>
+          </Link>
         </Box>
 
         <Box className="flex items-center gap-3">

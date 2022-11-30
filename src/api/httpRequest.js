@@ -18,7 +18,7 @@ httpRequest.get = (url, params) => {
     headers: {
       Authorization: token,
     },
-  });
+  }).then((res) => res.data);
 };
 
 httpRequest.post = (url, data) => {

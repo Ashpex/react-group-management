@@ -1,13 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ClassroomCards from "../src/components/ClassroomCards";
 import { getSession } from "next-auth/react";
+import httpRequest from "../src/api/httpRequest";
 
 export default function Home({ session }) {
+  const [groups, setGroups] = useState([]);
+
+  const getAllGroups = async () => {
+    try {
+      const res = await httpRequest.get("/group/");
+      setGroups(res?.data?.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getAllGroups();
+  }, []);
+
+  console.log({ groups });
+
   if (session) {
     return (
       <div className="">
         <main className="mt-4">
-          <ClassroomCards />
+          <ClassroomCards groups={groups} />
         </main>
       </div>
     );
