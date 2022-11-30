@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const httpRequest = axios.create({
-  //   baseURL: process.env.BASE_URL || "https://golang-api-f3b9.onrender.com/api",
-  baseURL: "http://45.119.212.77:5003/api",
+  baseURL: process.env.BASE_URL || "https://golang-api-f3b9.onrender.com/api",
+  //   baseURL: "http://45.119.212.77:5003/api",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

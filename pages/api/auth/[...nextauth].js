@@ -26,5 +26,15 @@ export default NextAuth({
       if (!url.includes("/")) return "/login";
       return url;
     },
+
+    jwt: async ({ token, user }) => {
+      user && (token.user = user);
+      return token;
+    },
+    session: async ({ session, token }) => {
+      //   console.log({ session, token });
+      session.user = token.user;
+      return session;
+    },
   },
 });

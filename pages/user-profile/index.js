@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { getSession } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -35,8 +35,8 @@ function UserProfile({ session }) {
     handleSubmit,
   } = useForm({
     defaultValues: {
-      name: user.name,
-      email: user.email,
+      name: user?.name || "",
+      email: user?.email || "",
     },
     resolver: yupResolver(InfoSchema),
   });
@@ -45,7 +45,7 @@ function UserProfile({ session }) {
     setIsFetching(true);
 
     try {
-      const res = await httpRequest.post("/user/profile", {
+      const res = await httpRequest.put("/user/profile", {
         name: data.name,
         email: data.email,
       });
@@ -54,8 +54,10 @@ function UserProfile({ session }) {
         autoClose: 3000,
       });
 
-      session.user.name = data.name;
-      session.user.email = data.email;
+      await signIn("credentials", {
+        redirect: false,
+        ...res.data,
+      });
     } catch (err) {
       setError(err?.response?.data?.message);
     }

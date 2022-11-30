@@ -176,7 +176,8 @@ function Navbar() {
                 {
                   label: "Đăng xuất",
                   onClick: () => {
-                    signOut();
+                    signOut({ callbackUrl: "/" });
+
                     localStorage.removeItem("user");
                     localStorage.removeItem("token");
                   },
