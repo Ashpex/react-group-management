@@ -153,7 +153,7 @@ function Navbar() {
           </Box>
         </Box>
 
-        {/* dialog join classroom */}
+        {/* dialog join classroom  */}
         <Dialog
           open={openJoinClassDialog}
           onClose={() => setOpenJoinClassDialog(false)}
