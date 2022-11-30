@@ -9,7 +9,7 @@ export default function Home({ session }) {
   const getAllGroups = async () => {
     try {
       const res = await httpRequest.get("/group/");
-      setGroups(res?.data?.data);
+      setGroups(res?.data);
     } catch (err) {
       console.log(err);
     }
@@ -18,8 +18,6 @@ export default function Home({ session }) {
   useEffect(() => {
     getAllGroups();
   }, []);
-
-  console.log({ groups });
 
   if (session) {
     return (
