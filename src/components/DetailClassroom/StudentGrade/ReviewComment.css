@@ -1,0 +1,12 @@
+.material-icons.MuiIcon-fontSizeMedium {
+  display: none;
+}
+
+.MuiBox-root.css-pqlpsc {
+  height: calc(100% - 128px);
+}
+
+div[id^="comments-"] > div {
+  overflow-y: hidden;
+  margin-top: 65px;
+}

@@ -14,8 +14,8 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
 import { Link as RouterLink } from "react-router-dom";
-import { FacebookLoginButton } from "react-social-login-buttons";
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+// import { FacebookLoginButton } from "react-social-login-buttons";
+// import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SimpleBackdrop from "../utils/Backdrop";
@@ -31,7 +31,12 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 function Copyright(props) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
       {"Copyright © "}
       <Link color="inherit" href="/">
         ClassroomSPA
@@ -44,7 +49,8 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-const CLIENT_ID = "780592097647-hif1svldddrkc4jpojqc44paile3l8da.apps.googleusercontent.com";
+const CLIENT_ID =
+  "780592097647-hif1svldddrkc4jpojqc44paile3l8da.apps.googleusercontent.com";
 
 const validationSchema = yup.object({
   email: yup
@@ -52,7 +58,10 @@ const validationSchema = yup.object({
     .max(255)
     .email("Email is invalid")
     .required("Email is required"),
-  password: yup.string("Enter user password").max(255).required("Password is required"),
+  password: yup
+    .string("Enter user password")
+    .max(255)
+    .required("Password is required"),
 });
 
 const LoginForm = ({ section, topic, room, name }) => {
@@ -86,7 +95,9 @@ const LoginForm = ({ section, topic, room, name }) => {
   const responseFacebook = (response) => {
     setOpenBackdrop(true);
     axios
-      .post(`${process.env.REACT_APP_API_URL}/auth/facebook?access_token=${response.accessToken}`)
+      .post(
+        `${process.env.REACT_APP_API_URL}/auth/facebook?access_token=${response.accessToken}`
+      )
       .then((res) => {
         if (res.status === 200) {
           localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -166,25 +177,27 @@ const LoginForm = ({ section, topic, room, name }) => {
     };
     // setState({ userInfo, isLoggedIn: true });
     //call API post authenticate
-    axios.post(`${process.env.REACT_APP_API_URL}/auth/google`, userInfo).then((res) => {
-      console.log(res);
-      if (res.status === 200) {
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        localStorage.setItem("access_token", res.data.access_token);
-        // let userInfo = {
-        //   name: res.data.user.name,
-        //   emailId: res.data.user.email,
-        // };
-        // setState({ userInfo, isLoggedIn: true });
-        const current_link = localStorage.getItem("current_link");
-        if (current_link) {
-          localStorage.removeItem("current_link");
-          navigate(current_link);
-        } else {
-          navigate("/classroom");
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/auth/google`, userInfo)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+          localStorage.setItem("access_token", res.data.access_token);
+          // let userInfo = {
+          //   name: res.data.user.name,
+          //   emailId: res.data.user.email,
+          // };
+          // setState({ userInfo, isLoggedIn: true });
+          const current_link = localStorage.getItem("current_link");
+          if (current_link) {
+            localStorage.removeItem("current_link");
+            navigate(current_link);
+          } else {
+            navigate("/classroom");
+          }
         }
-      }
-    });
+      });
   };
 
   const responseGoogleError = (response) => {
@@ -231,7 +244,9 @@ const LoginForm = ({ section, topic, room, name }) => {
             backgroundImage: "url(https://source.unsplash.com/random)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
-              t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
+              t.palette.mode === "light"
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -276,7 +291,9 @@ const LoginForm = ({ section, topic, room, name }) => {
                 id="password"
                 value={formik.values.password}
                 onChange={formik.handleChange}
-                error={formik.touched.password && Boolean(formik.errors.password)}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
                 helperText={formik.touched.password && formik.errors.password}
                 autoComplete="current-password"
               />
@@ -284,7 +301,12 @@ const LoginForm = ({ section, topic, room, name }) => {
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
                 Sign In
               </Button>
               <Grid container>
@@ -327,7 +349,7 @@ const LoginForm = ({ section, topic, room, name }) => {
                     //isSignedIn={true}
                     cookiePolicy={"single_host_origin"}
                   />
-                  <FacebookLogin
+                  {/* <FacebookLogin
                     appId="896620704300555"
                     // autoLoad
                     fields="name,email,picture,gender"
@@ -338,7 +360,7 @@ const LoginForm = ({ section, topic, room, name }) => {
                         style={{ width: 200, margin: 0, fontSize: 13.5 }}
                       />
                     )}
-                  />
+                  /> */}
                 </div>
               )}
               <Copyright sx={{ mt: 5 }} />
@@ -346,7 +368,10 @@ const LoginForm = ({ section, topic, room, name }) => {
           </Box>
         </Grid>
       </Grid>
-      <SimpleBackdrop state={openBackdrop} handleClose={() => setOpenBackdrop(false)} />
+      <SimpleBackdrop
+        state={openBackdrop}
+        handleClose={() => setOpenBackdrop(false)}
+      />
       <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
           User account cannot be signed in.

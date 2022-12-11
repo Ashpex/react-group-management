@@ -1,7 +1,7 @@
 import { useState, forwardRef, useRef, useContext } from "react";
 import MaterialTable from "material-table";
 // import Button from "@mui/material/Button";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Dialog from "@mui/material/Dialog";
@@ -39,14 +39,18 @@ const tableIcons = {
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
   Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
   Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-  DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+  DetailPanel: forwardRef((props, ref) => (
+    <ChevronRight {...props} ref={ref} />
+  )),
   Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
   Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
   Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
   FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
   LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
   NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+  PreviousPage: forwardRef((props, ref) => (
+    <ChevronLeft {...props} ref={ref} />
+  )),
   ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
   Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
   SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
@@ -55,8 +59,14 @@ const tableIcons = {
 };
 
 const validationSchema = yup.object({
-  first_name: yup.string("Enter user's first name").max(255).required("First name is required"),
-  last_name: yup.string("Enter user's last name").max(255).required("Last name is required"),
+  first_name: yup
+    .string("Enter user's first name")
+    .max(255)
+    .required("First name is required"),
+  last_name: yup
+    .string("Enter user's last name")
+    .max(255)
+    .required("Last name is required"),
   email: yup
     .string("Enter user's email")
     .max(255)
@@ -116,7 +126,11 @@ const AdminTable = () => {
         })
         .catch((err) => {
           console.log(err);
-          setOpenSnack("error", "Something's wrong. Please try again later", 5000);
+          setOpenSnack(
+            "error",
+            "Something's wrong. Please try again later",
+            5000
+          );
         });
       formik.resetForm();
       setOpen(false);
@@ -134,7 +148,12 @@ const AdminTable = () => {
             { title: "First name", field: "first_name", sorting: false },
             { title: "Last name", field: "last_name", sorting: false },
             { title: "Email", field: "email", sorting: false },
-            { title: "Created at", field: "createdAt", type: "date", searchable: false },
+            {
+              title: "Created at",
+              field: "createdAt",
+              type: "date",
+              searchable: false,
+            },
           ]}
           // data={data}
           data={(query) =>
@@ -182,13 +201,19 @@ const AdminTable = () => {
                     alt={rowData.first_name + " " + rowData.last_name}
                   />
                   <div class="desc">
-                    <h3 class="name">{rowData.first_name + " " + rowData.last_name}</h3>
+                    <h3 class="name">
+                      {rowData.first_name + " " + rowData.last_name}
+                    </h3>
                     <h5>{rowData.role}</h5>
                     <h5>
                       {" "}
                       Date joined:{" "}
                       <strong>
-                        {new Date(rowData.createdAt).toLocaleString().split(" ")[1]}
+                        {
+                          new Date(rowData.createdAt)
+                            .toLocaleString()
+                            .split(" ")[1]
+                        }
                       </strong>{" "}
                     </h5>
                   </div>
@@ -199,7 +224,10 @@ const AdminTable = () => {
                     <li>
                       {" "}
                       <EmailIcon />
-                      <span class="email-text"> meangelino@toyota.con </span>{" "}
+                      <span class="email-text">
+                        {" "}
+                        meangelino@toyota.con{" "}
+                      </span>{" "}
                     </li>
                   </ul>
                 </div>
@@ -212,7 +240,8 @@ const AdminTable = () => {
             <DialogTitle>Create admin account</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                A new admin account require new email, a password and its specific role
+                A new admin account require new email, a password and its
+                specific role
               </DialogContentText>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -226,8 +255,13 @@ const AdminTable = () => {
                     variant="standard"
                     value={formik.values.first_name}
                     onChange={formik.handleChange}
-                    error={formik.touched.first_name && Boolean(formik.errors.first_name)}
-                    helperText={formik.touched.first_name && formik.errors.first_name}
+                    error={
+                      formik.touched.first_name &&
+                      Boolean(formik.errors.first_name)
+                    }
+                    helperText={
+                      formik.touched.first_name && formik.errors.first_name
+                    }
                     autoFocus
                   />
                 </Grid>
@@ -241,8 +275,13 @@ const AdminTable = () => {
                     variant="standard"
                     value={formik.values.last_name}
                     onChange={formik.handleChange}
-                    error={formik.touched.last_name && Boolean(formik.errors.last_name)}
-                    helperText={formik.touched.last_name && formik.errors.last_name}
+                    error={
+                      formik.touched.last_name &&
+                      Boolean(formik.errors.last_name)
+                    }
+                    helperText={
+                      formik.touched.last_name && formik.errors.last_name
+                    }
                   />
                 </Grid>
               </Grid>
@@ -268,7 +307,9 @@ const AdminTable = () => {
                 variant="standard"
                 value={formik.values.password}
                 onChange={formik.handleChange}
-                error={formik.touched.password && Boolean(formik.errors.password)}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
                 helperText={formik.touched.password && formik.errors.password}
               />
               <TextField
