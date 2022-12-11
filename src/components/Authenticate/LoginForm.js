@@ -14,8 +14,6 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
 import { Link as RouterLink } from "react-router-dom";
-// import { FacebookLoginButton } from "react-social-login-buttons";
-// import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SimpleBackdrop from "../utils/Backdrop";
@@ -91,38 +89,6 @@ const LoginForm = ({ section, topic, room, name }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const responseFacebook = (response) => {
-    setOpenBackdrop(true);
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}/auth/facebook?access_token=${response.accessToken}`
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          localStorage.setItem("user", JSON.stringify(res.data.user));
-          localStorage.setItem("access_token", res.data.access_token);
-          const current_link = localStorage.getItem("current_link");
-          if (current_link) {
-            localStorage.removeItem("current_link");
-            navigate(current_link);
-          } else {
-            navigate("/classroom");
-          }
-          // let userInfo = {
-          //   name: res.data.user.name,
-          //   emailId: res.data.user.email,
-          // };
-          // setState({ userInfo, isLoggedIn: true });
-        }
-        if (res.status === 401) {
-          //basic log out process
-          localStorage.removeItem("user");
-          localStorage.removeItem("access_token");
-          navigate("/login");
-        }
-      });
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -349,18 +315,6 @@ const LoginForm = ({ section, topic, room, name }) => {
                     //isSignedIn={true}
                     cookiePolicy={"single_host_origin"}
                   />
-                  {/* <FacebookLogin
-                    appId="896620704300555"
-                    // autoLoad
-                    fields="name,email,picture,gender"
-                    callback={responseFacebook}
-                    render={(renderProps) => (
-                      <FacebookLoginButton
-                        onClick={renderProps.onClick}
-                        style={{ width: 200, margin: 0, fontSize: 13.5 }}
-                      />
-                    )}
-                  /> */}
                 </div>
               )}
               <Copyright sx={{ mt: 5 }} />
