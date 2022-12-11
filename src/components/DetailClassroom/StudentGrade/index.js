@@ -4,7 +4,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Grid from "@mui/material/Grid";
-import { ThemeProvider, createMuiTheme } from "@mui/material/styles";
+import { ThemeProvider, createTheme  } from "@mui/material/styles";
 import axios from "axios";
 import React, { useState } from "react";
 import theme from "../../../theme/theme";
@@ -18,7 +18,7 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 // const socket = io.connect("http://localhost:3001");
 
-const theme1 = createMuiTheme({
+const theme1 = createTheme({
   palette: {
     text: {
       disabled: "#757575",
