@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, Fragment, useRef } from "react";
 import * as React from "react";
 import Typography from "@mui/material/Typography";
@@ -31,7 +33,8 @@ const Notification = ({ data }) => {
   const handleClickNotification = (uuid, link) => {
     axios
       .put(
-        process.env.REACT_APP_API_URL + `/classroom/update-status-notifications`,
+        process.env.REACT_APP_API_URL +
+          `/classroom/update-status-notifications`,
         {
           uuid: uuid,
           has_read: true,
@@ -92,7 +95,9 @@ const Notification = ({ data }) => {
           tempListNotfication.current = res.data;
           setNotifications(tempListNotfication.current);
           setNewNotification(
-            tempListNotfication.current.filter((noti) => noti.has_read === false).length
+            tempListNotfication.current.filter(
+              (noti) => noti.has_read === false
+            ).length
           );
         }
       })
@@ -107,13 +112,18 @@ const Notification = ({ data }) => {
       .then((res) => {
         if (res.status === 200) {
           for (let item of res.data) {
-            socket.on("receive_notification_" + item.class_id + "_" + item.role_name, (data) => {
-              tempListNotfication.current.unshift(data);
-              setNotifications(tempListNotfication.current);
-              setNewNotification(
-                tempListNotfication.current.filter((noti) => noti.has_read === false).length
-              );
-            });
+            socket.on(
+              "receive_notification_" + item.class_id + "_" + item.role_name,
+              (data) => {
+                tempListNotfication.current.unshift(data);
+                setNotifications(tempListNotfication.current);
+                setNewNotification(
+                  tempListNotfication.current.filter(
+                    (noti) => noti.has_read === false
+                  ).length
+                );
+              }
+            );
           }
         }
       })
@@ -125,7 +135,8 @@ const Notification = ({ data }) => {
       console.log(tempListNotfication.current);
       setNotifications(tempListNotfication.current);
       setNewNotification(
-        tempListNotfication.current.filter((noti) => noti.has_read === false).length
+        tempListNotfication.current.filter((noti) => noti.has_read === false)
+          .length
       );
     });
   }, [socket]);
@@ -172,6 +183,7 @@ const Notification = ({ data }) => {
                   <img
                     src="https://res.cloudinary.com/teepublic/image/private/s--InSnRNha--/t_Resized%20Artwork/c_fit,g_north_west,h_954,w_954/co_ffffff,e_outline:48/co_ffffff,e_outline:inner_fill:48/co_ffffff,e_outline:48/co_ffffff,e_outline:inner_fill:48/co_bbbbbb,e_outline:3:1000/c_mpad,g_center,h_1260,w_1260/b_rgb:eeeeee/c_limit,f_auto,h_630,q_90,w_630/v1573575424/production/designs/6700820_0.jpg"
                     style={{ height: "320px", width: "100%" }}
+                    alt=""
                   ></img>
                 </div>
               ) : (
@@ -179,7 +191,10 @@ const Notification = ({ data }) => {
                   <Grid
                     item
                     sx={{
-                      borderBottom: index === notifications.length - 1 ? "none" : "1px solid black",
+                      borderBottom:
+                        index === notifications.length - 1
+                          ? "none"
+                          : "1px solid black",
                       padding: 1,
                       "&:hover": {
                         background: "#d7d7d7",
@@ -187,7 +202,9 @@ const Notification = ({ data }) => {
                       },
                     }}
                     id={`notification-${noti.uuid}`}
-                    onClick={() => handleClickNotification(noti.uuid, noti.link_navigate)}
+                    onClick={() =>
+                      handleClickNotification(noti.uuid, noti.link_navigate)
+                    }
                   >
                     <Grid container direction="row">
                       <Grid item xs={1.5} alignSelf="center">
@@ -208,7 +225,8 @@ const Notification = ({ data }) => {
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
                                 display: "-webkit-box",
-                                "-webkit-line-clamp": "2" /* number of lines to show */,
+                                "-webkit-line-clamp":
+                                  "2" /* number of lines to show */,
                                 "line-clamp": "2",
                                 "-webkit-box-orient": "vertical",
                               }}
@@ -216,7 +234,10 @@ const Notification = ({ data }) => {
                               {noti.message}
                             </Typography>
                           </Grid>
-                          <Grid item sx={{ ml: "auto", mr: 1.5, color: "#7e7777" }}>
+                          <Grid
+                            item
+                            sx={{ ml: "auto", mr: 1.5, color: "#7e7777" }}
+                          >
                             <Typography sx={{ fontSize: "12px" }}>
                               {moment
                                 .tz(noti.time, "Asia/Saigon")

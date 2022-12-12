@@ -50,6 +50,7 @@ const UserBarInClass = ({ list, role }) => {
             src="https://cdn.dribbble.com/users/1507491/screenshots/4945826/media/116a8ebc414c519ad1cfc0fe63f79d3e.jpg?compress=1&resize=800x600&vertical=top"
             height={200}
             width={250}
+            alt=""
           ></img>
         </div>
       ) : (

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -34,7 +35,6 @@ import Button from "@mui/material/Button";
 import { Dialog, Toolbar, AppBar, Slide } from "@mui/material";
 import { Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import style from "../../styles/accordion.css";
 import TeacherReviewComment from "../DetailClassroom/TeacherReviewGrade";
 import uuid from "react-native-uuid";
 import socket from "./Socket";
@@ -69,25 +69,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const list_header = [
-  {
-    name: "Math",
-    total_grade: 100,
-  },
-  {
-    name: "Physic",
-    total_grade: 100,
-  },
-  {
-    name: "Literature",
-    total_grade: 100,
-  },
-  {
-    name: "Geography",
-    total_grade: 100,
-  },
-];
-
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: "#f8f9fa",
@@ -117,7 +98,10 @@ export default function CustomizedTables({ data }) {
 
   const exportGradeTable = () => {
     axios({
-      url: process.env.REACT_APP_API_URL + "/upload/download/grade-table?class_id=" + data.id, //your url
+      url:
+        process.env.REACT_APP_API_URL +
+        "/upload/download/grade-table?class_id=" +
+        data.id, //your url
       method: "GET",
       responseType: "blob", // important
       headers: {
@@ -308,7 +292,10 @@ export default function CustomizedTables({ data }) {
     const formdata = new FormData();
     formdata.append("file", file);
     formdata.append("syllabus_id", curMenu);
-    formdata.append("syllabus_maxGrade", listHeader.find((row) => row.id === curMenu).grade);
+    formdata.append(
+      "syllabus_maxGrade",
+      listHeader.find((row) => row.id === curMenu).grade
+    );
     axios
       .post(process.env.REACT_APP_API_URL + "/upload/grade-list", formdata, {
         headers: {
@@ -369,9 +356,13 @@ export default function CustomizedTables({ data }) {
   React.useEffect(() => {
     const access_token = localStorage.getItem("access_token");
     axios
-      .get(process.env.REACT_APP_API_URL + `/classroom/grade-table?class_id=${data.id}`, {
-        headers: { Authorization: `Bearer ${access_token}` },
-      })
+      .get(
+        process.env.REACT_APP_API_URL +
+          `/classroom/grade-table?class_id=${data.id}`,
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+        }
+      )
       .then((res) => {
         if (res.status === 200) {
           let list_header = res.data.list_header;
@@ -451,13 +442,27 @@ export default function CustomizedTables({ data }) {
           >
             Export Grade
           </Button>
-          <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+          <Dialog
+            fullScreen
+            open={open}
+            onClose={handleClose}
+            TransitionComponent={Transition}
+          >
             <AppBar sx={{ position: "fixed" }} color="primary">
               <Toolbar>
-                <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={handleClose}
+                  aria-label="close"
+                >
                   <CloseIcon />
                 </IconButton>
-                <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                <Typography
+                  sx={{ ml: 2, flex: 1 }}
+                  variant="h6"
+                  component="div"
+                >
                   Grade review
                 </Typography>
               </Toolbar>
@@ -476,15 +481,28 @@ export default function CustomizedTables({ data }) {
         <Grid item xs={12}>
           <TableContainer sx={{ maxHeight: 500 }}>
             {/* bo width = unset de table full width */}
-            <Table aria-label="customized table" stickyHeader sx={{ width: "unset" }}>
+            <Table
+              aria-label="customized table"
+              stickyHeader
+              sx={{ width: "unset" }}
+            >
               <TableHead>
                 <TableRow>
-                  <StyledTableCell sx={{ fontWeight: "bold", fontSize: 15 }} align="center">
+                  <StyledTableCell
+                    sx={{ fontWeight: "bold", fontSize: 15 }}
+                    align="center"
+                  >
                     Student
                   </StyledTableCell>
                   {listHeader.map((row) => (
-                    <StyledTableCell key={row.id} align="center" sx={{ maxWidth: "200px" }}>
-                      <Box sx={{ fontWeight: "bold", fontSize: 18 }}>{row.subject_name}</Box>
+                    <StyledTableCell
+                      key={row.id}
+                      align="center"
+                      sx={{ maxWidth: "200px" }}
+                    >
+                      <Box sx={{ fontWeight: "bold", fontSize: 18 }}>
+                        {row.subject_name}
+                      </Box>
                       <Box>
                         <IconButton
                           aria-label="more"
@@ -501,7 +519,15 @@ export default function CustomizedTables({ data }) {
                         </IconButton>
                       </Box>
                       {row.finalize ? (
-                        <Box sx={{ position: "absolute", left: 1, top: 1, mt: 1, ml: 1 }}>
+                        <Box
+                          sx={{
+                            position: "absolute",
+                            left: 1,
+                            top: 1,
+                            mt: 1,
+                            ml: 1,
+                          }}
+                        >
                           <PublicIcon
                             sx={{
                               color: "black",
@@ -511,16 +537,40 @@ export default function CustomizedTables({ data }) {
                       ) : (
                         <Box></Box>
                       )}
-                      <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                        <Divider sx={{ backgroundColor: "white", height: 2, width: 100 }} />
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          width: "100%",
+                        }}
+                      >
+                        <Divider
+                          sx={{
+                            backgroundColor: "white",
+                            height: 2,
+                            width: 100,
+                          }}
+                        />
                       </Box>
                       <Box>(total/{row.grade})</Box>
                     </StyledTableCell>
                   ))}
-                  <StyledTableCell key="totalFinal" align="center" sx={{ maxWidth: "200px" }}>
+                  <StyledTableCell
+                    key="totalFinal"
+                    align="center"
+                    sx={{ maxWidth: "200px" }}
+                  >
                     <Box sx={{ fontWeight: "bold", fontSize: 18 }}>Total</Box>
-                    <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                      <Divider sx={{ backgroundColor: "white", height: 2, width: 100 }} />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <Divider
+                        sx={{ backgroundColor: "white", height: 2, width: 100 }}
+                      />
                     </Box>
                     <Box>
                       (total/
@@ -542,7 +592,9 @@ export default function CustomizedTables({ data }) {
                             <ListItemAvatar>
                               <Avatar src={row.avatar}></Avatar>
                             </ListItemAvatar>
-                            <Box sx={{ display: "flex", flexDirection: "column" }}>
+                            <Box
+                              sx={{ display: "flex", flexDirection: "column" }}
+                            >
                               <ListItemText primary={row.full_name} />
                               <ListItemText primary={row.student_code} />
                             </Box>
@@ -556,9 +608,17 @@ export default function CustomizedTables({ data }) {
                                 <AccountCircleIcon />
                               </Avatar>
                             </ListItemAvatar>
-                            <Box sx={{ display: "flex", flexDirection: "column" }}>
-                              <ListItemText sx={{ color: "#bdbdbd" }} primary={row.full_name} />
-                              <ListItemText sx={{ color: "#bdbdbd" }} primary={row.student_code} />
+                            <Box
+                              sx={{ display: "flex", flexDirection: "column" }}
+                            >
+                              <ListItemText
+                                sx={{ color: "#bdbdbd" }}
+                                primary={row.full_name}
+                              />
+                              <ListItemText
+                                sx={{ color: "#bdbdbd" }}
+                                primary={row.student_code}
+                              />
                             </Box>
                           </ListItem>
                         </List>
@@ -591,7 +651,9 @@ export default function CustomizedTables({ data }) {
                         if (subRow != null) {
                           return (
                             <ClickAwayListener
-                              onClickAway={(e) => handleClickAway(index, subIndex)}
+                              onClickAway={(e) =>
+                                handleClickAway(index, subIndex)
+                              }
                             >
                               <StyledTableCell align="center">
                                 <FormControl variant="standard">
@@ -605,7 +667,12 @@ export default function CustomizedTables({ data }) {
                                       </InputAdornment>
                                     }
                                     onChange={(e) =>
-                                      handleChangeInput(index, e, subIndex, listMaxScore[subIndex])
+                                      handleChangeInput(
+                                        index,
+                                        e,
+                                        subIndex,
+                                        listMaxScore[subIndex]
+                                      )
                                     }
                                     aria-describedby="standard-weight-helper-text"
                                   />
@@ -614,7 +681,9 @@ export default function CustomizedTables({ data }) {
                             </ClickAwayListener>
                           );
                         } else {
-                          return <StyledTableCell align="center"></StyledTableCell>;
+                          return (
+                            <StyledTableCell align="center"></StyledTableCell>
+                          );
                         }
                       }
                       // <StyledTableCell align="center">
@@ -633,49 +702,6 @@ export default function CustomizedTables({ data }) {
                       //     />
                       //   </FormControl>
 
-                      {
-                        /* {subRow.isClickAway ? (
-                          <ClickAwayListener onClickAway={(e) => handleClickAway(index, subIndex)}>
-                            <FormControl variant="standard">
-                              <Input
-                                sx={{ width: "8ch" }}
-                                id="standard-adornment-weight"
-                                value={subRow.score}
-                                // onChange={handleChange('weight')}
-                                endAdornment={
-                                  <InputAdornment position="end">
-                                    /{row.max_score[subIndex]}
-                                  </InputAdornment>
-                                }
-                                aria-describedby="standard-weight-helper-text"
-                                onChange={(e) =>
-                                  handleChangeInput(index, e, subIndex, row.max_score[subIndex])
-                                }
-                                autoFocus={true}
-                              />
-                            </FormControl>
-                          </ClickAwayListener>
-                        ) : (
-                          <FormControl variant="standard">
-                            <Input
-                              sx={{ width: "8ch" }}
-                              id="standard-adornment-weight"
-                              value={subRow.score}
-                              // onChange={handleChange('weight')}
-                              endAdornment={
-                                <InputAdornment position="end">
-                                  /{row.max_score[subIndex]}
-                                </InputAdornment>
-                              }
-                              aria-describedby="standard-weight-helper-text"
-                              onChange={(e) =>
-                                handleChangeInput(index, e, subIndex, row.max_score[subIndex])
-                              }
-                              onClick={(e) => handleClickIn(index, subIndex)}
-                            />
-                          </FormControl>
-                        )} */
-                      }
                       // </StyledTableCell>
                     })}
                   </StyledTableRow>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import ClassroomList from "./ClassroomList";
 import MenuAppBar from "../utils/MenuAppBar";

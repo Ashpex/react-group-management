@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import MaterialTable from "material-table";
 import { forwardRef } from "react";
 
@@ -25,17 +25,25 @@ import axios from "axios";
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-  Check: forwardRef((props, ref) => <Check {...props} ref={ref} sx={{ color: "#0c9723 " }} />),
+  Check: forwardRef((props, ref) => (
+    <Check {...props} ref={ref} sx={{ color: "#0c9723 " }} />
+  )),
   Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
   Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-  DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} sx={{ color: "#f2af4a" }} />),
+  DetailPanel: forwardRef((props, ref) => (
+    <ChevronRight {...props} ref={ref} />
+  )),
+  Edit: forwardRef((props, ref) => (
+    <Edit {...props} ref={ref} sx={{ color: "#f2af4a" }} />
+  )),
   Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
   Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
   FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
   LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
   NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+  PreviousPage: forwardRef((props, ref) => (
+    <ChevronLeft {...props} ref={ref} />
+  )),
   ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
   Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
   SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
@@ -92,10 +100,26 @@ const UserTable = () => {
       <MaterialTable
         icons={tableIcons}
         columns={[
-          { title: "ID", field: "id", searchable: false, sorting: false, editable: "never" },
+          {
+            title: "ID",
+            field: "id",
+            searchable: false,
+            sorting: false,
+            editable: "never",
+          },
           { title: "Email", field: "email", sorting: false, editable: "never" },
-          { title: "Student code", field: "student_code", searchable: false, sorting: false },
-          { title: "Status", field: "status", searchable: false, editable: "never" },
+          {
+            title: "Student code",
+            field: "student_code",
+            searchable: false,
+            sorting: false,
+          },
+          {
+            title: "Status",
+            field: "status",
+            searchable: false,
+            editable: "never",
+          },
           {
             title: "Created at",
             field: "createdAt",
@@ -239,16 +263,24 @@ const UserTable = () => {
             <section class="user-detail">
               <div class="profile-info">
                 <img
-                  src={user.avatar ? user.avatar : "https://source.unsplash.com/100x100/?face"}
+                  src={
+                    user.avatar
+                      ? user.avatar
+                      : "https://source.unsplash.com/100x100/?face"
+                  }
                   alt={(user.first_name || "") + " " + (user.last_name || "")}
                 />
                 <div class="desc">
-                  <h3 class="name">{(user.first_name || "") + " " + (user.last_name || "")}</h3>
+                  <h3 class="name">
+                    {(user.first_name || "") + " " + (user.last_name || "")}
+                  </h3>
                   <h5>{user.role}</h5>
                   <h5>
                     {" "}
                     Date joined:{" "}
-                    <strong>{new Date(user.createdAt).toLocaleString().split(" ")[1]}</strong>{" "}
+                    <strong>
+                      {new Date(user.createdAt).toLocaleString().split(" ")[1]}
+                    </strong>{" "}
                   </h5>
                 </div>
               </div>

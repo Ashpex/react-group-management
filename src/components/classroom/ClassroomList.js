@@ -61,7 +61,7 @@ export default function ClassroomList() {
   const styles = useStyles();
   const navigate = useNavigate();
   const { classState, loading } = React.useContext(ClassProvider.context);
-  const [classes, setClasses] = classState;
+  const [classes] = classState;
 
   return (
     <Box className={styles.grid}>
@@ -71,7 +71,12 @@ export default function ClassroomList() {
         <div>
           <img
             src="https://cdn.dribbble.com/users/1507491/screenshots/4945826/media/116a8ebc414c519ad1cfc0fe63f79d3e.jpg?compress=1&resize=800x600&vertical=top"
-            style={{ position: "fixed", top: "64px", left: "50%", transform: `translateX(-50%)` }}
+            style={{
+              position: "fixed",
+              top: "64px",
+              left: "50%",
+              transform: `translateX(-50%)`,
+            }}
             alt="Empty classlist"
           ></img>
         </div>
@@ -94,14 +99,21 @@ export default function ClassroomList() {
                 <Typography gutterBottom variant="h5" component="div" noWrap>
                   {c.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" className={styles.description}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  className={styles.description}
+                >
                   {c.description}
                 </Typography>
               </CardContent>
               <CardActions className={styles.actions}>
                 <ThemeProvider theme={theme}>
                   {c.student ? (
-                    <Tooltip title={`Open your work for ${c.name}`} disableInteractive>
+                    <Tooltip
+                      title={`Open your work for ${c.name}`}
+                      disableInteractive
+                    >
                       <IconButton
                         size="small"
                         variant="contained"
@@ -114,7 +126,10 @@ export default function ClassroomList() {
                       </IconButton>
                     </Tooltip>
                   ) : (
-                    <Tooltip title={`Open gradebook for ${c.name}`} disableInteractive>
+                    <Tooltip
+                      title={`Open gradebook for ${c.name}`}
+                      disableInteractive
+                    >
                       <IconButton
                         size="small"
                         variant="contained"

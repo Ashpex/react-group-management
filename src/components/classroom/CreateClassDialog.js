@@ -13,13 +13,15 @@ import socket from "../utils/Socket";
 
 const validationSchema = yup.object({
   name: yup.string("Enter class name").required("Class name is required"),
-  section: yup.string("Enter class section").required("Class section is required"),
+  section: yup
+    .string("Enter class section")
+    .required("Class section is required"),
   topic: yup.string("Enter class topic"),
   description: yup.string("Enter class description"),
 });
 
 export default function CreateClassDialog({ open, handleClose }) {
-  const { classState, loading } = React.useContext(ClassProvider.context);
+  const { classState } = React.useContext(ClassProvider.context);
   const [classes, setClasses] = classState;
   const access_token = localStorage.getItem("access_token");
   const formik = useFormik({
@@ -50,7 +52,7 @@ export default function CreateClassDialog({ open, handleClose }) {
         .then((res) => {
           // console.log(res.data);
           if (res.status === 201) {
-            socket.emit("join_room", "class_" + res.data.id); 
+            socket.emit("join_room", "class_" + res.data.id);
             const user = JSON.parse(localStorage.getItem("user"));
             const new_class = res.data;
             new_class["student"] = null;

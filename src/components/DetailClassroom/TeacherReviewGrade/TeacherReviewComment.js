@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -39,7 +40,6 @@ export default function TeacherReviewComment({
   socket,
   class_id,
 }) {
-  const theme = useTheme();
   const [state, setState] = useState(false);
   const { syllabus_name, syllabus_id, student_id } = syllabus;
   const [chatCtl] = React.useState(
@@ -47,7 +47,6 @@ export default function TeacherReviewComment({
       showDateTime: true,
     })
   );
-  const navigate = useNavigate();
   const [commentList, setCommentList] = useState([]);
   let numberOfComment = useRef(0);
   const user = JSON.parse(localStorage.getItem("user"));
@@ -66,7 +65,12 @@ export default function TeacherReviewComment({
         type: "text",
         content: (
           <div style={{ position: "relative" }}>
-            <p style={{ ...cssName, right: data.user_id === user.id ? "0" : "none" }}>
+            <p
+              style={{
+                ...cssName,
+                right: data.user_id === user.id ? "0" : "none",
+              }}
+            >
               {data.name_user}
             </p>
             <span>{data.comment}</span>
@@ -96,12 +100,16 @@ export default function TeacherReviewComment({
         type: "text",
         content: (
           <div style={{ position: "relative" }}>
-            <p style={{ ...cssName, right: 0 }}>{user.last_name + " " + user.first_name}</p>
+            <p style={{ ...cssName, right: 0 }}>
+              {user.last_name + " " + user.first_name}
+            </p>
             <span>{response.value}</span>
           </div>
         ),
         self: true,
-        avatar: user.avatar ? user.avatar : "https://cdn-icons-png.flaticon.com/512/194/194935.png",
+        avatar: user.avatar
+          ? user.avatar
+          : "https://cdn-icons-png.flaticon.com/512/194/194935.png",
         createdAt: new Date(),
       });
       numberOfComment.current++;
@@ -110,7 +118,9 @@ export default function TeacherReviewComment({
         comment: response.value,
         user_id: user.id,
         name_user: user.last_name + " " + user.first_name,
-        avatar: user.avatar ? user.avatar : "https://cdn-icons-png.flaticon.com/512/194/194935.png",
+        avatar: user.avatar
+          ? user.avatar
+          : "https://cdn-icons-png.flaticon.com/512/194/194935.png",
         is_student: false,
       };
       socket.emit("send_comment", messageData);
@@ -140,7 +150,10 @@ export default function TeacherReviewComment({
   );
 
   const toggleDrawer = (open) => (event) => {
-    if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
       return;
     }
 
@@ -188,9 +201,13 @@ export default function TeacherReviewComment({
     socket.emit("join_room", "class_private_" + student_id);
     const access_token = localStorage.getItem("access_token");
     axios
-      .get(process.env.REACT_APP_API_URL + `/classroom/all-comment?review_id=${review_id}`, {
-        headers: { Authorization: `Bearer ${access_token}` },
-      })
+      .get(
+        process.env.REACT_APP_API_URL +
+          `/classroom/all-comment?review_id=${review_id}`,
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+        }
+      )
       .then((res) => {
         if (res.status === 200) {
           setCommentList(res.data);
@@ -200,7 +217,12 @@ export default function TeacherReviewComment({
               type: "text",
               content: (
                 <div style={{ position: "relative" }}>
-                  <p style={{ ...cssName, right: message.user_id === user.id ? "0" : "none" }}>
+                  <p
+                    style={{
+                      ...cssName,
+                      right: message.user_id === user.id ? "0" : "none",
+                    }}
+                  >
                     {message.name_user}
                   </p>
                   <span>{message.comment}</span>
@@ -246,7 +268,10 @@ export default function TeacherReviewComment({
             <Typography sx={{ ml: 1.5 }} variant="h6">
               {syllabus_name}
             </Typography>
-            <IconButton onClick={toggleDrawer(false)} sx={{ float: "right", ml: "auto", mr: 2 }}>
+            <IconButton
+              onClick={toggleDrawer(false)}
+              sx={{ float: "right", ml: "auto", mr: 2 }}
+            >
               <ChevronRightIcon />
             </IconButton>
           </DrawerHeader>
@@ -261,7 +286,9 @@ export default function TeacherReviewComment({
         >
           <Badge
             badgeContent={
-              commentList.filter((message) => message.status && message.user_id !== user.id).length
+              commentList.filter(
+                (message) => message.status && message.user_id !== user.id
+              ).length
             }
             color="info"
           >

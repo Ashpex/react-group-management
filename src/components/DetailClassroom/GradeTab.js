@@ -1,30 +1,29 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { Accordion, AccordionSummary, Typography, AccordionDetails, Link } from "@mui/material";
+import {
+  Accordion,
+  AccordionSummary,
+  Button,
+  TextField,
+  Typography,
+} from "@mui/material";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
-import Avatar from "@mui/material/Avatar";
+
 import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { Topic } from "@mui/icons-material";
+
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import axios from "axios";
-import { useNavigate, useRef } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+
 import { Dialog, Toolbar, AppBar, Slide } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import style from "../../styles/accordion.css";
 import BackdropProvider from "../../contexts/BackdropProvider";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -76,7 +75,7 @@ const GradeTab = ({ data, openState }) => {
       subject_name: "",
       grade: 0,
       new: true,
-      finalize: false
+      finalize: false,
     });
     updateCharacters(items);
     console.log(items);
@@ -175,7 +174,10 @@ const GradeTab = ({ data, openState }) => {
                 disabled={!visable}
               />
             </Box>
-            <IconButton aria-label="delete" onClick={() => handleRemove(item.id)}>
+            <IconButton
+              aria-label="delete"
+              onClick={() => handleRemove(item.id)}
+            >
               <DeleteIcon />
             </IconButton>
           </AccordionSummary>
@@ -187,9 +189,13 @@ const GradeTab = ({ data, openState }) => {
   React.useEffect(() => {
     const access_token = localStorage.getItem("access_token");
     axios
-      .get(process.env.REACT_APP_API_URL + `/classroom/grade-structure?class_id=${data.id}`, {
-        headers: { Authorization: `Bearer ${access_token}` },
-      })
+      .get(
+        process.env.REACT_APP_API_URL +
+          `/classroom/grade-structure?class_id=${data.id}`,
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+        }
+      )
       .then((res) => {
         if (res.status === 200) {
           updateCharacters(res.data?.list_syllabus);
@@ -223,18 +229,37 @@ const GradeTab = ({ data, openState }) => {
           >
             Manage
           </Button>
-          <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+          <Dialog
+            fullScreen
+            open={open}
+            onClose={handleClose}
+            TransitionComponent={Transition}
+          >
             <AppBar sx={{ position: "relative" }} color="secondary">
               <Toolbar>
-                <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={handleClose}
+                  aria-label="close"
+                >
                   <CloseIcon />
                 </IconButton>
-                <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                <Typography
+                  sx={{ ml: 2, flex: 1 }}
+                  variant="h6"
+                  component="div"
+                >
                   Grade structure
                 </Typography>
               </Toolbar>
             </AppBar>
-            <Grid container direction="column" alignItems="center" justifyContent="space-between">
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justifyContent="space-between"
+            >
               {/* <Button onClick={onDownload} variant="contained" color="primary">
             Student list
           </Button>
@@ -268,13 +293,13 @@ const GradeTab = ({ data, openState }) => {
                   />
                 </FormControl>
                 <FormControl variant="standard" fullWidth>
-                    <Input
-                      id="component-simple"
-                      sx={{ fontSize: 20, mt: 2 }}
-                      value={description}
-                      onChange={handleChangeDescription}
-                      placeholder="Description"
-                    />
+                  <Input
+                    id="component-simple"
+                    sx={{ fontSize: 20, mt: 2 }}
+                    value={description}
+                    onChange={handleChangeDescription}
+                    placeholder="Description"
+                  />
                 </FormControl>
               </Box>
               <Box
