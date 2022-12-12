@@ -47,8 +47,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-const CLIENT_ID =
-  "780592097647-hif1svldddrkc4jpojqc44paile3l8da.apps.googleusercontent.com";
+const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const validationSchema = yup.object({
   email: yup
