@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -30,7 +31,13 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-start",
 }));
 
-export default function ReviewComment({ setCommenting, syllabus, review_id, socket, data }) {
+export default function ReviewComment({
+  setCommenting,
+  syllabus,
+  review_id,
+  socket,
+  data,
+}) {
   const [state, setState] = useState(false);
   const { syllabus_name, syllabus_id } = syllabus;
   let numberOfComment = useRef(0);
@@ -79,7 +86,12 @@ export default function ReviewComment({ setCommenting, syllabus, review_id, sock
         type: "text",
         content: (
           <div style={{ position: "relative" }}>
-            <p style={{ ...cssName, right: data.user_id === user.id ? "0" : "none" }}>
+            <p
+              style={{
+                ...cssName,
+                right: data.user_id === user.id ? "0" : "none",
+              }}
+            >
               {data.name_user}
             </p>
             <span>{data.comment}</span>
@@ -109,12 +121,16 @@ export default function ReviewComment({ setCommenting, syllabus, review_id, sock
         type: "text",
         content: (
           <div style={{ position: "relative" }}>
-            <p style={{ ...cssName, right: 0 }}>{user.last_name + " " + user.first_name}</p>
+            <p style={{ ...cssName, right: 0 }}>
+              {user.last_name + " " + user.first_name}
+            </p>
             <span>{response.value}</span>
           </div>
         ),
         self: true,
-        avatar: user.avatar ? user.avatar : "https://cdn-icons-png.flaticon.com/512/194/194931.png",
+        avatar: user.avatar
+          ? user.avatar
+          : "https://cdn-icons-png.flaticon.com/512/194/194931.png",
         createdAt: new Date(),
       });
       const messageData = {
@@ -122,7 +138,9 @@ export default function ReviewComment({ setCommenting, syllabus, review_id, sock
         comment: response.value,
         user_id: user.id,
         name_user: user.last_name + " " + user.first_name,
-        avatar: user.avatar ? user.avatar : "https://cdn-icons-png.flaticon.com/512/194/194931.png",
+        avatar: user.avatar
+          ? user.avatar
+          : "https://cdn-icons-png.flaticon.com/512/194/194931.png",
         is_student: true,
       };
       numberOfComment.current++;
@@ -150,7 +168,10 @@ export default function ReviewComment({ setCommenting, syllabus, review_id, sock
   );
 
   const toggleDrawer = (open) => (event) => {
-    if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
       return;
     }
 
@@ -197,9 +218,13 @@ export default function ReviewComment({ setCommenting, syllabus, review_id, sock
     socket.emit("join_room", review_id);
     const access_token = localStorage.getItem("access_token");
     axios
-      .get(process.env.REACT_APP_API_URL + `/classroom/all-comment?review_id=${review_id}`, {
-        headers: { Authorization: `Bearer ${access_token}` },
-      })
+      .get(
+        process.env.REACT_APP_API_URL +
+          `/classroom/all-comment?review_id=${review_id}`,
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+        }
+      )
       .then((res) => {
         if (res.status === 200) {
           setCommentList(res.data);
@@ -209,7 +234,12 @@ export default function ReviewComment({ setCommenting, syllabus, review_id, sock
               type: "text",
               content: (
                 <div style={{ position: "relative" }}>
-                  <p style={{ ...cssName, right: message.user_id === user.id ? "0" : "none" }}>
+                  <p
+                    style={{
+                      ...cssName,
+                      right: message.user_id === user.id ? "0" : "none",
+                    }}
+                  >
                     {message.name_user}
                   </p>
                   <span>{message.comment}</span>
@@ -256,7 +286,10 @@ export default function ReviewComment({ setCommenting, syllabus, review_id, sock
             <Typography sx={{ ml: 1.5 }} variant="h6">
               {syllabus_name}
             </Typography>
-            <IconButton onClick={toggleDrawer(false)} sx={{ float: "right", ml: "auto", mr: 2 }}>
+            <IconButton
+              onClick={toggleDrawer(false)}
+              sx={{ float: "right", ml: "auto", mr: 2 }}
+            >
               <ChevronRightIcon />
             </IconButton>
           </DrawerHeader>
@@ -270,7 +303,10 @@ export default function ReviewComment({ setCommenting, syllabus, review_id, sock
           onClick={toggleDrawer(true)}
         >
           <Badge
-            badgeContent={mock.filter((message) => !message.isStudent && !message.isSeen).length}
+            badgeContent={
+              mock.filter((message) => !message.isStudent && !message.isSeen)
+                .length
+            }
             color="info"
           >
             <AddCommentOutlined />

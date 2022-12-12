@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import { Avatar, Button, Box, Paper, Typography, Chip } from "@mui/material";
 import AddReactionIcon from "@mui/icons-material/AddReaction";
@@ -115,7 +116,10 @@ const InviteTab = () => {
           if (err.response.status === 401) {
             localStorage.removeItem("user");
             localStorage.removeItem("access_token");
-            localStorage.setItem("current_link", "/invite/" + id + "?role=STUDENT");
+            localStorage.setItem(
+              "current_link",
+              "/invite/" + id + "?role=STUDENT"
+            );
             setEffect(false);
             navigate("/login");
           }
@@ -146,7 +150,10 @@ const InviteTab = () => {
           if (err.response.status === 401) {
             localStorage.removeItem("user");
             localStorage.removeItem("access_token");
-            localStorage.setItem("current_link", "/invite/" + id + "?role=" + role_user);
+            localStorage.setItem(
+              "current_link",
+              "/invite/" + id + "?role=" + role_user
+            );
             setEffect(false);
             navigate("/login");
           }
@@ -195,8 +202,14 @@ const InviteTab = () => {
                 marginTop: "10px",
               }}
             >
-              <Chip label={data?.teacherNum + " Teacher"} avatar={<FaceIcon />} />
-              <Chip label={data?.studentNum + " Student"} avatar={<FaceOutlinedIcon />} />
+              <Chip
+                label={data?.teacherNum + " Teacher"}
+                avatar={<FaceIcon />}
+              />
+              <Chip
+                label={data?.studentNum + " Student"}
+                avatar={<FaceOutlinedIcon />}
+              />
             </Box>
             <Box
               sx={{

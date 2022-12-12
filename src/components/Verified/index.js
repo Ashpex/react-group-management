@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -10,12 +11,9 @@ const Verified = () => {
   React.useEffect(() => {
     if (token) {
       axios
-        .post(
-          process.env.REACT_APP_API_URL + `/verified`,
-          {
-              token
-          }
-        )
+        .post(process.env.REACT_APP_API_URL + `/verified`, {
+          token,
+        })
         .then((res) => {
           if (res.status === 200) {
             localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -24,18 +22,14 @@ const Verified = () => {
           }
         })
         .catch((err) => {
-            navigate("/login");
+          navigate("/login");
         });
-    }else{
-        navigate("/login");
+    } else {
+      navigate("/login");
     }
   }, []);
 
-  return (
-    <div>
-
-    </div>
-  );
+  return <div></div>;
 };
 
 export default Verified;

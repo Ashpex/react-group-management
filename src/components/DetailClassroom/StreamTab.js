@@ -40,7 +40,7 @@ const styles = {
 const StreamTab = ({ data, classId }) => {
   let work = null;
   const [addPost, setAddPost] = React.useState(false);
-  const [user, setUser] = React.useContext(UserProvider.context);
+  const [user] = React.useContext(UserProvider.context);
   const [openGrade, setOpenGrade] = React.useState(false);
   const teacher = data.teacherList?.find((t) => t.id === user.id);
   const { setOpenSnack } = React.useContext(BackdropProvider.context);
@@ -48,7 +48,10 @@ const StreamTab = ({ data, classId }) => {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <Container maxWidth="lg" sx={{ marginTop: 11, maxWidth: "1000px !important" }}>
+        <Container
+          maxWidth="lg"
+          sx={{ marginTop: 11, maxWidth: "1000px !important" }}
+        >
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
@@ -84,7 +87,9 @@ const StreamTab = ({ data, classId }) => {
                       </Typography>
                       <Typography>
                         <b style={styles.infoLabel}>Description:</b>
-                        <span style={styles.sizeText}>{data.description || ""}</span>
+                        <span style={styles.sizeText}>
+                          {data.description || ""}
+                        </span>
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -105,7 +110,10 @@ const StreamTab = ({ data, classId }) => {
                             <IconButton
                               onClick={() => {
                                 navigator.clipboard.writeText(data.invitecode);
-                                setOpenSnack("info", "Invite code copied to clipboard");
+                                setOpenSnack(
+                                  "info",
+                                  "Invite code copied to clipboard"
+                                );
                               }}
                             >
                               <ContentCopyIcon />
@@ -172,7 +180,12 @@ const StreamTab = ({ data, classId }) => {
                         <span style={styles.infoLabel}>Grade structure</span>
                       </Typography>
                       <GradeStructure class_id={classId} open={openGrade} />
-                      {teacher && <GradeTab data={data} openState={[openGrade, setOpenGrade]} />}
+                      {teacher && (
+                        <GradeTab
+                          data={data}
+                          openState={[openGrade, setOpenGrade]}
+                        />
+                      )}
                     </Item>
                   </Grid>
                 </Grid>
@@ -182,7 +195,11 @@ const StreamTab = ({ data, classId }) => {
                   {addPost ? (
                     <Box>
                       <ControlledEditor />
-                      <Grid container justifyContent="end" sx={{ marginTop: 2 }}>
+                      <Grid
+                        container
+                        justifyContent="end"
+                        sx={{ marginTop: 2 }}
+                      >
                         <Button
                           sx={{ marginRight: 1 }}
                           color="primary"

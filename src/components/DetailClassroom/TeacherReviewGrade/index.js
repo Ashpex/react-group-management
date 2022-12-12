@@ -1,5 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
-import { Avatar, Container, TextField, Typography, Button, Box } from "@mui/material";
+import {
+  Avatar,
+  Container,
+  TextField,
+  Typography,
+  Button,
+  Box,
+} from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -83,9 +91,13 @@ const TeacherReviewGrade = ({ data }) => {
     //     }
     //   ]);
     axios
-      .get(process.env.REACT_APP_API_URL + `/classroom/all-review?class_id=${data.id}`, {
-        headers: { Authorization: `Bearer ${access_token}` },
-      })
+      .get(
+        process.env.REACT_APP_API_URL +
+          `/classroom/all-review?class_id=${data.id}`,
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+        }
+      )
       .then((res) => {
         if (res.status === 200) {
           setSyllabus(res.data);
@@ -145,7 +157,13 @@ const TeacherReviewGrade = ({ data }) => {
                 >
                   <AccordionSummary>
                     <Grid container>
-                      <Grid container sx={{ justifyContent: "space-between", display: "flex" }}>
+                      <Grid
+                        container
+                        sx={{
+                          justifyContent: "space-between",
+                          display: "flex",
+                        }}
+                      >
                         <Box></Box>
                         <Box>
                           <Typography
@@ -173,7 +191,8 @@ const TeacherReviewGrade = ({ data }) => {
                             color="success"
                             sx={{
                               position: "absolute",
-                              top: expanded === "panel" + index ? "20px" : "10px",
+                              top:
+                                expanded === "panel" + index ? "20px" : "10px",
                               left: "40px",
                               zIndex: 1000,
                               transition: "top linear 0s",
@@ -207,7 +226,9 @@ const TeacherReviewGrade = ({ data }) => {
                       </Grid>
                     </Grid>
                   </AccordionSummary>
-                  <AccordionDetails sx={{ borderTop: "1px solid #ccc", padding: 0 }}>
+                  <AccordionDetails
+                    sx={{ borderTop: "1px solid #ccc", padding: 0 }}
+                  >
                     <Formik
                       initialValues={{
                         [`expected-${syl.syllabus_id}`]: `${syl.grade}`,
@@ -218,20 +239,29 @@ const TeacherReviewGrade = ({ data }) => {
                       }}
                       onSubmit={(values) => {
                         const form = {
-                          expect_score: parseInt(values[`expected-${syl.syllabus_id}`], 10),
+                          expect_score: parseInt(
+                            values[`expected-${syl.syllabus_id}`],
+                            10
+                          ),
                           reason: values[`reason-${syl.syllabus_id}`],
-                          final_score: parseInt(values[`final-${syl.syllabus_id}`], 10),
+                          final_score: parseInt(
+                            values[`final-${syl.syllabus_id}`],
+                            10
+                          ),
                         };
                         axios
                           .put(
-                            process.env.REACT_APP_API_URL + `/classroom/update-review`,
+                            process.env.REACT_APP_API_URL +
+                              `/classroom/update-review`,
                             {
                               syllabus_id: syl.syllabus_id,
                               student_id: syl.student_id,
                               ...form,
                             },
                             {
-                              headers: { Authorization: `Bearer ${access_token}` },
+                              headers: {
+                                Authorization: `Bearer ${access_token}`,
+                              },
                             }
                           )
                           .then((res) => {
@@ -265,7 +295,10 @@ const TeacherReviewGrade = ({ data }) => {
                           <Grid container direction="column">
                             <Grid
                               container
-                              style={{ display: "flex", justifyContent: "space-between" }}
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                              }}
                             >
                               <Box
                                 item
@@ -279,15 +312,25 @@ const TeacherReviewGrade = ({ data }) => {
                                 <TextField
                                   id={`expected-${syl.syllabus_id}`}
                                   onBlur={props.handleBlur}
-                                  value={props.values[`expected-${syl.syllabus_id}`]}
+                                  value={
+                                    props.values[`expected-${syl.syllabus_id}`]
+                                  }
                                   name={`expected-${syl.syllabus_id}`}
                                   label={`Expected grade for ${syl.syllabus_name}`}
                                   error={
-                                    props.touched[`expected-${syl.syllabus_id}`] &&
-                                    Boolean(props.errors[`expected-${syl.syllabus_id}`])
+                                    props.touched[
+                                      `expected-${syl.syllabus_id}`
+                                    ] &&
+                                    Boolean(
+                                      props.errors[
+                                        `expected-${syl.syllabus_id}`
+                                      ]
+                                    )
                                   }
                                   helperText={
-                                    props.touched[`expected-${syl.syllabus_id}`] &&
+                                    props.touched[
+                                      `expected-${syl.syllabus_id}`
+                                    ] &&
                                     props.errors[`expected-${syl.syllabus_id}`]
                                   }
                                   defaultValue={syl.grade}
@@ -308,12 +351,16 @@ const TeacherReviewGrade = ({ data }) => {
                                   id={`final-${syl.syllabus_id}`}
                                   onChange={props.handleChange}
                                   onBlur={props.handleBlur}
-                                  value={props.values[`final-${syl.syllabus_id}`]}
+                                  value={
+                                    props.values[`final-${syl.syllabus_id}`]
+                                  }
                                   name={`final-${syl.syllabus_id}`}
                                   label={`Final score for ${syl.syllabus_name}`}
                                   error={
                                     props.touched[`final-${syl.syllabus_id}`] &&
-                                    Boolean(props.errors[`final-${syl.syllabus_id}`])
+                                    Boolean(
+                                      props.errors[`final-${syl.syllabus_id}`]
+                                    )
                                   }
                                   helperText={
                                     props.touched[`final-${syl.syllabus_id}`] &&
@@ -339,15 +386,23 @@ const TeacherReviewGrade = ({ data }) => {
                                   id={`reason-${syl.syllabus_id}`}
                                   onChange={props.handleChange}
                                   onBlur={props.handleBlur}
-                                  value={props.values[`reason-${syl.syllabus_id}`]}
+                                  value={
+                                    props.values[`reason-${syl.syllabus_id}`]
+                                  }
                                   name={`reason-${syl.syllabus_id}`}
                                   label={`Reason for grade composition`}
                                   error={
-                                    props.touched[`reason-${syl.syllabus_id}`] &&
-                                    Boolean(props.errors[`reason-${syl.syllabus_id}`])
+                                    props.touched[
+                                      `reason-${syl.syllabus_id}`
+                                    ] &&
+                                    Boolean(
+                                      props.errors[`reason-${syl.syllabus_id}`]
+                                    )
                                   }
                                   helperText={
-                                    props.touched[`reason-${syl.syllabus_id}`] &&
+                                    props.touched[
+                                      `reason-${syl.syllabus_id}`
+                                    ] &&
                                     props.errors[`reason-${syl.syllabus_id}`]
                                   }
                                   multiline

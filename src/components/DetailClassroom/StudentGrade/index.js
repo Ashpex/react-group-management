@@ -1,10 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
-import { Avatar, Container, TextField, Typography, Button, Box } from "@mui/material";
+import {
+  Avatar,
+  Container,
+  TextField,
+  Typography,
+  Button,
+  Box,
+} from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Grid from "@mui/material/Grid";
-import { ThemeProvider, createTheme  } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import axios from "axios";
 import React, { useState } from "react";
 import theme from "../../../theme/theme";
@@ -53,7 +61,13 @@ const getColorForPercentage = (pct) => {
   // or output as hex if preferred
 };
 
-const StudentGrade = ({ data, classId, visitedState, syllabusState, setEffect }) => {
+const StudentGrade = ({
+  data,
+  classId,
+  visitedState,
+  syllabusState,
+  setEffect,
+}) => {
   const [syllabus, setSyllabus] = syllabusState;
   const [visited, setVisited] = visitedState;
   const [expanded, setExpanded] = React.useState(false);
@@ -210,7 +224,9 @@ const StudentGrade = ({ data, classId, visitedState, syllabusState, setEffect })
                       </Box>
                     </Grid>
                   </AccordionSummary>
-                  <AccordionDetails sx={{ borderTop: "1px solid #ccc", padding: 0 }}>
+                  <AccordionDetails
+                    sx={{ borderTop: "1px solid #ccc", padding: 0 }}
+                  >
                     {syl.review_id ? (
                       <Formik
                         initialValues={{
@@ -246,16 +262,30 @@ const StudentGrade = ({ data, classId, visitedState, syllabusState, setEffect })
                                     id={`expected-${syl.syllabus_id}`}
                                     onChange={props.handleChange}
                                     onBlur={props.handleBlur}
-                                    value={props.values[`expected-${syl.syllabus_id}`]}
+                                    value={
+                                      props.values[
+                                        `expected-${syl.syllabus_id}`
+                                      ]
+                                    }
                                     name={`expected-${syl.syllabus_id}`}
                                     label={`Expected grade for ${syl.syllabus_name}`}
                                     error={
-                                      props.touched[`expected-${syl.syllabus_id}`] &&
-                                      Boolean(props.errors[`expected-${syl.syllabus_id}`])
+                                      props.touched[
+                                        `expected-${syl.syllabus_id}`
+                                      ] &&
+                                      Boolean(
+                                        props.errors[
+                                          `expected-${syl.syllabus_id}`
+                                        ]
+                                      )
                                     }
                                     helperText={
-                                      props.touched[`expected-${syl.syllabus_id}`] &&
-                                      props.errors[`expected-${syl.syllabus_id}`]
+                                      props.touched[
+                                        `expected-${syl.syllabus_id}`
+                                      ] &&
+                                      props.errors[
+                                        `expected-${syl.syllabus_id}`
+                                      ]
                                     }
                                     defaultValue={syl.grade}
                                     disabled={true}
@@ -277,15 +307,25 @@ const StudentGrade = ({ data, classId, visitedState, syllabusState, setEffect })
                                     id={`reason-${syl.syllabus_id}`}
                                     onChange={props.handleChange}
                                     onBlur={props.handleBlur}
-                                    value={props.values[`reason-${syl.syllabus_id}`]}
+                                    value={
+                                      props.values[`reason-${syl.syllabus_id}`]
+                                    }
                                     name={`reason-${syl.syllabus_id}`}
                                     label={`Reason for grade composition`}
                                     error={
-                                      props.touched[`reason-${syl.syllabus_id}`] &&
-                                      Boolean(props.errors[`reason-${syl.syllabus_id}`])
+                                      props.touched[
+                                        `reason-${syl.syllabus_id}`
+                                      ] &&
+                                      Boolean(
+                                        props.errors[
+                                          `reason-${syl.syllabus_id}`
+                                        ]
+                                      )
                                     }
                                     helperText={
-                                      props.touched[`reason-${syl.syllabus_id}`] &&
+                                      props.touched[
+                                        `reason-${syl.syllabus_id}`
+                                      ] &&
                                       props.errors[`reason-${syl.syllabus_id}`]
                                     }
                                     multiline
@@ -327,12 +367,16 @@ const StudentGrade = ({ data, classId, visitedState, syllabusState, setEffect })
                         }}
                         onSubmit={(values) => {
                           const form = {
-                            expect_score: parseInt(values[`expected-${syl.syllabus_id}`], 10),
+                            expect_score: parseInt(
+                              values[`expected-${syl.syllabus_id}`],
+                              10
+                            ),
                             reason: values[`reason-${syl.syllabus_id}`],
                           };
                           axios
                             .post(
-                              process.env.REACT_APP_API_URL + `/classroom/add-review`,
+                              process.env.REACT_APP_API_URL +
+                                `/classroom/add-review`,
                               {
                                 syllabus_id: syl.syllabus_id,
                                 student_id: user.id,
@@ -340,7 +384,9 @@ const StudentGrade = ({ data, classId, visitedState, syllabusState, setEffect })
                                 ...form,
                               },
                               {
-                                headers: { Authorization: `Bearer ${access_token}` },
+                                headers: {
+                                  Authorization: `Bearer ${access_token}`,
+                                },
                               }
                             )
                             .then((res) => {
@@ -349,7 +395,11 @@ const StudentGrade = ({ data, classId, visitedState, syllabusState, setEffect })
                               if (res.status === 200 || res.status === 201) {
                                 const notification = {
                                   uuid: uuid.v1(),
-                                  sender_name: "Student " + user.last_name + " " + user.first_name,
+                                  sender_name:
+                                    "Student " +
+                                    user.last_name +
+                                    " " +
+                                    user.first_name,
                                   sender_avatar: user.avatar
                                     ? user.avatar
                                     : "https://cdn-icons-png.flaticon.com/512/194/194931.png",
@@ -406,16 +456,30 @@ const StudentGrade = ({ data, classId, visitedState, syllabusState, setEffect })
                                     id={`expected-${syl.syllabus_id}`}
                                     onChange={props.handleChange}
                                     onBlur={props.handleBlur}
-                                    value={props.values[`expected-${syl.syllabus_id}`]}
+                                    value={
+                                      props.values[
+                                        `expected-${syl.syllabus_id}`
+                                      ]
+                                    }
                                     name={`expected-${syl.syllabus_id}`}
                                     label={`Expected grade for ${syl.syllabus_name}`}
                                     error={
-                                      props.touched[`expected-${syl.syllabus_id}`] &&
-                                      Boolean(props.errors[`expected-${syl.syllabus_id}`])
+                                      props.touched[
+                                        `expected-${syl.syllabus_id}`
+                                      ] &&
+                                      Boolean(
+                                        props.errors[
+                                          `expected-${syl.syllabus_id}`
+                                        ]
+                                      )
                                     }
                                     helperText={
-                                      props.touched[`expected-${syl.syllabus_id}`] &&
-                                      props.errors[`expected-${syl.syllabus_id}`]
+                                      props.touched[
+                                        `expected-${syl.syllabus_id}`
+                                      ] &&
+                                      props.errors[
+                                        `expected-${syl.syllabus_id}`
+                                      ]
                                     }
                                     defaultValue={syl.grade}
                                   ></TextField>
@@ -436,15 +500,25 @@ const StudentGrade = ({ data, classId, visitedState, syllabusState, setEffect })
                                     id={`reason-${syl.syllabus_id}`}
                                     onChange={props.handleChange}
                                     onBlur={props.handleBlur}
-                                    value={props.values[`reason-${syl.syllabus_id}`]}
+                                    value={
+                                      props.values[`reason-${syl.syllabus_id}`]
+                                    }
                                     name={`reason-${syl.syllabus_id}`}
                                     label={`Reason for grade composition`}
                                     error={
-                                      props.touched[`reason-${syl.syllabus_id}`] &&
-                                      Boolean(props.errors[`reason-${syl.syllabus_id}`])
+                                      props.touched[
+                                        `reason-${syl.syllabus_id}`
+                                      ] &&
+                                      Boolean(
+                                        props.errors[
+                                          `reason-${syl.syllabus_id}`
+                                        ]
+                                      )
                                     }
                                     helperText={
-                                      props.touched[`reason-${syl.syllabus_id}`] &&
+                                      props.touched[
+                                        `reason-${syl.syllabus_id}`
+                                      ] &&
                                       props.errors[`reason-${syl.syllabus_id}`]
                                     }
                                     multiline
@@ -465,7 +539,11 @@ const StudentGrade = ({ data, classId, visitedState, syllabusState, setEffect })
                                   letterSpacing: "normal",
                                 }}
                               >
-                                <Button type="submit" variant="contained" sx={{ float: "right" }}>
+                                <Button
+                                  type="submit"
+                                  variant="contained"
+                                  sx={{ float: "right" }}
+                                >
                                   Submit review
                                 </Button>
                               </Grid>

@@ -5,12 +5,11 @@ import IconButton from "@mui/material/IconButton";
 import Divider from "@mui/material/Divider";
 import AddCommentOutlined from "@mui/icons-material/AddCommentOutlined";
 import { Badge, Typography } from "@mui/material";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useState, useRef } from "react";
 import { ChatController, MuiChat } from "chat-ui-react";
 import "./TeacherReviewComment.css";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import uuid from "react-native-uuid";
 
@@ -228,7 +227,7 @@ export default function TeacherReviewComment({
                   <span>{message.comment}</span>
                 </div>
               ),
-              self: message.user_id == user.id,
+              self: message.user_id === user.id,
               avatar: message.avatar
                 ? message.avatar
                 : message.is_student

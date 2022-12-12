@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { Grid, Typography, Box } from "@mui/material";
 import axios from "axios";
@@ -8,11 +9,16 @@ const GradeStructure = ({ class_id, open }) => {
     if (open === false) {
       const access_token = localStorage.getItem("access_token");
       axios
-        .get(process.env.REACT_APP_API_URL + "/classroom/grade-structure?class_id=" + class_id, {
-          headers: {
-            Authorization: "Bearer " + access_token,
-          },
-        })
+        .get(
+          process.env.REACT_APP_API_URL +
+            "/classroom/grade-structure?class_id=" +
+            class_id,
+          {
+            headers: {
+              Authorization: "Bearer " + access_token,
+            },
+          }
+        )
         .then((res) => {
           // console.log("res", res);
           setList(res.data.list_syllabus);
@@ -20,6 +26,7 @@ const GradeStructure = ({ class_id, open }) => {
         .catch((err) => console.log(err));
     }
   }, [open]);
+
   return (
     <div>
       {list.length > 0 ? (
