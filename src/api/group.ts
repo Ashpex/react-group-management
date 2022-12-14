@@ -18,27 +18,17 @@ const groupApi = {
   getInvitationLink: (id) => axiosClient.get(`/group/${id}/get-invite-link`),
   inviteUserViaEmail: (id, email) =>
     axiosClient.post(`/group/${id}/invite-user-by-email`, { email }),
-  joinGroup: (token: string) =>
-    axiosClient.get<JoinGroupResponseType>(`/group/invite/${token}`),
-  getAllMembers: (id: string | undefined) =>
-    axiosClient.get<GetAllMemberResponseType>(`/group/${id}`),
-  assignMemberRole: (
-    groupId: string | undefined,
-    userId: string | undefined,
-    role: string
-  ) =>
-    axiosClient.post<AssignRoleResponseType>(`/group/${groupId}/assign-role`, {
+  joinGroup: (token) => axiosClient.get(`/group/invite/${token}`),
+  getAllMembers: (id) => axiosClient.get(`/group/${id}`),
+  assignMemberRole: (groupId, userId, role) =>
+    axiosClient.post(`/group/${groupId}/assign-role`, {
       user: userId,
       role,
     }),
-  leaveGroup: (groupId: string | undefined) =>
-    axiosClient.get<LeaveGroupResponseType>(`/group/${groupId}/leave`),
-  kickOutMember: (groupId: string | undefined, userId: string | undefined) =>
-    axiosClient.get<KickOutResponseType>(
-      `/group/${groupId}/kick?userId=${userId}`
-    ),
-  deleteGroup: (groupId: string | undefined) =>
-    axiosClient.delete<DeleteGroupResponseType>(`/group/${groupId}`),
+  leaveGroup: (groupId) => axiosClient.get(`/group/${groupId}/leave`),
+  kickOutMember: (groupId, userId) =>
+    axiosClient.get(`/group/${groupId}/kick?userId=${userId}`),
+  deleteGroup: (groupId) => axiosClient.delete(`/group/${groupId}`),
 };
 
 export default groupApi;
