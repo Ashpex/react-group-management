@@ -6,7 +6,7 @@ const groupApi = {
       name,
       description,
     }),
-  getAll: (params: { pageSize; page }) => {
+  getAll: (params) => {
     const pageSize =
       params.pageSize && params.pageSize > 0 ? params.pageSize : 10;
     const page = params.page && params.page > 0 ? params.page : 1;
