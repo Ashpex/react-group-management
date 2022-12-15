@@ -1,21 +1,34 @@
 import {
-  Popover, Tooltip, ActionIcon, Group, Text, Button,
-} from '@mantine/core';
-import {
-  IconUser, IconAlertCircle, IconX,
-} from '@tabler/icons';
-import { useState } from 'react';
+  Popover,
+  Tooltip,
+  ActionIcon,
+  Group,
+  Text,
+  Button,
+} from "@mantine/core";
+import { IconUser, IconAlertCircle, IconX } from "@tabler/icons";
+import { useState } from "react";
 
-import { USER_ROLE } from '@/utils/constants';
+import { USER_ROLE } from "../../../utils/constants";
 
-export function ConfirmPopoverAssignRole({ role, onConfirm }: { role: string, onConfirm: () => void }) {
+export function ConfirmPopoverAssignRole({ role, onConfirm }) {
   const [opened, setOpened] = useState(false);
 
   return (
-    <Popover position="top" withArrow shadow="md" opened={opened} onChange={setOpened}>
+    <Popover
+      position="top"
+      withArrow
+      shadow="md"
+      opened={opened}
+      onChange={setOpened}
+    >
       <Popover.Target>
         <Tooltip label="Assign role">
-          <ActionIcon variant="outline" color="blue" onClick={() => setOpened((o) => !o)}>
+          <ActionIcon
+            variant="outline"
+            color="blue"
+            onClick={() => setOpened((o) => !o)}
+          >
             <IconUser />
           </ActionIcon>
         </Tooltip>
@@ -27,8 +40,7 @@ export function ConfirmPopoverAssignRole({ role, onConfirm }: { role: string, on
           </ActionIcon>
           <Text size="sm">
             Assign to role
-            {role === USER_ROLE.MEMBER ? ' Co-owner' : ' Member'}
-            ?
+            {role === USER_ROLE.MEMBER ? " Co-owner" : " Member"}?
           </Text>
         </Group>
         <Group position="right" mt="xs">
@@ -56,14 +68,24 @@ export function ConfirmPopoverAssignRole({ role, onConfirm }: { role: string, on
   );
 }
 
-export function ConfirmPopoverKickOut({ onConfirm }: { onConfirm: () => void }) {
+export function ConfirmPopoverKickOut({ onConfirm }) {
   const [opened, setOpened] = useState(false);
 
   return (
-    <Popover position="top" withArrow shadow="md" opened={opened} onChange={setOpened}>
+    <Popover
+      position="top"
+      withArrow
+      shadow="md"
+      opened={opened}
+      onChange={setOpened}
+    >
       <Popover.Target>
         <Tooltip label="Kick out">
-          <ActionIcon variant="outline" color="red" onClick={() => setOpened((o) => !o)}>
+          <ActionIcon
+            variant="outline"
+            color="red"
+            onClick={() => setOpened((o) => !o)}
+          >
             <IconX />
           </ActionIcon>
         </Tooltip>
@@ -73,9 +95,7 @@ export function ConfirmPopoverKickOut({ onConfirm }: { onConfirm: () => void }) 
           <ActionIcon size="sm" color="yellow" variant="filled">
             <IconAlertCircle />
           </ActionIcon>
-          <Text size="sm">
-            Kick out this user?
-          </Text>
+          <Text size="sm">Kick out this user?</Text>
         </Group>
         <Group position="right" mt="xs">
           <Button
