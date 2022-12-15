@@ -9,7 +9,6 @@ import {
 } from '@mantine/core';
 import { IconCheck } from '@tabler/icons';
 
-// import im`age from './image.svg';
 import learningHero from '@/assets/learning_hero.svg';
 
 const useStyles = createStyles((theme) => ({
