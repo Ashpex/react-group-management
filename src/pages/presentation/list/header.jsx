@@ -1,28 +1,18 @@
-import {
-  Group, Title, Button, Tooltip, Modal, TextInput,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { IconPlus, IconArrowsJoin } from '@tabler/icons';
-import { useState } from 'react';
+import { Group, Title, Button, Tooltip, Modal, TextInput } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { IconPlus, IconArrowsJoin } from "@tabler/icons";
+import { useState } from "react";
 
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import presentationApi from '@/api/presentation';
-import * as notificationManager from '@/pages/common/notificationManager';
-import { isAxiosError, ErrorResponse } from '@/utils/axiosErrorHandler';
+import presentationApi from "../../../api/presentation";
+import * as notificationManager from "../../common/notificationManager";
+import { isAxiosError, ErrorResponse } from "../../../utils/axiosErrorHandler";
 
-interface Props {
-  fetchData: () => void
-}
-
-interface FormProps {
-  name: string
-}
-
-export default function PresentationListHeader({ fetchData }: Props) {
+export default function PresentationListHeader({ fetchData }) {
   const [opened, setOpened] = useState(false);
 
-  const form = useForm({ initialValues: { name: '' } });
+  const form = useForm({ initialValues: { name: "" } });
 
   const handleOpenModal = () => {
     setOpened(true);
@@ -33,16 +23,18 @@ export default function PresentationListHeader({ fetchData }: Props) {
     setOpened(false);
   };
 
-  const handleSubmitForm = async (values: FormProps) => {
+  const handleSubmitForm = async (values) => {
     try {
-      const { data: response } = await presentationApi.createPresentation(values.name);
+      const { data: response } = await presentationApi.createPresentation(
+        values.name
+      );
 
-      notificationManager.showSuccess('', response.message);
+      notificationManager.showSuccess("", response.message);
       handleCloseModal();
       fetchData();
     } catch (error) {
-      if (isAxiosError<ErrorResponse>(error)) {
-        notificationManager.showFail('', error.response?.data.message);
+      if (isAxiosError(error)) {
+        notificationManager.showFail("", error.response?.data.message);
       }
     }
   };
@@ -59,7 +51,7 @@ export default function PresentationListHeader({ fetchData }: Props) {
             label="Presentation name"
             placeholder="Your presentation name"
             required
-            {...form.getInputProps('name')}
+            {...form.getInputProps("name")}
           />
           <Group position="right" mt="md">
             <Button onClick={handleCloseModal}>Cancel</Button>
@@ -70,7 +62,12 @@ export default function PresentationListHeader({ fetchData }: Props) {
       <Group my="lg" position="apart">
         <Title
           order={3}
-          sx={(theme) => ({ color: theme.colorScheme === 'dark' ? theme.colors.gray[1] : theme.colors.dark[4] })}
+          sx={(theme) => ({
+            color:
+              theme.colorScheme === "dark"
+                ? theme.colors.gray[1]
+                : theme.colors.dark[4],
+          })}
         >
           My presentations
         </Title>

@@ -1,10 +1,9 @@
-import randomColor from 'randomcolor';
-import React from 'react';
+import randomColor from "randomcolor";
+import React from "react";
 
-import Chart from '@/pages/common/chart';
-import { MultiChoiceSlide } from '@/pages/presentation/types';
+import Chart from "../../common/chart";
 
-export default function MultiChoiceDisplaySlide({ title, options }: MultiChoiceSlide) {
+export default function MultiChoiceDisplaySlide({ title, options }) {
   const backgroundColor = options.map(({ color }) => color || randomColor());
 
   return (
@@ -18,18 +17,18 @@ export default function MultiChoiceDisplaySlide({ title, options }: MultiChoiceS
               ticks: {
                 precision: 0,
                 font: { size: 15 },
-                color: '#4F4F4F',
+                color: "#4F4F4F",
               },
             },
             x: {
               ticks: {
                 font: { size: 15 },
-                color: '#4F4F4F',
+                color: "#4F4F4F",
               },
             },
           },
           plugins: {
-            datalabels: { color: 'white' },
+            datalabels: { color: "white" },
             title: {
               display: true,
               text: title,
@@ -39,10 +38,12 @@ export default function MultiChoiceDisplaySlide({ title, options }: MultiChoiceS
         }}
         data={{
           labels: options.map(({ value }) => value),
-          datasets: [{
-            data: options.map(({ quantity }) => quantity || 0),
-            backgroundColor,
-          }],
+          datasets: [
+            {
+              data: options.map(({ quantity }) => quantity || 0),
+              backgroundColor,
+            },
+          ],
         }}
       />
     </div>
