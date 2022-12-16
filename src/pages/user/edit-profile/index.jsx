@@ -1,31 +1,34 @@
 import {
-  Avatar, Button, Container, Text, TextInput, Textarea, Paper, Stack, Flex,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useEffect, useState } from 'react';
+  Avatar,
+  Button,
+  Container,
+  Text,
+  TextInput,
+  Textarea,
+  Paper,
+  Stack,
+  Flex,
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useEffect, useState } from "react";
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 
-import userApi from '@/api/user';
-import useUserInfo from '@/hooks/useUserInfo';
-import * as notificationManager from '@/pages/common/notificationManager';
-import { isAxiosError, ErrorResponse } from '@/utils/axiosErrorHandler';
-
-interface FormProps {
-  name: string;
-  description: string;
-}
+import userApi from "../../../api/user";
+import useUserInfo from "../../../hooks/useUserInfo";
+import * as notificationManager from "../../common/notificationManager";
+import { isAxiosError } from "../../../utils/axiosErrorHandler";
 
 export default function ProfileEditor() {
   const { userInfo: cookieUserInfo } = useUserInfo();
-  const [email, setEmail] = useState(cookieUserInfo?.email || '');
+  const [email, setEmail] = useState(cookieUserInfo?.email || "");
   const navigate = useNavigate();
   const avatarUrl = `https://avatars.dicebear.com/api/identicon/${email}.svg`;
 
-  const form = useForm<FormProps>({
+  const form = useForm({
     initialValues: {
-      name: cookieUserInfo?.name || '',
-      description: cookieUserInfo?.description || '',
+      name: cookieUserInfo?.name || "",
+      description: cookieUserInfo?.description || "",
     },
   });
 
@@ -37,26 +40,26 @@ export default function ProfileEditor() {
         form.setValues(response.data);
         setEmail(response.data.email);
       } catch (error) {
-        if (isAxiosError<ErrorResponse>(error)) {
-          notificationManager.showFail('', error.response?.data.message);
+        if (isAxiosError(error)) {
+          notificationManager.showFail("", error.response?.data.message);
         }
       }
     };
 
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSubmitForm = async (values: FormProps) => {
+  const handleSubmitForm = async (values) => {
     try {
       await userApi.updateMe(values.name, values.description);
 
-      notificationManager.showSuccess('', 'Update user success');
+      notificationManager.showSuccess("", "Update user success");
 
-      navigate('/user/profile');
+      navigate("/user/profile");
     } catch (error) {
-      if (isAxiosError<ErrorResponse>(error)) {
-        notificationManager.showFail('', error.response?.data.message);
+      if (isAxiosError(error)) {
+        notificationManager.showFail("", error.response?.data.message);
       }
     }
   };
@@ -67,7 +70,12 @@ export default function ProfileEditor() {
         radius="md"
         withBorder
         p="lg"
-        sx={(theme) => ({ backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.white })}
+        sx={(theme) => ({
+          backgroundColor:
+            theme.colorScheme === "dark"
+              ? theme.colors.dark[5]
+              : theme.colors.white,
+        })}
       >
         <Stack>
           <Flex direction="column" justify="center" align="center">
@@ -76,8 +84,11 @@ export default function ProfileEditor() {
               withBorder
               p="lg"
               sx={(theme) => ({
-                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[0],
-                width: 'fit-content',
+                backgroundColor:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.dark[4]
+                    : theme.colors.gray[0],
+                width: "fit-content",
               })}
             >
               <Avatar variant="filled" src={avatarUrl} size={100} mx={20} />
@@ -92,23 +103,29 @@ export default function ProfileEditor() {
                 label="Name"
                 placeholder="your name"
                 required
-                {...form.getInputProps('name')}
+                {...form.getInputProps("name")}
               />
               <Textarea
                 label="Description"
                 placeholder="Write a quote that you like here"
                 required
-                {...form.getInputProps('description')}
+                {...form.getInputProps("description")}
               />
               <Flex
                 justify="center"
                 align="center"
                 gap="sm"
-                sx={() => ({ '@media (max-width: 360px)': { flexDirection: 'column' } })}
+                sx={() => ({
+                  "@media (max-width: 360px)": { flexDirection: "column" },
+                })}
               >
-                <Button w={160} color="green" type="submit">Submit</Button>
+                <Button w={160} color="green" type="submit">
+                  Submit
+                </Button>
                 <Link to="/user/profile">
-                  <Button w={160} color="red">Cancel</Button>
+                  <Button w={160} color="red">
+                    Cancel
+                  </Button>
                 </Link>
               </Flex>
             </Stack>

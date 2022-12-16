@@ -1,19 +1,19 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import appConfig from 'config';
+import axios from "axios";
+import appConfig from "../../config";
 
-import { APP_LOGOUT_EVENT } from './constants';
+import { APP_LOGOUT_EVENT } from "./constants";
 
-import getJwtToken from '@/utils/getJwtToken';
+import getJwtToken from "../utils/getJwtToken";
 
 const axiosClient = axios.create({
   baseURL: appConfig.backendUrl,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { "Content-Type": "application/json" },
   timeout: 15000,
   withCredentials: true,
 });
 
 axiosClient.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config) => {
     const cf = config;
     const { jwtToken, isExpired } = getJwtToken();
 
@@ -26,7 +26,7 @@ axiosClient.interceptors.request.use(
 
     return cf;
   },
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 export default axiosClient;
