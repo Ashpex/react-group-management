@@ -13,3 +13,9 @@ export const ServerToClientEventType = {
   waitInRoom: "wait-in-room",
   privateMessage: "private-message",
 };
+
+export const WaitInRoomType = {
+  info: "info",
+  newSlide: "new-slide",
+  newVote: "new-vote",
+};

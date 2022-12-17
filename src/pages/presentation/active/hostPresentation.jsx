@@ -10,8 +10,6 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { io as socketIO } from "socket.io-client";
 
-import config from "../../../../config";
-
 import MultiChoiceDisplaySlide from "../../presentation/slides/MultiChoice";
 import {
   ClientToServerEventType,
@@ -40,13 +38,13 @@ export default function HostPresentation({ presentation }) {
       },
     [multiChoiceSlide, options]
   );
-  const invitationLink = `${config.backendUrl}/presentation/join`;
+  const invitationLink = `${process.env.REACT_APP_BACKEND_URL}/presentation/join`;
 
   const isLoading = multiChoiceSlide === undefined || !!roomId;
 
   const socket = useMemo(
     () =>
-      socketIO(config.backendUrl, {
+      socketIO(process.env.REACT_APP_BACKEND_URL || "http://localhost:3000", {
         extraHeaders: { Authorization: `Bearer ${jwtToken}` },
       }),
     [jwtToken]

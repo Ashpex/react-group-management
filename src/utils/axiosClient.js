@@ -1,12 +1,11 @@
 import axios from "axios";
-import appConfig from "../../config";
 
 import { APP_LOGOUT_EVENT } from "./constants";
 
 import getJwtToken from "../utils/getJwtToken";
 
 const axiosClient = axios.create({
-  baseURL: appConfig.backendUrl,
+  baseURL: process.env.REACT_APP_BACKEND_URL || "http://localhost:3000",
   headers: { "Content-Type": "application/json" },
   timeout: 15000,
   withCredentials: true,

@@ -14,7 +14,6 @@ import {
   Stack,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import config from "config";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -70,7 +69,12 @@ const LoginPage = () => {
   };
 
   const handleGoogleLogin = async () => {
-    window.open(`${config.backendUrl}/auth/google`, "_self");
+    window.open(
+      `${
+        process.env.REACT_APP_BACKEND_URL || "http://localhost:3000"
+      }/auth/google`,
+      "_self"
+    );
   };
 
   useEffect(() => {

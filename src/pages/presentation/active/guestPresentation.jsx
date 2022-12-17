@@ -10,15 +10,13 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { io as socketIO } from "socket.io-client";
 
-import config from "../../../../config";
-
 import {
   ClientToServerEventType,
   ServerToClientEventType,
-} from "@/socket/types";
-import { SlideType } from "@/utils/constants";
+} from "../../../socket/types";
+import { SlideType } from "../../../utils/constants";
 
-import getJwtToken from "@/utils/getJwtToken";
+import getJwtToken from "../../../utils/getJwtToken";
 
 function InputCodePage({ setRoomId }) {
   const [input, setInput] = useState("");
@@ -48,7 +46,7 @@ function ShowPage({ roomId }) {
 
   const socket = useMemo(
     () =>
-      socketIO(config.backendUrl, {
+      socketIO(process.env.REACT_APP_BACKEND_URL || "http://localhost:3000", {
         extraHeaders: { Authorization: `Bearer ${jwtToken}` },
       }),
     [jwtToken]

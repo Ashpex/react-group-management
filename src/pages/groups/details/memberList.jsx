@@ -10,7 +10,7 @@ import {
 } from "../../common/confirmPopover";
 import * as notificationManager from "../../common/notificationManager";
 import { sortMemberListByRole, getUserId } from "../../../utils";
-import { isAxiosError } from "@/utils/axiosErrorHandler";
+import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import { USER_ROLE } from "../../../utils/constants";
 
 export default function MemberList({ role, setRole }) {
