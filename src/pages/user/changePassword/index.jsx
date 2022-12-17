@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import userApi from "../../../api/user";
 import * as notificationManager from "../../common/notificationManager";
-import { isAxiosError, ErrorResponse } from "../../../utils/axiosErrorHandler";
+import { isAxiosError } from "../../../utils/axiosErrorHandler";
 
 export default function ChangePasswordForm() {
   const navigate = useNavigate();
