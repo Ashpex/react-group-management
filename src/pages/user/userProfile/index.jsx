@@ -18,6 +18,7 @@ import userApi from "../../../api/user";
 import useUserInfo from "../../../hooks/useUserInfo";
 import * as notificationManager from "../../common/notificationManager";
 import { isAxiosError } from "../../../utils/axiosErrorHandler";
+import Cookies from "js-cookie";
 
 function TrueUserProfile(info) {
   const [userInfo, setUserInfo] = useState(info);
@@ -26,9 +27,10 @@ function TrueUserProfile(info) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: response } = await userApi.getMe();
+        const user = JSON.parse(Cookies.get("user"));
+        const { data: response } = await userApi.getUserInfo(user._id);
 
-        setUserInfo(response.data);
+        setUserInfo(response);
       } catch (error) {
         if (isAxiosError(error)) {
           notificationManager.showFail("", error.response?.data.message);
@@ -67,10 +69,10 @@ function TrueUserProfile(info) {
             </Paper>
             <Stack>
               <Text size="lg" weight={500} mt="md">
-                {userInfo.name}
+                {userInfo?.name}
               </Text>
               <Text size="lg" weight={200} mt="md">
-                {userInfo.email}
+                {userInfo?.email}
               </Text>
             </Stack>
           </Group>
@@ -81,7 +83,7 @@ function TrueUserProfile(info) {
               hideLabel="Hide"
               transitionDuration={0}
             >
-              {userInfo.description || ""}
+              {userInfo?.description || ""}
             </Spoiler>
           </Blockquote>
         </Stack>
@@ -126,12 +128,8 @@ function TrueUserProfile(info) {
   );
 }
 
-function NullUserProfile() {
-  return <div>Nothing here</div>;
-}
-
 export default function UserProfile() {
   const { userInfo } = useUserInfo();
 
-  return userInfo ? <TrueUserProfile {...userInfo} /> : <NullUserProfile />;
+  return userInfo ? <TrueUserProfile {...userInfo} /> : <div>Nothing here</div>;
 }

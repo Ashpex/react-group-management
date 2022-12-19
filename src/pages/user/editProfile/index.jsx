@@ -35,10 +35,12 @@ export default function ProfileEditor() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: response } = await userApi.getMe();
+        const { data: response } = await userApi.getUserInfo(
+          cookieUserInfo._id
+        );
 
-        form.setValues(response.data);
-        setEmail(response.data.email);
+        form.setValues(response);
+        setEmail(response.email);
       } catch (error) {
         if (isAxiosError(error)) {
           notificationManager.showFail("", error.response?.data.message);
@@ -52,7 +54,10 @@ export default function ProfileEditor() {
 
   const handleSubmitForm = async (values) => {
     try {
-      await userApi.updateMe(values.name, values.description);
+      await userApi.updateUserInfo(cookieUserInfo._id, {
+        name: values.name,
+        description: values.description,
+      });
 
       notificationManager.showSuccess("", "Update user success");
 

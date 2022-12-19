@@ -1,9 +1,8 @@
 import axiosClient from "../utils/axiosClient";
 
 const userApi = {
-  getMe: () => axiosClient.get("/user/me"),
-  updateMe: (name, description) =>
-    axiosClient.put("/user/me", { name, description }),
+  getUserInfo: (userId) => axiosClient.get(`/users/${userId}`),
+  updateUserInfo: (userId, user) => axiosClient.put(`/users/${userId}`, user),
   changePassword: (oldPassword, newPassword) =>
     axiosClient.put("/user/change-password", {
       oldPassword,
