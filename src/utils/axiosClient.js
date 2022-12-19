@@ -4,8 +4,6 @@ import { APP_LOGOUT_EVENT } from "./constants";
 
 import getJwtToken from "../utils/getJwtToken";
 
-console.log(process.env.REACT_APP_BACKEND_URL);
-
 const axiosClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL || "http://localhost:3000",
   headers: {

@@ -16,7 +16,7 @@ import {
 import { useForm } from "@mantine/form";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import GoogleButton from "../common/googleButton";
 import authApi from "../../../api/auth";
@@ -26,11 +26,9 @@ import { AUTH_COOKIE } from "../../../utils/constants";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
-  const initEmail = searchParams.get("email");
 
   useEffect(() => {
+    console.log(Cookies.get(AUTH_COOKIE));
     if (Cookies.get(AUTH_COOKIE)) {
       navigate("/");
     }
@@ -38,7 +36,7 @@ const LoginPage = () => {
 
   const form = useForm({
     initialValues: {
-      email: initEmail || "",
+      email: "",
       password: "",
       rememberMe: false,
     },
@@ -51,16 +49,14 @@ const LoginPage = () => {
         values.password
       );
 
+      console.log({ response });
+
       notificationManager.showSuccess("", response.message);
 
-      if (token) {
-        navigate(`/group/invite?token=${token}`);
-      } else {
-        Cookies.set("token", response.data.token);
-        Cookies.set("user", JSON.stringify(response.data.user));
+      Cookies.set("token", response.token);
+      Cookies.set("user", JSON.stringify(response.user));
 
-        navigate("/");
-      }
+      navigate("/");
     } catch (error) {
       if (isAxiosError(error)) {
         notificationManager.showFail("", error.response?.data.message);
@@ -77,14 +73,14 @@ const LoginPage = () => {
     );
   };
 
-  useEffect(() => {
-    if (initEmail) {
-      notificationManager.showSuccess(
-        "",
-        "Xác thực email thành công. Vui lòng đăng nhập để tiếp tục"
-      );
-    }
-  }, []);
+  //   useEffect(() => {
+  //     if (initEmail) {
+  //       notificationManager.showSuccess(
+  //         "",
+  //         "Xác thực email thành công. Vui lòng đăng nhập để tiếp tục"
+  //       );
+  //     }
+  //   }, []);
 
   return (
     <Container size={420} my={40}>
