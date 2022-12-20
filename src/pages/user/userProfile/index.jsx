@@ -65,7 +65,14 @@ function TrueUserProfile(info) {
                     : theme.colors.gray[0],
               })}
             >
-              <Avatar variant="filled" src={avatarUrl} size={100} mx={20} />
+              <Avatar
+                variant="filled"
+                color="cyan"
+                radius="xl"
+                size={100}
+                mx={20}
+                src={userInfo?.avatarUrl || avatarUrl}
+              ></Avatar>
             </Paper>
             <Stack>
               <Text size="lg" weight={500} mt="md">
