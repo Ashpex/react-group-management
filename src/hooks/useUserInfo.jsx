@@ -4,12 +4,12 @@ import { useJwt } from "react-jwt";
 import { AUTH_COOKIE } from "../utils/constants";
 
 export default function useUserInfo() {
-  const user = JSON.parse(Cookies.get("user"));
+  const user = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
   const token = Cookies.get(AUTH_COOKIE);
 
   const { isExpired } = useJwt(token);
 
-  if (isExpired) {
+  if (isExpired || !user) {
     return { userInfo: null };
   }
 

@@ -9,7 +9,8 @@ export default function Logout() {
 
   useEffect(() => {
     Cookies.remove(AUTH_COOKIE);
-    navigate("/");
+    Cookies.remove("user");
+    navigate("/login");
   });
 
   return <div />;

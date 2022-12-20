@@ -51,10 +51,14 @@ const LoginPage = () => {
 
       console.log({ response });
 
-      notificationManager.showSuccess("", response.message);
+      notificationManager.showSuccess("", "Đăng nhập thành công");
 
-      Cookies.set("token", response.token);
-      Cookies.set("user", JSON.stringify(response.user));
+      Cookies.set("token", response.token, {
+        expires: 365,
+      });
+      Cookies.set("user", JSON.stringify(response.user), {
+        expires: 365,
+      });
 
       navigate("/");
     } catch (error) {
