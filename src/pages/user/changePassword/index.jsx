@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { PasswordInput, Paper, Container, Button, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { useEffect } from "react";
@@ -7,9 +8,11 @@ import { Link, useNavigate } from "react-router-dom";
 import userApi from "../../../api/user";
 import * as notificationManager from "../../common/notificationManager";
 import { isAxiosError } from "../../../utils/axiosErrorHandler";
+import useUserInfo from "../../../hooks/useUserInfo";
 
 export default function ChangePasswordForm() {
   const navigate = useNavigate();
+  const { userInfo } = useUserInfo();
   const form = useForm({
     initialValues: {
       oldPassword: "",
@@ -28,30 +31,31 @@ export default function ChangePasswordForm() {
     },
   });
 
+  const checkUser = async () => {
+    const { data: res } = await userApi.getUserInfo(userInfo._id);
+
+    if (res.isLoggedInWithGoogle) {
+      navigate("/user/profile");
+      notificationManager.showFail(
+        "",
+        "User logged in with Google account cannot change their password"
+      );
+    }
+  };
+
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: resp } = await userApi.getMe();
-
-      if (resp.data.isLoggedInWithGoogle) {
-        navigate("/user/profile");
-        notificationManager.showFail(
-          "",
-          "User logged in with Google account cannot change their password"
-        );
-      }
-    };
-
     checkUser();
-  });
+  }, []);
 
   const handleSubmitForm = async (values) => {
     try {
-      const { data } = await userApi.changePassword(
+      await userApi.changePassword(
+        userInfo._id,
         values.oldPassword,
         values.newPassword
       );
 
-      notificationManager.showSuccess("", data.message);
+      notificationManager.showSuccess("", "Password changed successfully");
       navigate("/user/profile");
     } catch (error) {
       if (isAxiosError(error)) {
@@ -64,7 +68,6 @@ export default function ChangePasswordForm() {
     <Container size={420} my={40}>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <form onSubmit={form.onSubmit(handleSubmitForm)}>
-          {/* <form onSubmit={form.onSubmit(null)}> */}
           <PasswordInput
             label="Old Password"
             placeholder="Your old password"

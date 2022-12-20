@@ -18,11 +18,11 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import GoogleButton from "../common/googleButton";
 import authApi from "../../../api/auth";
 import * as notificationManager from "../../common/notificationManager";
 import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import { AUTH_COOKIE } from "../../../utils/constants";
+import { GoogleLogin } from "@react-oauth/google";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -49,8 +49,6 @@ const LoginPage = () => {
         values.password
       );
 
-      console.log({ response });
-
       notificationManager.showSuccess("", "Đăng nhập thành công");
 
       Cookies.set("token", response.token, {
@@ -68,23 +66,28 @@ const LoginPage = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    window.open(
-      `${
-        process.env.REACT_APP_BACKEND_URL || "http://localhost:3000"
-      }/auth/google`,
-      "_self"
-    );
-  };
+  const responseGoogleSuccess = async (credentialResponse) => {
+    try {
+      const { data: response } = await authApi.signInWithGoogle(
+        credentialResponse.credential
+      );
 
-  //   useEffect(() => {
-  //     if (initEmail) {
-  //       notificationManager.showSuccess(
-  //         "",
-  //         "Xác thực email thành công. Vui lòng đăng nhập để tiếp tục"
-  //       );
-  //     }
-  //   }, []);
+      notificationManager.showSuccess("", "Đăng nhập google thành công");
+
+      Cookies.set("token", response.token, {
+        expires: 365,
+      });
+      Cookies.set("user", JSON.stringify(response.user), {
+        expires: 365,
+      });
+
+      navigate("/");
+    } catch (error) {
+      if (isAxiosError(error)) {
+        notificationManager.showFail("", error.message);
+      }
+    }
+  };
 
   return (
     <Container size={420} my={40}>
@@ -141,9 +144,18 @@ const LoginPage = () => {
           <Divider label="Or continue with" labelPosition="center" my="lg" />
 
           <Stack>
-            <GoogleButton radius="xl" onClick={handleGoogleLogin}>
-              Google
-            </GoogleButton>
+            <GoogleLogin
+              shape="circle"
+              type="standard"
+              theme="outline"
+              logo_alignment="center"
+              width="100%"
+              text="Login with Google"
+              onSuccess={responseGoogleSuccess}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+            />
           </Stack>
         </form>
       </Paper>

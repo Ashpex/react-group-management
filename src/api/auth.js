@@ -12,6 +12,11 @@ const authApi = {
       password,
       name,
     }),
+
+  signInWithGoogle: (tokenId) =>
+    axiosClient.post("/auth/google", {
+      tokenId,
+    }),
 };
 
 export default authApi;
