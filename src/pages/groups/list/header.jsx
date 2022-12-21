@@ -16,9 +16,11 @@ import groupApi from "../../../api/group";
 import * as notificationManager from "../../common/notificationManager";
 import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import { GROUP_FILTER_TYPE } from "../../../utils/constants";
+import useUserInfo from "../../../hooks/useUserInfo";
 
 export default function Header({ fetchData, groupFilter, setGroupFilter }) {
   const [opened, setOpened] = useState(false);
+  const { userInfo } = useUserInfo();
 
   const form = useForm({
     initialValues: {
@@ -41,10 +43,14 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
     try {
       const { data: response } = await groupApi.createGroup(
         values.name,
-        values.desc
+        values.desc,
+        userInfo._id
       );
 
-      notificationManager.showSuccess("", response.message);
+      notificationManager.showSuccess(
+        "",
+        `Create group ${response?.name} successfully`
+      );
       handleCloseModal();
       fetchData();
     } catch (error) {

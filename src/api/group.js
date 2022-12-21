@@ -1,10 +1,11 @@
 import axiosClient from "../utils/axiosClient";
 
 const groupApi = {
-  createGroup: (name, description) =>
-    axiosClient.post("/group", {
+  createGroup: (name, description, createdUserId) =>
+    axiosClient.post("/groups", {
       name,
       description,
+      createdUserId,
     }),
   getAll: (params) => {
     const pageSize =
