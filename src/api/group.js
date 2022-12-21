@@ -15,7 +15,10 @@ const groupApi = {
     return axiosClient.get(`/group?size=${pageSize}&page=${page}`);
   },
   getGroupById: (id) => axiosClient.get(`/group/${id}`),
-  getMyGroups: () => axiosClient.get("/group/my-group"),
+
+  getGroupsOwner: (createdUserId) =>
+    axiosClient.get(`/groups/owner/${createdUserId}`),
+
   getInvitationLink: (id) => axiosClient.get(`/group/${id}/get-invite-link`),
   inviteUserViaEmail: (id, email) =>
     axiosClient.post(`/group/${id}/invite-user-by-email`, { email }),

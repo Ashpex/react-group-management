@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Container,
   Grid,
@@ -24,6 +25,7 @@ import * as notificationManager from "../../common/notificationManager";
 import { filterGroupByType, getUserId } from "../../../utils";
 import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import { GROUP_FILTER_TYPE } from "../../../utils/constants";
+import useUserInfo from "../../../hooks/useUserInfo";
 
 const GROUPS_PER_PAGE = 8;
 
@@ -65,11 +67,12 @@ export default function GroupsPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [groupFilter, setGroupFilter] = useState(GROUP_FILTER_TYPE.ALL);
   const [isLoading, setLoading] = useState(false);
+  const { userInfo } = useUserInfo();
 
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const { data: response } = await groupApi.getMyGroups();
+      const { data: response } = await groupApi.getGroupsOwner(userInfo._id);
 
       setDataSource(response.data);
       setTotalPages(Math.ceil(response.data.length / GROUPS_PER_PAGE));
@@ -95,7 +98,7 @@ export default function GroupsPage() {
 
   const currentDataSource = useMemo(() => {
     const startIndex = (activePage - 1) * GROUPS_PER_PAGE;
-    const groups = filteredDataSource.slice(
+    const groups = filteredDataSource?.slice(
       startIndex,
       startIndex + GROUPS_PER_PAGE
     );
@@ -114,8 +117,8 @@ export default function GroupsPage() {
         <Center>
           <Loader />
         </Center>
-      ) : dataSource.length > 0 ? (
-        currentDataSource.length > 0 ? (
+      ) : dataSource?.length > 0 ? (
+        currentDataSource?.length > 0 ? (
           <>
             <Grid>
               {currentDataSource.map((group, index) => (
