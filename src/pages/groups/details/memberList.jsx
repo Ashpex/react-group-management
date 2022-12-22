@@ -9,28 +9,28 @@ import {
   ConfirmPopoverKickOut,
 } from "../../common/confirmPopover";
 import * as notificationManager from "../../common/notificationManager";
-import { sortMemberListByRole, getUserId } from "../../../utils";
+import { sortMemberListByRole } from "../../../utils";
 import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import { USER_ROLE } from "../../../utils/constants";
+import useUserInfo from "../../../hooks/useUserInfo";
 
 export default function MemberList({ role, setRole }) {
   const [dataSource, setDataSource] = useState([]);
   const [fetching, setFetching] = useState(false);
   const { groupId } = useParams();
+  const { userInfo } = useUserInfo();
 
   const fetchData = useCallback(async () => {
     try {
       setFetching(true);
-      const { data: response } = await groupApi.getAllMembers(groupId);
+      const { data: response } = await groupApi.getGroupById(groupId);
 
-      const userId = getUserId();
-
-      const convertedData = response.data.usersAndRoles.map((item) => ({
+      const convertedData = response.usersAndRoles.map((item) => ({
         ...item,
-        role: USER_ROLE[item.role],
+        role: USER_ROLE[item.role.toUpperCase()],
       }));
 
-      const user = convertedData.find((item) => item.user._id === userId);
+      const user = convertedData.find((item) => item.user._id === userInfo._id);
 
       setRole(user?.role || "");
       setDataSource(sortMemberListByRole(convertedData));

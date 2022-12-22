@@ -74,8 +74,8 @@ export default function GroupsPage() {
       setLoading(true);
       const { data: response } = await groupApi.getGroupsOwner(userInfo._id);
 
-      setDataSource(response.data);
-      setTotalPages(Math.ceil(response.data.length / GROUPS_PER_PAGE));
+      setDataSource(response);
+      setTotalPages(Math.ceil(response?.length / GROUPS_PER_PAGE));
     } catch (error) {
       if (isAxiosError(error)) {
         notificationManager.showFail("", error.response?.data.message);
@@ -121,7 +121,7 @@ export default function GroupsPage() {
         currentDataSource?.length > 0 ? (
           <>
             <Grid>
-              {currentDataSource.map((group, index) => (
+              {currentDataSource?.map((group, index) => (
                 <Grid.Col key={index} span={3}>
                   <Card
                     component={Link}

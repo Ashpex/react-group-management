@@ -14,7 +14,7 @@ const groupApi = {
 
     return axiosClient.get(`/group?size=${pageSize}&page=${page}`);
   },
-  getGroupById: (id) => axiosClient.get(`/group/${id}`),
+  getGroupById: (id) => axiosClient.get(`/groups/${id}`),
 
   getGroupsOwner: (createdUserId) =>
     axiosClient.get(`/groups/owner/${createdUserId}`),

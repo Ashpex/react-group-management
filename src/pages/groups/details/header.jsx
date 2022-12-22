@@ -50,7 +50,7 @@ export default function Header({ role }) {
       try {
         const { data: response } = await groupApi.getGroupById(groupId);
 
-        setGroupData(response.data);
+        setGroupData(response);
       } catch (error) {
         if (isAxiosError(error)) {
           notificationManager.showFail("", error.response?.data.message);
