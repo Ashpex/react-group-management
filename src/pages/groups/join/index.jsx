@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Box, Button, Code, Image, Loader, Title } from "@mantine/core";
@@ -17,18 +18,24 @@ export default function JoinGroup() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [group, setGroup] = useState(null);
 
   const joinGroup = async (groupId, email, userRole) => {
     setLoading(true);
     try {
       const res = await groupApi.joinGroup(groupId, email, userRole);
       setUser(res.data.newMember);
+      setGroup(res.data.group);
       notificationManager.showSuccess("", "Join group successfully");
       setError(null);
     } catch (error) {
       setError(error.response?.data.message);
       notificationManager.showFail("", error.response?.data?.message);
       setUser(null);
+
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
     }
     setLoading(false);
   };
@@ -121,7 +128,7 @@ export default function JoinGroup() {
               fontWeight: "700",
             }}
           >
-            {user?.group?.name}
+            {group?.name}
           </Code>
           successfully
         </Title>
@@ -161,7 +168,7 @@ export default function JoinGroup() {
             marginTop: "20px",
           }}
           onClick={() => {
-            navigate(`/groups/${groupId}`);
+            navigate(`/group/${groupId}`);
           }}
         >
           Access Group

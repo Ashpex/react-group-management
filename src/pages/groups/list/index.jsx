@@ -72,7 +72,9 @@ export default function GroupsPage() {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const { data: response } = await groupApi.getGroupsOwner(userInfo._id);
+      const { data: response } = await groupApi.getAllGroupsByUserId(
+        userInfo._id
+      );
 
       setDataSource(response);
       setTotalPages(Math.ceil(response?.length / GROUPS_PER_PAGE));

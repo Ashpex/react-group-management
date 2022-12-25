@@ -7,6 +7,7 @@ const groupApi = {
       description,
       createdUserId,
     }),
+
   getAll: (params) => {
     const pageSize =
       params.pageSize && params.pageSize > 0 ? params.pageSize : 10;
@@ -14,10 +15,13 @@ const groupApi = {
 
     return axiosClient.get(`/group?size=${pageSize}&page=${page}`);
   },
+
   getGroupById: (id) => axiosClient.get(`/groups/${id}`),
 
   getGroupsOwner: (createdUserId) =>
     axiosClient.get(`/groups/owner/${createdUserId}`),
+
+  getAllGroupsByUserId: (userId) => axiosClient.get(`/groups/users/${userId}`),
 
   getInvitationLink: (id) => axiosClient.get(`/group/${id}/get-invite-link`),
 
