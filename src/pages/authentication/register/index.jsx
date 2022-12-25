@@ -15,7 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import authApi from "../../../api/auth";
 import * as notificationManager from "../../common/notificationManager";
-import { isAxiosError, ErrorResponse } from "../../../utils/axiosErrorHandler";
+import { isAxiosError } from "../../../utils/axiosErrorHandler";
 
 import { AUTH_COOKIE } from "../../../utils/constants";
 

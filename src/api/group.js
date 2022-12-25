@@ -20,9 +20,16 @@ const groupApi = {
     axiosClient.get(`/groups/owner/${createdUserId}`),
 
   getInvitationLink: (id) => axiosClient.get(`/group/${id}/get-invite-link`),
-  inviteUserViaEmail: (id, email) =>
-    axiosClient.post(`/group/${id}/invite-user-by-email`, { email }),
-  joinGroup: (token) => axiosClient.get(`/group/invite/${token}`),
+
+  inviteUserByEmail: (groupId, email, userRole) =>
+    axiosClient.post(`/groups/invite/${groupId}`, {
+      email,
+      userRole,
+    }),
+
+  joinGroup: (groupId, email, userRole) =>
+    axiosClient.post(`/groups/joinGroup/${groupId}`, { email, userRole }),
+
   getAllMembers: (id) => axiosClient.get(`/group/${id}`),
   assignMemberRole: (groupId, userId, role) =>
     axiosClient.post(`/group/${groupId}/assign-role`, {

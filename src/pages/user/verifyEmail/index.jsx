@@ -21,7 +21,6 @@ export default function VerifyEmail() {
     try {
       const res = await authApi.verifyEmail(token);
       setError(null);
-      console.log({ res });
       notificationManager.showSuccess("", res.data.message);
       setUser(res.data.user);
 

@@ -7,6 +7,8 @@ import {
   TextInput,
   Breadcrumbs,
   Anchor,
+  createStyles,
+  Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -23,6 +25,24 @@ import * as notificationManager from "../../common/notificationManager";
 import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import { USER_ROLE } from "../../../utils/constants";
 
+const useStyles = createStyles((theme) => ({
+  modal: {
+    "& .mantine-Modal-inner": {
+      display: "flex",
+      alignItems: "center",
+    },
+
+    "& .mantine-Modal-modal": {
+      width: "30%",
+    },
+
+    "& .mantine-Input-disabled": {
+      color: "black",
+      fontWeight: "500",
+    },
+  },
+}));
+
 export default function Header({ role }) {
   const [invitationModalOpened, setInvitationModalOpened] = useState(false);
   const [inviteViaEmailOpened, setInviteViaEmailOpened] = useState(false);
@@ -31,9 +51,10 @@ export default function Header({ role }) {
   const [isLoading, setLoading] = useState(false);
   const { groupId } = useParams();
   const navigate = useNavigate();
+  const { classes } = useStyles();
 
   const form = useForm({
-    initialValues: { email: "" },
+    initialValues: { email: "", role: USER_ROLE.MEMBER },
     validate: {
       email: (value) =>
         /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value) ? null : "Invalid email",
@@ -62,16 +83,7 @@ export default function Header({ role }) {
   }, [groupId]);
 
   const handleOpenInvitationModal = async () => {
-    try {
-      const { data: response } = await groupApi.getInvitationLink(groupId);
-
-      setInvitationLink(response.data);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
-    }
-
+    setInvitationLink(`${window.location.origin}/groups/invitation/${groupId}`);
     setInvitationModalOpened(true);
   };
 
@@ -98,9 +110,10 @@ export default function Header({ role }) {
   const handleSubmitInviteViaEmailForm = async (values) => {
     try {
       setLoading(true);
-      const { data: response } = await groupApi.inviteUserViaEmail(
+      const { data: response } = await groupApi.inviteUserByEmail(
         groupId,
-        values.email
+        values.email,
+        values.role
       );
 
       notificationManager.showSuccess("", response.message);
@@ -146,6 +159,7 @@ export default function Header({ role }) {
         title="Invitation link"
         opened={invitationModalOpened}
         onClose={handleCloseInvitationModal}
+        className={classes.modal}
       >
         <TextInput value={invitationLink} disabled />
         <Group position="center" mt="lg">
@@ -156,6 +170,7 @@ export default function Header({ role }) {
         title="Invite via email"
         opened={inviteViaEmailOpened}
         onClose={handleCloseInviteViaEmailModal}
+        className={classes.modal}
       >
         <form onSubmit={form.onSubmit(handleSubmitInviteViaEmailForm)}>
           <TextInput
@@ -164,6 +179,17 @@ export default function Header({ role }) {
             required
             {...form.getInputProps("email")}
           />
+
+          <Select
+            label="Choose role"
+            defaultValue={USER_ROLE.MEMBER}
+            data={[
+              { value: USER_ROLE.CO_OWNER, label: "CO OWNER" },
+              { value: USER_ROLE.MEMBER, label: "MEMBER" },
+            ]}
+            {...form.getInputProps("role")}
+          />
+
           <Group position="center" mt="lg">
             <Button type="submit" loading={isLoading}>
               Send link
@@ -179,73 +205,66 @@ export default function Header({ role }) {
             </Anchor>
           ))}
         </Breadcrumbs>
-        {
-          // eslint-disable-next-line no-nested-ternary
-          role === USER_ROLE.OWNER || role === USER_ROLE.CO_OWNER ? (
-            <Group>
-              <Menu position="bottom-end" shadow="md">
-                <Menu.Target>
-                  <Tooltip label="Invite people">
-                    <Button>
-                      <IconUserPlus />
-                    </Button>
-                  </Tooltip>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item onClick={handleOpenInvitationModal}>
-                    Get invitation link
-                  </Menu.Item>
-                  <Menu.Item onClick={handleOpenInviteViaEmailModal}>
-                    Send invitation via email
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-              <Menu position="bottom-end" shadow="md">
-                <Menu.Target>
-                  <Tooltip label="Menu">
-                    <Button>
-                      <IconCategory />
-                    </Button>
-                  </Tooltip>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  {/* <Menu.Label>Application</Menu.Label>
-                    <Menu.Item icon={<IconSettings size={14} />}>Settings</Menu.Item>
-                    <Menu.Divider /> */}
-                  {role === USER_ROLE.OWNER ? (
-                    <>
-                      {/* <Menu.Label>Danger zone</Menu.Label> */}
-                      <Menu.Item
-                        color="red"
-                        icon={<IconTrash size={14} />}
-                        onClick={handleDeleteGroup}
-                      >
-                        Delete group
-                      </Menu.Item>
-                    </>
-                  ) : (
-                    <>
-                      <Menu.Label>Danger zone</Menu.Label>
-                      <Menu.Item
-                        color="red"
-                        icon={<IconLogout size={14} />}
-                        onClick={handleMemberLeaveGroup}
-                      >
-                        Leave group
-                      </Menu.Item>
-                    </>
-                  )}
-                </Menu.Dropdown>
-              </Menu>
-            </Group>
-          ) : role === USER_ROLE.MEMBER ? (
-            <Tooltip label="Leave group">
-              <Button color="red" onClick={handleMemberLeaveGroup}>
-                <IconLogout />
-              </Button>
-            </Tooltip>
-          ) : null
-        }
+        {role === USER_ROLE.OWNER || role === USER_ROLE.CO_OWNER ? (
+          <Group>
+            <Menu position="bottom-end" shadow="md">
+              <Menu.Target>
+                <Tooltip label="Invite people">
+                  <Button>
+                    <IconUserPlus />
+                  </Button>
+                </Tooltip>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item onClick={handleOpenInvitationModal}>
+                  Get invitation link
+                </Menu.Item>
+                <Menu.Item onClick={handleOpenInviteViaEmailModal}>
+                  Send invitation via email
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+            <Menu position="bottom-end" shadow="md">
+              <Menu.Target>
+                <Tooltip label="Menu">
+                  <Button>
+                    <IconCategory />
+                  </Button>
+                </Tooltip>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {role === USER_ROLE.OWNER ? (
+                  <>
+                    <Menu.Item
+                      color="red"
+                      icon={<IconTrash size={14} />}
+                      onClick={handleDeleteGroup}
+                    >
+                      Delete group
+                    </Menu.Item>
+                  </>
+                ) : (
+                  <>
+                    <Menu.Label>Danger zone</Menu.Label>
+                    <Menu.Item
+                      color="red"
+                      icon={<IconLogout size={14} />}
+                      onClick={handleMemberLeaveGroup}
+                    >
+                      Leave group
+                    </Menu.Item>
+                  </>
+                )}
+              </Menu.Dropdown>
+            </Menu>
+          </Group>
+        ) : role === USER_ROLE.MEMBER ? (
+          <Tooltip label="Leave group">
+            <Button color="red" onClick={handleMemberLeaveGroup}>
+              <IconLogout />
+            </Button>
+          </Tooltip>
+        ) : null}
       </Group>
     </>
   );

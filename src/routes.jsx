@@ -117,8 +117,8 @@ const UNAUTHORIZED_ROUTES = [
     element: <LoginGoogle />,
   },
   {
-    path: "/group/invite",
-    name: "Invite",
+    path: "/group/join",
+    name: "Join",
     element: <JoinGroup />,
   },
   {

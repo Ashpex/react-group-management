@@ -5,9 +5,9 @@ export const USER_COOKIE = "user";
 export const APP_LOGOUT_EVENT = "app-logout-even";
 
 export const USER_ROLE = {
-  OWNER: "Owner",
-  CO_OWNER: "Co-owner",
-  MEMBER: "Member",
+  OWNER: "owner",
+  CO_OWNER: "co_owner",
+  MEMBER: "member",
 };
 
 export const GROUP_FILTER_TYPE = {
