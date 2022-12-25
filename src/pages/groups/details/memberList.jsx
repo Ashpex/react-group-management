@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Group } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import React, { useState, useEffect, useCallback } from "react";
@@ -66,9 +67,9 @@ export default function MemberList({ role, setRole }) {
 
   const handleKickOutMember = async (userId) => {
     try {
-      const { data: response } = await groupApi.kickOutMember(groupId, userId);
+      const { data: response } = await groupApi.removeMember(groupId, userId);
 
-      notificationManager.showSuccess("", response.message);
+      notificationManager.showSuccess("", "Kick out member successfully");
       fetchData();
     } catch (error) {
       if (isAxiosError(error)) {

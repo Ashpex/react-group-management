@@ -41,8 +41,10 @@ const groupApi = {
       role,
     }),
   leaveGroup: (groupId) => axiosClient.get(`/group/${groupId}/leave`),
-  kickOutMember: (groupId, userId) =>
-    axiosClient.get(`/group/${groupId}/kick?userId=${userId}`),
+
+  removeMember: (groupId, userId) =>
+    axiosClient.get(`/groups/${groupId}/remove/${userId}`),
+
   deleteGroup: (groupId) => axiosClient.delete(`/group/${groupId}`),
 };
 
