@@ -23,6 +23,7 @@ import Layout from "./layout/layout";
 import GuestPresentation from "./pages/presentation/active/guestPresentation";
 import HostPresentation from "./pages/presentation/active/hostPresentation";
 import UserProfile from "./pages/user/userProfile";
+import VerifyEmail from "./pages/user/verifyEmail";
 
 export const AUTHORIZED_ROUTES = [
   {
@@ -119,6 +120,11 @@ const UNAUTHORIZED_ROUTES = [
     path: "/group/invite",
     name: "Invite",
     element: <JoinGroup />,
+  },
+  {
+    path: "/user/verify-email/:token",
+    name: "Profile",
+    element: <VerifyEmail />,
   },
 ];
 

@@ -17,6 +17,8 @@ const authApi = {
     axiosClient.post("/auth/google", {
       tokenId,
     }),
+
+  verifyEmail: (token) => axiosClient.get(`/auth/verify-email/${token}`),
 };
 
 export default authApi;

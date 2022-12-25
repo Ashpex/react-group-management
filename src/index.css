@@ -1,3 +1,25 @@
 /* @tailwind base;
 @tailwind components;
 @tailwind utilities; */
+
+body {
+  margin: 0;
+}
+
+.haAclf {
+  width: 100%;
+}
+
+.S9gUrf-YoZ4jf {
+  width: 100%;
+}
+
+.S9gUrf-YoZ4jf iframe {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.S9gUrf-YoZ4jf iframe .haAclf {
+  width: 100% !important;
+  padding: 0;
+}
