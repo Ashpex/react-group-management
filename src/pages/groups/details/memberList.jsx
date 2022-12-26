@@ -50,13 +50,9 @@ export default function MemberList({ role, setRole }) {
 
   const handleAssignMemberRole = async (userId, roleAssign) => {
     try {
-      const { data: response } = await groupApi.assignMemberRole(
-        groupId,
-        userId,
-        roleAssign
-      );
+      await groupApi.changeRoleMember(groupId, userId, roleAssign);
 
-      notificationManager.showSuccess("", response.message);
+      notificationManager.showSuccess("", "Assign role successfully");
       fetchData();
     } catch (error) {
       if (isAxiosError(error)) {

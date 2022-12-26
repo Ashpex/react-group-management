@@ -35,6 +35,7 @@ const useStyles = createStyles((theme) => ({
 export default function Header({ fetchData, groupFilter, setGroupFilter }) {
   const [openCreateGroupModal, setOpenCreateGroupModal] = useState(false);
   const [openJoinGroupModal, setOpenJoinGroupModal] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
   const { userInfo } = useUserInfo();
   const { classes } = useStyles();
 
@@ -69,7 +70,7 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
   };
 
   const handleOpenJoinGroupModal = () => {
-    createGroupForm.reset();
+    joinGroupForm.reset();
     setOpenJoinGroupModal(true);
   };
 
@@ -79,12 +80,13 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
   };
 
   const handleCloseJoinGroupModal = () => {
-    createGroupForm.reset();
+    joinGroupForm.reset();
     setOpenJoinGroupModal(false);
   };
 
   const handleSubmitCreateGroupForm = async (values) => {
     try {
+      setButtonLoading(true);
       const { data: response } = await groupApi.createGroup(
         values.name,
         values.desc,
@@ -100,12 +102,15 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
       if (isAxiosError(error)) {
         notificationManager.showFail("", error.response?.data.message);
       }
+    } finally {
+      setButtonLoading(false);
+      handleCloseCreateGroupModal();
     }
-    handleCloseCreateGroupModal();
   };
 
   const handleSubmitJoinGroupForm = async (values) => {
     try {
+      setButtonLoading(true);
       const groupId = values.link.split("/").pop();
       if (!groupId) {
         notificationManager.showFail("", "Invalid link");
@@ -127,8 +132,10 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
       if (isAxiosError(error)) {
         notificationManager.showFail("", error.response?.data.message);
       }
+    } finally {
+      setButtonLoading(false);
+      handleCloseJoinGroupModal();
     }
-    handleOpenJoinGroupModal();
   };
 
   return (
@@ -153,7 +160,9 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
             {...createGroupForm.getInputProps("desc")}
           />
           <Group position="center">
-            <Button type="submit">Create</Button>
+            <Button type="submit" disabled={buttonLoading}>
+              Create
+            </Button>
           </Group>
         </form>
       </Modal>
@@ -171,7 +180,9 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
             {...joinGroupForm.getInputProps("link")}
           />
           <Group position="center" mt={12}>
-            <Button type="submit">Join</Button>
+            <Button type="submit" disabled={buttonLoading}>
+              Join
+            </Button>
           </Group>
         </form>
       </Modal>
