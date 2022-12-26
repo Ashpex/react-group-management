@@ -35,10 +35,10 @@ const groupApi = {
     axiosClient.post(`/groups/joinGroup/${groupId}`, { email, userRole }),
 
   getAllMembers: (id) => axiosClient.get(`/group/${id}`),
-  assignMemberRole: (groupId, userId, role) =>
-    axiosClient.post(`/group/${groupId}/assign-role`, {
-      user: userId,
-      role,
+
+  changeRoleMember: (groupId, userId, userRole) =>
+    axiosClient.post(`/groups/${groupId}/changeRole/${userId}`, {
+      userRole,
     }),
 
   leaveGroup: (groupId, userId) =>
@@ -47,7 +47,7 @@ const groupApi = {
   removeMember: (groupId, userId) =>
     axiosClient.get(`/groups/${groupId}/remove/${userId}`),
 
-  deleteGroup: (groupId) => axiosClient.delete(`/group/${groupId}`),
+  deleteGroup: (groupId) => axiosClient.delete(`/groups/${groupId}`),
 };
 
 export default groupApi;
