@@ -7,6 +7,7 @@ import {
   TextInput,
   Textarea,
   Select,
+  createStyles,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconPlus, IconDoorEnter } from "@tabler/icons";
@@ -15,13 +16,27 @@ import { useState } from "react";
 import groupApi from "../../../api/group";
 import * as notificationManager from "../../common/notificationManager";
 import { isAxiosError } from "../../../utils/axiosErrorHandler";
-import { GROUP_FILTER_TYPE } from "../../../utils/constants";
+import { GROUP_FILTER_TYPE, USER_ROLE } from "../../../utils/constants";
 import useUserInfo from "../../../hooks/useUserInfo";
+
+const useStyles = createStyles((theme) => ({
+  modal: {
+    "& .mantine-Modal-inner": {
+      display: "flex",
+      alignItems: "center",
+    },
+
+    "& .mantine-Modal-modal": {
+      width: "30%",
+    },
+  },
+}));
 
 export default function Header({ fetchData, groupFilter, setGroupFilter }) {
   const [openCreateGroupModal, setOpenCreateGroupModal] = useState(false);
   const [openJoinGroupModal, setOpenJoinGroupModal] = useState(false);
   const { userInfo } = useUserInfo();
+  const { classes } = useStyles();
 
   const createGroupForm = useForm({
     initialValues: {
@@ -36,25 +51,14 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
     },
     validate: {
       link: (value) => {
-        // const regex = new RegExp(
-        //   "^(https?:\\/\\/)?((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?(\\#[-a-z\\d_]*)?$"
-        // );
-
-        // use regex to test, accept http:// and https:// and localhost
         const regex = new RegExp(
-          "^(https?:\\/\\/)?(localhost|((\\d{1,3}\\.){3}\\d{1,3}))(:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?(\\#[-a-z\\d_]*)?$"
+          "^(https?:\\/\\/)|(localhost|((\\d{1,3}\\.){3}\\d{1,3}))(:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?(\\#[-a-z\\d_]*)?$"
         );
 
         if (!regex.test(value)) {
           return "Invalid link 1";
         }
         return null;
-
-        // return new RegExp(
-        //   "^(https?:\\/\\/)?((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?(\\#[-a-z\\d_]*)?$"
-        // ).test(value)
-        //   ? null
-        //   : "Invalid link 2";
       },
     },
   });
@@ -91,41 +95,46 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
         "",
         `Create group ${response?.name} successfully`
       );
-      setOpenCreateGroupModal();
       fetchData();
     } catch (error) {
       if (isAxiosError(error)) {
         notificationManager.showFail("", error.response?.data.message);
       }
     }
+    handleCloseCreateGroupModal();
   };
 
   const handleSubmitJoinGroupForm = async (values) => {
-    // try {
-    //   const { data: response } = await groupApi.createGroup(
-    //     values.name,
-    //     values.desc,
-    //     userInfo._id
-    //   );
+    try {
+      const groupId = values.link.split("/").pop();
+      if (!groupId) {
+        notificationManager.showFail("", "Invalid link");
+        return;
+      }
 
-    //   notificationManager.showSuccess(
-    //     "",
-    //     `Create group ${response?.name} successfully`
-    //   );
-    //   setOpenCreateGroupModal();
-    //   fetchData();
-    // } catch (error) {
-    //   if (isAxiosError(error)) {
-    //     notificationManager.showFail("", error.response?.data.message);
-    //   }
-    // }
+      const { data: response } = await groupApi.joinGroup(
+        groupId,
+        userInfo.email,
+        USER_ROLE.MEMBER
+      );
 
-    console.log({ values });
+      notificationManager.showSuccess(
+        "",
+        `Join group ${response?.name} successfully`
+      );
+      fetchData();
+    } catch (error) {
+      if (isAxiosError(error)) {
+        notificationManager.showFail("", error.response?.data.message);
+      }
+    }
+    handleOpenJoinGroupModal();
   };
 
   return (
     <>
       <Modal
+        className={classes.modal}
         title="Create a group"
         opened={openCreateGroupModal}
         onClose={handleCloseCreateGroupModal}
@@ -150,6 +159,7 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
       </Modal>
 
       <Modal
+        className={classes.modal}
         title="Join group by link"
         opened={openJoinGroupModal}
         onClose={handleCloseJoinGroupModal}
@@ -160,7 +170,7 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
             required
             {...joinGroupForm.getInputProps("link")}
           />
-          <Group position="center">
+          <Group position="center" mt={12}>
             <Button type="submit">Join</Button>
           </Group>
         </form>
