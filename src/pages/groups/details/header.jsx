@@ -97,6 +97,7 @@ export default function Header({ role }) {
   const handleCopyInvitationLink = () => {
     navigator.clipboard.writeText(invitationLink);
     notificationManager.showSuccess("", "Copy to clipboard");
+    setInvitationModalOpened(false);
   };
 
   const handleOpenInviteViaEmailModal = () => {

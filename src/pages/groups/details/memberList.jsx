@@ -67,7 +67,7 @@ export default function MemberList({ role, setRole }) {
 
   const handleKickOutMember = async (userId) => {
     try {
-      const { data: response } = await groupApi.removeMember(groupId, userId);
+      await groupApi.removeMember(groupId, userId);
 
       notificationManager.showSuccess("", "Kick out member successfully");
       fetchData();
