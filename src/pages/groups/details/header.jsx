@@ -24,6 +24,7 @@ import groupApi from "../../../api/group";
 import * as notificationManager from "../../common/notificationManager";
 import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import { USER_ROLE } from "../../../utils/constants";
+import useUserInfo from "../../../hooks/useUserInfo";
 
 const useStyles = createStyles((theme) => ({
   modal: {
@@ -52,6 +53,7 @@ export default function Header({ role }) {
   const { groupId } = useParams();
   const navigate = useNavigate();
   const { classes } = useStyles();
+  const { userInfo } = useUserInfo();
 
   const form = useForm({
     initialValues: { email: "", role: USER_ROLE.MEMBER },
@@ -129,9 +131,9 @@ export default function Header({ role }) {
 
   const handleMemberLeaveGroup = async () => {
     try {
-      const { data: response } = await groupApi.leaveGroup(groupId);
+      await groupApi.leaveGroup(groupId, userInfo._id);
 
-      notificationManager.showSuccess("", response.message);
+      notificationManager.showSuccess("", `You have left ${groupData?.name}`);
       navigate("/groups");
     } catch (error) {
       if (isAxiosError(error)) {

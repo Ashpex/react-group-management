@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { createBrowserRouter, Outlet, useNavigate } from "react-router-dom";
 
-import UnauthorizedLayout from "./layout/unauthorizedLayout";
+import UnauthorizedLayout from "./layout/UnauthorizedLayout";
 import LoginPage from "./pages/authentication/login";
 import LoginGoogle from "./pages/authentication/login/loginGoogle";
 import Logout from "./pages/authentication/logout";
@@ -19,7 +19,7 @@ import ProfileEditor from "./pages/user/editProfile";
 
 import { APP_LOGOUT_EVENT } from "./utils/constants";
 
-import Layout from "./layout/layout";
+import Layout from "./layout/Layout";
 import GuestPresentation from "./pages/presentation/active/guestPresentation";
 import HostPresentation from "./pages/presentation/active/hostPresentation";
 import UserProfile from "./pages/user/userProfile";

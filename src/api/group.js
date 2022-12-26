@@ -40,7 +40,9 @@ const groupApi = {
       user: userId,
       role,
     }),
-  leaveGroup: (groupId) => axiosClient.get(`/group/${groupId}/leave`),
+
+  leaveGroup: (groupId, userId) =>
+    axiosClient.get(`/groups/${groupId}/leaveGroup/${userId}`),
 
   removeMember: (groupId, userId) =>
     axiosClient.get(`/groups/${groupId}/remove/${userId}`),
