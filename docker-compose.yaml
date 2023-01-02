@@ -1,0 +1,10 @@
+version: '3'
+services:
+  class-group:
+    image: lhquan244/class-group:latest
+    ports:
+      - "5011:3000"
+    container_name: class-group-fe
+    # volumes:
+    #   - /home/ubuntu/jenkins_compose/jenkins_configuration:/var/jenkins_home
+    #   - /var/run/docker.sock:/var/run/docker.sock
