@@ -1,18 +1,18 @@
 import { Group, Title, Button, Tooltip, Modal, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconPlus, IconArrowsJoin } from "@tabler/icons";
+import { IconPlus } from "@tabler/icons";
 import { useState } from "react";
-
-import { Link } from "react-router-dom";
 
 import presentationApi from "../../../api/presentation";
 import * as notificationManager from "../../common/notificationManager";
-import { isAxiosError, ErrorResponse } from "../../../utils/axiosErrorHandler";
+import { isAxiosError } from "../../../utils/axiosErrorHandler";
+import useUserInfo from "../../../hooks/useUserInfo";
 
 export default function PresentationListHeader({ fetchData }) {
   const [opened, setOpened] = useState(false);
+  const { userInfo } = useUserInfo();
 
-  const form = useForm({ initialValues: { name: "" } });
+  const form = useForm({ initialValues: { name: "", description: "" } });
 
   const handleOpenModal = () => {
     setOpened(true);
@@ -24,12 +24,15 @@ export default function PresentationListHeader({ fetchData }) {
   };
 
   const handleSubmitForm = async (values) => {
+    console.log({ values });
     try {
-      const { data: response } = await presentationApi.createPresentation(
-        values.name
+      await presentationApi.createPresentation(
+        values.name,
+        values.description,
+        userInfo._id
       );
 
-      notificationManager.showSuccess("", response.message);
+      notificationManager.showSuccess("", "Create presentation successfully");
       handleCloseModal();
       fetchData();
     } catch (error) {
@@ -52,6 +55,12 @@ export default function PresentationListHeader({ fetchData }) {
             placeholder="Your presentation name"
             required
             {...form.getInputProps("name")}
+          />
+          <TextInput
+            label="Presentation description"
+            placeholder="Your presentation description"
+            {...form.getInputProps("description")}
+            mt="md"
           />
           <Group position="right" mt="md">
             <Button onClick={handleCloseModal}>Cancel</Button>
@@ -76,13 +85,6 @@ export default function PresentationListHeader({ fetchData }) {
             <Button onClick={handleOpenModal}>
               <IconPlus />
             </Button>
-          </Tooltip>
-          <Tooltip label="Join a presentation">
-            <Link to="/presentation/join">
-              <Button>
-                <IconArrowsJoin />
-              </Button>
-            </Link>
           </Tooltip>
         </Group>
       </Group>

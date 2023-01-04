@@ -29,7 +29,7 @@
     "randomcolor": "^0.6.2",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
-    "react-chartjs-2": "^5.0.1",
+    "react-chartjs-2": "^5.1.0",
     "react-dom": "^18.2.0",
     "react-google-login": "^5.2.2",
     "react-jwt": "^1.1.7",
@@ -38,6 +38,7 @@
     "react-timeago": "^7.1.0",
     "sass": "^1.56.2",
     "socket.io-client": "^4.5.4",
+    "use-debounce": "^9.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
