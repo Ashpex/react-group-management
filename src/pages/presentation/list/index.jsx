@@ -1,50 +1,62 @@
 import {
   Container,
-  Box,
   Text,
-  ActionIcon,
   Group,
-  Menu,
   Tooltip,
-  Modal,
-  Button,
+  Center,
+  Loader,
+  Alert,
+  Grid,
+  Card,
+  createStyles,
+  Image,
+  Stack,
 } from "@mantine/core";
-import { IconEdit, IconPresentation, IconTrash, IconDots } from "@tabler/icons";
-import sortBy from "lodash.sortby";
-import { DataTable } from "mantine-datatable";
+import { IconAlertCircle } from "@tabler/icons";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import TimeAgo from "react-timeago";
 
 import PresentationListHeader from "./header";
 
 import presentationApi from "../../../api/presentation";
 import * as notificationManager from "../../common/notificationManager";
-import { getUserId } from "../../../utils";
 import { isAxiosError } from "../../../utils/axiosErrorHandler";
+import useUserInfo from "../../../hooks/useUserInfo";
+import { Link } from "react-router-dom";
+
+const useStyles = createStyles(() => ({
+  lineClamp1: {
+    display: "-webkit-box",
+    WebkitLineClamp: 1,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+  },
+  lineClamp3: {
+    display: "-webkit-box",
+    WebkitLineClamp: 3,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+  },
+}));
 
 export default function PresentationList() {
+  const { classes } = useStyles();
   const [dataSource, setDataSource] = useState([]);
-  const [sortedDataSource, setSortedDataSource] = useState([]);
-  const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "updatedAt",
-    direction: "asc",
-  });
   const [selectedPresentation, setSelectedPresentation] = useState({
     name: "",
     id: "",
   });
   const [opened, setOpened] = useState(false);
   const [isLoading, setLoading] = useState(false);
-
-  const currentUserId = getUserId();
+  const { userInfo } = useUserInfo();
 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const { data: response } = await presentationApi.getMyPresentations();
-
-      setDataSource(response.data);
+      const { data: response } = await presentationApi.getPresentations(
+        userInfo._id
+      );
+      setDataSource(response);
     } catch (error) {
       if (isAxiosError(error)) {
         notificationManager.showFail("", error.response?.data.message);
@@ -57,17 +69,6 @@ export default function PresentationList() {
   useEffect(() => {
     fetchData();
   }, []);
-
-  useEffect(() => {
-    const data =
-      sortStatus.columnAccessor === "userCreated.name"
-        ? sortBy(dataSource, ["userCreated.name", "name"])
-        : sortBy(dataSource, sortStatus.columnAccessor);
-
-    setSortedDataSource(
-      sortStatus.direction === "desc" ? data : data.reverse()
-    );
-  }, [sortStatus, dataSource]);
 
   const handleDeletePresentation = async (presentationId) => {
     try {
@@ -98,44 +99,17 @@ export default function PresentationList() {
     {
       accessor: "name",
       title: "Name",
-      sortable: true,
       width: 400,
-      render: (record) => (
-        <Text
-          component={Link}
-          to={`/presentation/${record._id}/${record.slides[0]._id}/edit`}
-        >
-          {record.name}
-        </Text>
-      ),
+      render: (record) => <Text>{record.name}</Text>,
     },
     {
-      accessor: "userCreated.name",
-      title: "Owner",
-      sortable: true,
-      render: (record) =>
-        currentUserId === record.userCreated._id ? (
-          <Text>me</Text>
-        ) : (
-          <Text>{record.userCreated.name}</Text>
-        ),
-    },
-    {
-      accessor: "updatedAt",
-      title: "Modified",
-      sortable: true,
-      render: (record) => (
-        <Tooltip label={new Date(record.updatedAt).toLocaleString("en-US")}>
-          <Text>
-            <TimeAgo date={record.updatedAt} title="" />
-          </Text>
-        </Tooltip>
-      ),
+      accessor: "description",
+      title: "Description",
+      render: (record) => <Text>{record.description}</Text>,
     },
     {
       accessor: "createdAt",
       title: "Created",
-      sortable: true,
       render: (record) => (
         <Tooltip label={new Date(record.updatedAt).toLocaleString("en-US")}>
           <Text>
@@ -150,7 +124,7 @@ export default function PresentationList() {
       width: 100,
       render: (record) => (
         <Group position="center">
-          <Menu shadow="sm" width={100}>
+          {/* <Menu shadow="sm" width={100}>
             <Menu.Target>
               <ActionIcon>
                 <IconDots />
@@ -178,7 +152,7 @@ export default function PresentationList() {
                 Delete
               </Menu.Item>
             </Menu.Dropdown>
-          </Menu>
+          </Menu> */}
         </Group>
       ),
     },
@@ -186,38 +160,65 @@ export default function PresentationList() {
 
   return (
     <Container size="lg">
-      <Modal
-        title={`Delete "${selectedPresentation.name}"?`}
-        opened={opened}
-        onClose={handleCloseModal}
-      >
-        <Group position="right" mt={16}>
-          <Button color="dark" variant="subtle" onClick={handleCloseModal}>
-            Cancel
-          </Button>
-          <Button
-            color="red"
-            onClick={() => handleDeletePresentation(selectedPresentation.id)}
-          >
-            Delete
-          </Button>
-        </Group>
-      </Modal>
       <PresentationListHeader fetchData={fetchData} />
-      <Box mt="xl">
-        <DataTable
-          columns={COLUMNS}
-          records={sortedDataSource}
-          idAccessor="_id"
-          minHeight={400}
-          verticalSpacing="sm"
-          noRecordsText="No presentations to show"
-          highlightOnHover
-          sortStatus={sortStatus}
-          onSortStatusChange={setSortStatus}
-          fetching={isLoading}
-        />
-      </Box>
+
+      {isLoading ? (
+        <Center>
+          <Loader />
+        </Center>
+      ) : dataSource?.length > 0 ? (
+        <>
+          <Grid>
+            {dataSource?.map((presentation, index) => (
+              <Grid.Col key={index} span={3}>
+                <Card
+                  component={Link}
+                  to={`/presentations/${presentation._id}`}
+                  shadow="sm"
+                  p="lg"
+                  radius="md"
+                  h={333}
+                  withBorder
+                >
+                  <Card.Section>
+                    <Image
+                      src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1122&q=80"
+                      height={160}
+                      alt="Cover image"
+                    />
+                  </Card.Section>
+
+                  <Stack mt="md" mb="xs" spacing="xs">
+                    <Tooltip label={presentation.name} position="top-start">
+                      <Text weight={600} className={classes.lineClamp1}>
+                        {presentation.name}
+                      </Text>
+                    </Tooltip>
+                    <Text className={classes.lineClamp1}>
+                      {presentation.createdAt.toLocaleString("en-US")}
+                    </Text>
+                  </Stack>
+
+                  <Text size="sm" color="dimmed" className={classes.lineClamp3}>
+                    {presentation.description}
+                  </Text>
+                </Card>
+              </Grid.Col>
+            ))}
+          </Grid>
+        </>
+      ) : (
+        <Center>
+          <Alert
+            icon={<IconAlertCircle size={16} />}
+            radius="md"
+            color="yellow"
+            my="xl"
+          >
+            Create your first presentation
+          </Alert>
+        </Center>
+      )}
     </Container>
   );
 }

@@ -28,7 +28,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(Cookies.get(AUTH_COOKIE));
     if (Cookies.get(AUTH_COOKIE)) {
       navigate("/");
     }
