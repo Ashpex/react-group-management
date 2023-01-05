@@ -1,4 +1,4 @@
-import { Box, Image, Title } from "@mantine/core";
+import { Box, CloseButton, Image, Title } from "@mantine/core";
 import React from "react";
 import BarChart from "../../../../assets/bar-chart.svg";
 
@@ -7,6 +7,7 @@ export default function PresentationSlides({
   slides,
   setSelectedSlide,
   selectedSlide,
+  deleteSlide,
 }) {
   return (
     <Box
@@ -55,6 +56,13 @@ export default function PresentationSlides({
               Bar Chart
             </Title>
           </Box>
+          <CloseButton
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              deleteSlide(slide._id);
+            }}
+          />
         </Box>
       ))}
     </Box>

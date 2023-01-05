@@ -1,5 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, Button, CloseButton, TextInput, Title } from "@mantine/core";
+import {
+  Box,
+  Button,
+  CloseButton,
+  Select,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import presentationApi from "../../../api/presentation";
@@ -12,8 +19,10 @@ export default function PresentationOption({
   getAllSlides,
 }) {
   const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
   const [options, setOptions] = useState([]);
   const [questionValueDebounce] = useDebounce(question, 400);
+  const [answerValueDebounce] = useDebounce(answer, 400);
   const [optionValueDebounce] = useDebounce(options, 400);
 
   const updateSlide = async (data) => {
@@ -30,6 +39,7 @@ export default function PresentationOption({
     if (slide) {
       setQuestion(slide?.question);
       setOptions(slide?.options);
+      setAnswer(slide?.answer);
     }
   }, [slide?.question, slide?.options]);
 
@@ -38,9 +48,10 @@ export default function PresentationOption({
       updateSlide({
         question: questionValueDebounce,
         options: optionValueDebounce,
+        answer: answerValueDebounce,
       });
     }
-  }, [questionValueDebounce, optionValueDebounce]);
+  }, [questionValueDebounce, optionValueDebounce, answerValueDebounce]);
 
   return (
     <Box sx={sx}>
@@ -52,6 +63,22 @@ export default function PresentationOption({
           value={question || ""}
           onChange={(e) => setQuestion(e.target.value)}
         />
+
+        {Boolean(options?.length) && (
+          <Select
+            mt={"md"}
+            label="Anwser"
+            placeholder="Choose anwser"
+            value={answer}
+            data={[
+              ...options.map((option, index) => ({
+                label: option.value,
+                value: option.value,
+              })),
+            ]}
+            onChange={(value) => setAnswer(value)}
+          />
+        )}
 
         {options.map((option, index) => (
           <OptionItem
@@ -67,6 +94,7 @@ export default function PresentationOption({
               newOptions.splice(index, 1);
               setOptions(newOptions);
             }}
+            number={index + 1}
           />
         ))}
 
@@ -93,8 +121,12 @@ export default function PresentationOption({
   );
 }
 
-const OptionItem = ({ valueOption, updateValueOption, removeOption }) => {
-  const [valueOptionDebounce] = useDebounce(valueOption, 400);
+const OptionItem = ({
+  valueOption,
+  updateValueOption,
+  removeOption,
+  number,
+}) => {
   return (
     <Box
       mt="md"
@@ -110,7 +142,7 @@ const OptionItem = ({ valueOption, updateValueOption, removeOption }) => {
           fontWeight: "500",
         }}
       >
-        Options
+        Options {number}
       </Title>
 
       <Box
