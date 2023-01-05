@@ -44,6 +44,16 @@ export default function PresentationDetail() {
     }
   };
 
+  const deleteSlide = async (slideId) => {
+    try {
+      await presentationApi.deleteSlide(presentationId, slideId);
+      getAllSlides();
+    } catch (error) {
+      console.log(error);
+      notificationManager.showFail("", error.response?.data.message);
+    }
+  };
+
   const currentSlide = useMemo(() => {
     return slides[selectedSlide];
   }, [slides?.length, selectedSlide]);
@@ -53,9 +63,10 @@ export default function PresentationDetail() {
       sx={{
         width: "calc(100% + 32px)",
         marginLeft: "-16px",
-        height: "calc(100% + 32px)",
-        marginTop: "-16px",
+        height: "100%",
         overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Box
@@ -71,6 +82,7 @@ export default function PresentationDetail() {
           display: "flex",
           alignItems: "center",
           height: "100%",
+          overflow: "hidden",
         }}
       >
         <Box
@@ -90,6 +102,7 @@ export default function PresentationDetail() {
             slides={slides}
             setSelectedSlide={setSelectedSlide}
             selectedSlide={selectedSlide}
+            deleteSlide={deleteSlide}
           />
         </Box>
 
@@ -101,14 +114,16 @@ export default function PresentationDetail() {
             padding: "0 32px",
             overflow: "auto",
             backgroundColor: "#dbdce1",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <PresentationContent
             sx={{
-              marginTop: "32px",
-              height: "calc(100% - 166px)",
+              width: "100%",
+              height: "calc(100% - 64px)",
               backgroundColor: "#fff",
-              padding: "16px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -123,12 +138,12 @@ export default function PresentationDetail() {
             borderLeft: "1px solid #e9ecef",
             width: "100%",
             height: "100%",
-            padding: "0 16px",
+            overflow: "auto",
           }}
         >
           <PresentationOption
             sx={{
-              marginTop: "16px",
+              margin: "16px",
             }}
             slide={currentSlide}
             getAllSlides={getAllSlides}

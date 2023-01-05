@@ -30,9 +30,13 @@ const presentationApi = {
       presentationId,
       question: data.question,
       options: data.options,
+      answer: data.answer,
     }),
 
-  deleteSlide: (id) => axiosClient.delete(`/slide/${id}`),
+  deleteSlide: (presentationId, slideId) =>
+    axiosClient.delete(`/presentations/slides/${slideId}`, {
+      presentationId,
+    }),
 };
 
 export default presentationApi;
