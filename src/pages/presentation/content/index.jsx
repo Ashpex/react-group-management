@@ -24,7 +24,9 @@ export default function PresentationContent({ sx, slide }) {
       {
         label: "Answer",
         data: (slide?.options || []).map((v) => v?.quantity || 0),
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        backgroundColor: (slide?.options || []).map((v) =>
+          v?.value === slide?.answer ? "#228be6" : "rgba(255, 99, 132, 0.5)"
+        ),
       },
     ],
   };

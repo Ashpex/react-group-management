@@ -9,6 +9,10 @@ import {
   Anchor,
   createStyles,
   Select,
+  Box,
+  CloseButton,
+  Title,
+  Avatar,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -16,11 +20,15 @@ import {
   IconTrash,
   IconCategory,
   IconLogout,
+  IconDoorEnter,
+  IconMessageCircle,
+  IconSend,
 } from "@tabler/icons";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
 import groupApi from "../../../api/group";
+import messageApi from "../../../api/message";
 import * as notificationManager from "../../common/notificationManager";
 import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import { USER_ROLE } from "../../../utils/constants";
@@ -47,9 +55,12 @@ const useStyles = createStyles((theme) => ({
 export default function Header({ role }) {
   const [invitationModalOpened, setInvitationModalOpened] = useState(false);
   const [inviteViaEmailOpened, setInviteViaEmailOpened] = useState(false);
+  const [joinSlideOpened, setJoinSlideOpened] = useState(false);
   const [groupData, setGroupData] = useState();
   const [invitationLink, setInvitationLink] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const [openChatBox, setOpenChatBox] = useState(false);
+  const [messages, setMessages] = useState([]);
   const { groupId } = useParams();
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -61,6 +72,10 @@ export default function Header({ role }) {
       email: (value) =>
         /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value) ? null : "Invalid email",
     },
+  });
+
+  const joinSlideForm = useForm({
+    initialValues: { slideId: "" },
   });
 
   const breadcrumbsItems = [
@@ -84,6 +99,34 @@ export default function Header({ role }) {
     fetchData();
   }, [groupId]);
 
+  useEffect(() => {
+    if (openChatBox) {
+      getAllMessages();
+    }
+  }, [groupId, openChatBox]);
+
+  const sendMessage = async (content) => {
+    try {
+      await messageApi.createMessage(groupId, content, userInfo._id);
+      getAllMessages();
+    } catch (error) {
+      if (isAxiosError(error)) {
+        notificationManager.showFail("", "Failed to send message");
+      }
+    }
+  };
+
+  const getAllMessages = async () => {
+    try {
+      const { data: response } = await messageApi.getMessagesByGroupId(groupId);
+      setMessages(response);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        notificationManager.showFail("", error.response?.data.message);
+      }
+    }
+  };
+
   const handleOpenInvitationModal = async () => {
     setInvitationLink(`${window.location.origin}/groups/invitation/${groupId}`);
     setInvitationModalOpened(true);
@@ -105,9 +148,23 @@ export default function Header({ role }) {
     setInviteViaEmailOpened(true);
   };
 
+  const handleOpenJoinGroupModal = () => {
+    joinSlideForm.reset();
+    setJoinSlideOpened(true);
+  };
+
+  const handleCloseJoinSlideModal = () => {
+    joinSlideForm.reset();
+    setJoinSlideOpened(false);
+  };
+
   const handleCloseInviteViaEmailModal = () => {
     form.reset();
     setInviteViaEmailOpened(false);
+  };
+
+  const handleSubmitSlideIdForm = async (values) => {
+    navigate(`/slides/${values.slideId}`);
   };
 
   const handleSubmitInviteViaEmailForm = async (values) => {
@@ -200,6 +257,27 @@ export default function Header({ role }) {
           </Group>
         </form>
       </Modal>
+
+      <Modal
+        title="Join slide"
+        opened={joinSlideOpened}
+        onClose={handleCloseJoinSlideModal}
+        className={classes.modal}
+      >
+        <form onSubmit={joinSlideForm.onSubmit(handleSubmitSlideIdForm)}>
+          <TextInput
+            label="Slide ID"
+            placeholder="Slide ID you want join"
+            required
+            {...joinSlideForm.getInputProps("slideId")}
+          />
+
+          <Group position="center" mt="lg">
+            <Button type="submit">Join</Button>
+          </Group>
+        </form>
+      </Modal>
+
       <Group my="lg" position="apart">
         <Breadcrumbs>
           {breadcrumbsItems.map((item, index) => (
@@ -262,13 +340,170 @@ export default function Header({ role }) {
             </Menu>
           </Group>
         ) : role === USER_ROLE.MEMBER ? (
-          <Tooltip label="Leave group">
-            <Button color="red" onClick={handleMemberLeaveGroup}>
-              <IconLogout />
-            </Button>
-          </Tooltip>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "1rem",
+              alignItems: "center",
+            }}
+          >
+            <Tooltip label="Join slide">
+              <Button onClick={handleOpenJoinGroupModal}>
+                <IconDoorEnter />
+              </Button>
+            </Tooltip>
+            <Tooltip label="Leave group">
+              <Button color="red" onClick={handleMemberLeaveGroup}>
+                <IconLogout />
+              </Button>
+            </Tooltip>
+          </Box>
         ) : null}
       </Group>
+
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 15,
+          right: 15,
+          zIndex: 9,
+        }}
+      >
+        <Tooltip label="Invite people">
+          <Button
+            sx={{
+              borderRadius: "50%",
+              width: "3rem",
+              height: "3rem",
+              padding: 0,
+            }}
+            onClick={() => {
+              setOpenChatBox(!openChatBox);
+            }}
+          >
+            <IconMessageCircle size={24} />
+          </Button>
+        </Tooltip>
+
+        {openChatBox && (
+          <Box
+            sx={{
+              position: "fixed",
+              bottom: 15,
+              right: 15,
+              width: "20vw",
+              height: "70vh",
+              backgroundColor: "white",
+              borderRadius: "1rem",
+              border: "1px solid #e5e5e5",
+              padding: "14px",
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                right: "-10px",
+                top: "-12px",
+                zIndex: 10,
+              }}
+            >
+              <CloseButton
+                size="18"
+                iconSize={20}
+                color="red"
+                variant="filled"
+                sx={{
+                  borderRadius: "50%",
+                  padding: "8px",
+                }}
+                onClick={() => {
+                  setOpenChatBox(!openChatBox);
+                }}
+              />
+            </Box>
+
+            {/* chat content */}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-end",
+                height: "calc(100% - 40px)",
+                width: "100%",
+                overflowY: "scroll",
+              }}
+            >
+              {messages?.map((message, index) => {
+                return (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "1rem",
+                      gap: "8px",
+                      flexDirection:
+                        message.userId === userInfo?._id
+                          ? "row-reverse"
+                          : "row",
+                    }}
+                  >
+                    <Avatar radius="xl" color="cyan">
+                      {message.userId === userInfo?._id ? "Me" : "U"}
+                    </Avatar>
+
+                    <Box
+                      sx={{
+                        background: "#e4e6eb",
+                        borderRadius: "1rem",
+                        padding: "8px 16px",
+                        width: "fit-content",
+                      }}
+                    >
+                      {message?.content}
+                    </Box>
+
+                    <Title
+                      sx={{
+                        fontSize: "10px",
+                        fontWeight: "400",
+                      }}
+                    >
+                      {new Date(message?.createdAt).toLocaleTimeString(
+                        "en-US",
+                        {
+                          hour: "numeric",
+                          minute: "numeric",
+                        }
+                      )}
+                    </Title>
+                  </Box>
+                );
+              })}
+            </Box>
+
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: 14,
+                width: "calc(100% - 28px)",
+              }}
+            >
+              <TextInput
+                placeholder="Enter your massage"
+                rightSection={<IconSend size="18" />}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    sendMessage(e.target.value);
+                    e.target.value = "";
+                  }
+                }}
+                autoComplete="off"
+              />
+            </Box>
+          </Box>
+        )}
+      </Box>
     </>
   );
 }

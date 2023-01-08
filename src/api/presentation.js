@@ -12,7 +12,11 @@ const presentationApi = {
   deletePresentation: (id) => axiosClient.delete(`/presentation/${id}`),
 
   getAllSlides: (presentationId, userId) =>
-    axiosClient.get(`/presentations/slides/${presentationId}?userId=${userId}`),
+    axiosClient.get(
+      `/presentations/slides?presentationId=${presentationId}&userId=${userId}`
+    ),
+
+  getSlideById: (id) => axiosClient.get(`/presentations/slides/${id}`),
 
   updateMultipleChoiceSlide: (id, data) =>
     axiosClient.put(`/slide/${id}`, {
@@ -37,6 +41,12 @@ const presentationApi = {
     axiosClient.delete(`/presentations/slides/${slideId}`, {
       presentationId,
     }),
+
+  submitAnswer: (slideId, answerId) => {
+    return axiosClient.post(`/presentations/slides/${slideId}/answer`, {
+      answerId,
+    });
+  },
 };
 
 export default presentationApi;

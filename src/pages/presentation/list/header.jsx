@@ -24,7 +24,6 @@ export default function PresentationListHeader({ fetchData }) {
   };
 
   const handleSubmitForm = async (values) => {
-    console.log({ values });
     try {
       await presentationApi.createPresentation(
         values.name,
