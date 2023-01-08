@@ -7,10 +7,11 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import presentationApi from "../../../api/presentation";
 import * as notificationManager from "../../common/notificationManager";
+import socketIOClient from "socket.io-client";
 
 export default function PresentationOption({
   sx,
@@ -24,16 +25,28 @@ export default function PresentationOption({
   const [questionValueDebounce] = useDebounce(question, 400);
   const [answerValueDebounce] = useDebounce(answer, 400);
   const [optionValueDebounce] = useDebounce(options, 400);
+  const socketRef = useRef();
 
   const updateSlide = async (data) => {
     try {
       await presentationApi.updateSlide(presentationId, slide._id, data);
       getAllSlides();
+      socketRef.current.emit("updateOptions", {
+        slideId: slide._id,
+      });
     } catch (error) {
       console.log(error);
       notificationManager.showFail("", error.response?.data.message);
     }
   };
+
+  useEffect(() => {
+    socketRef.current = socketIOClient.connect(process.env.REACT_APP_BACKEND);
+
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     if (slide) {
@@ -114,6 +127,25 @@ export default function PresentationOption({
             }}
           >
             Add Option
+          </Button>
+        </Box>
+
+        <Box mt="lg">
+          <Button
+            sx={{
+              width: "100%",
+            }}
+            color="red"
+            onClick={() => {
+              setOptions([
+                ...options.map((option) => ({
+                  ...option,
+                  quantity: 0,
+                })),
+              ]);
+            }}
+          >
+            Reset vote
           </Button>
         </Box>
       </>

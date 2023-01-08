@@ -25,6 +25,7 @@ import HostPresentation from "./pages/presentation/active/hostPresentation";
 import UserProfile from "./pages/user/userProfile";
 import VerifyEmail from "./pages/user/verifyEmail";
 import PresentationDetail from "./pages/presentation/detail";
+import SlideQuestion from "./pages/presentation/slides/question";
 
 export const AUTHORIZED_ROUTES = [
   {
@@ -82,6 +83,11 @@ export const AUTHORIZED_ROUTES = [
     path: "/presentation/join/",
     name: "Join Present",
     element: <GuestPresentation />,
+  },
+  {
+    path: "/slides/:slideId",
+    name: "Join Present",
+    element: <SlideQuestion />,
   },
   {
     path: "/presentations/:presentationId",

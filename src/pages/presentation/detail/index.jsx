@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Box } from "@mantine/core";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useParams } from "react-router-dom";
 import presentationApi from "../../../api/presentation";
 import useUserInfo from "../../../hooks/useUserInfo";
@@ -9,15 +15,29 @@ import PresentationHeader from "../header";
 import PresentationOption from "../option";
 import PresentationSlides from "../slides/list";
 import * as notificationManager from "../../common/notificationManager";
+import socketIOClient from "socket.io-client";
 
 export default function PresentationDetail() {
   const { presentationId } = useParams();
   const { userInfo } = useUserInfo();
   const [slides, setSlides] = useState([]);
   const [selectedSlide, setSelectedSlide] = useState(0);
+  const socketRef = useRef();
 
   useEffect(() => {
     getAllSlides();
+  }, []);
+
+  useEffect(() => {
+    socketRef.current = socketIOClient.connect(process.env.REACT_APP_BACKEND);
+
+    socketRef.current.on("memberAnswer", () => {
+      getAllSlides();
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
   }, []);
 
   const getAllSlides = useCallback(async () => {
