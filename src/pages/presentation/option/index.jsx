@@ -6,6 +6,7 @@ import {
   Select,
   TextInput,
   Title,
+
 } from "@mantine/core";
 import React, { useEffect, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
@@ -19,6 +20,7 @@ export default function PresentationOption({
   presentationId,
   getAllSlides,
 }) {
+
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [options, setOptions] = useState([]);
@@ -69,6 +71,8 @@ export default function PresentationOption({
   return (
     <Box sx={sx}>
       <>
+
+       <Title sx={{fontSize:20}}>Id: {slide?._id}</Title>
         <TextInput
           label="Question"
           placeholder="Your question"
