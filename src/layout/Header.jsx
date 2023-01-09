@@ -9,14 +9,12 @@ import {
   Drawer,
   Image,
   ScrollArea,
-  useMantineColorScheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
 import { Link } from "react-router-dom";
 
 import BlackLogo from "../assets/logo-low-res-black.png";
-import WhiteLogo from "../assets/logo-low-res-white.png";
 
 import useUserInfo from "./../hooks/useUserInfo";
 import ThemeSwitcher from "../pages/common/buttons/ThemeSwitcher";
@@ -29,7 +27,7 @@ const useStyles = createStyles((theme) => ({
     paddingLeft: theme.spacing.md,
     paddingRight: theme.spacing.md,
     textDecoration: "none",
-    color: theme.colorScheme === "dark" ? theme.white : theme.black,
+    color: theme.black,
     fontWeight: 500,
     fontSize: theme.fontSizes.sm,
 
@@ -41,10 +39,7 @@ const useStyles = createStyles((theme) => ({
     },
 
     ...theme.fn.hover({
-      backgroundColor:
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[6]
-          : theme.colors.gray[0],
+      backgroundColor: theme.colors.gray[0],
     }),
   },
 
@@ -80,7 +75,7 @@ const RightButtons = () => {
 
   return (
     <>
-      <ThemeSwitcher />
+      {/* <ThemeSwitcher /> */}
       {userInfo ? (
         <Link to="/user/profile">
           <UserAvatar userInfo={userInfo} />
@@ -94,18 +89,13 @@ export default function HeaderMegaMenu() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();
-  const { colorScheme } = useMantineColorScheme();
 
   return (
     <Box>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
           <Link to="/">
-            <Image
-              src={colorScheme === "light" ? BlackLogo : WhiteLogo}
-              height={30}
-              width="auto"
-            />
+            <Image src={BlackLogo} height={30} width="auto" />
           </Link>
 
           <Group
@@ -138,15 +128,9 @@ export default function HeaderMegaMenu() {
         zIndex={1_000_000}
       >
         <ScrollArea sx={{ height: "calc(100vh - 60px)" }} mx="-md">
-          <Divider
-            my="sm"
-            color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
-          />
+          <Divider my="sm" color={"gray.1"} />
           <NavLinks />
-          <Divider
-            my="sm"
-            color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
-          />
+          <Divider my="sm" color={"gray.1"} />
           <Group position="center" grow pb="xl" px="md">
             <RightButtons />
           </Group>

@@ -7,8 +7,6 @@ const presentationApi = {
   getPresentations: (userId) =>
     axiosClient.get(`/presentations?userId=${userId}`),
 
-  getPresentationById: (id) => axiosClient.get(`/presentation/${id}`),
-
   deletePresentation: (id) => axiosClient.delete(`/presentation/${id}`),
 
   getAllSlides: (presentationId, userId) =>
@@ -17,12 +15,6 @@ const presentationApi = {
     ),
 
   getSlideById: (id) => axiosClient.get(`/presentations/slides/${id}`),
-
-  updateMultipleChoiceSlide: (id, data) =>
-    axiosClient.put(`/slide/${id}`, {
-      title: data.question,
-      options: data.options,
-    }),
 
   createSlide: (presentationId) =>
     axiosClient.post("/presentations/slides", {
