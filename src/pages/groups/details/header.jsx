@@ -24,9 +24,10 @@ import {
   IconMessageCircle,
   IconSend,
 } from "@tabler/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
+import socketIOClient from "socket.io-client";
 import groupApi from "../../../api/group";
 import messageApi from "../../../api/message";
 import * as notificationManager from "../../common/notificationManager";
@@ -65,6 +66,8 @@ export default function Header({ role }) {
   const navigate = useNavigate();
   const { classes } = useStyles();
   const { userInfo } = useUserInfo();
+  const chatBoxRef = useRef();
+  const socketRef = useRef();
 
   const form = useForm({
     initialValues: { email: "", role: USER_ROLE.MEMBER },
@@ -82,6 +85,18 @@ export default function Header({ role }) {
     { title: "Groups", to: "/groups" },
     { title: groupData?.name || "", to: "#" },
   ];
+
+  useEffect(() => {
+    socketRef.current = socketIOClient.connect(process.env.REACT_APP_BACKEND);
+
+    socketRef.current.on("getMessages", () => {
+      getAllMessages();
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,7 +123,7 @@ export default function Header({ role }) {
   const sendMessage = async (content) => {
     try {
       await messageApi.createMessage(groupId, content, userInfo._id);
-      getAllMessages();
+      socketRef.current.emit("getMessages", { groupId });
     } catch (error) {
       if (isAxiosError(error)) {
         notificationManager.showFail("", "Failed to send message");
@@ -120,6 +135,7 @@ export default function Header({ role }) {
     try {
       const { data: response } = await messageApi.getMessagesByGroupId(groupId);
       setMessages(response);
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     } catch (error) {
       if (isAxiosError(error)) {
         notificationManager.showFail("", error.response?.data.message);
@@ -391,7 +407,7 @@ export default function Header({ role }) {
               position: "fixed",
               bottom: 15,
               right: 15,
-              width: "20vw",
+              width: "25vw",
               height: "70vh",
               backgroundColor: "white",
               borderRadius: "1rem",
@@ -427,11 +443,11 @@ export default function Header({ role }) {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "flex-end",
                 height: "calc(100% - 40px)",
                 width: "100%",
                 overflowY: "scroll",
               }}
+              ref={chatBoxRef}
             >
               {messages?.map((message, index) => {
                 return (
@@ -454,10 +470,15 @@ export default function Header({ role }) {
 
                     <Box
                       sx={{
-                        background: "#e4e6eb",
+                        background:
+                          message.userId === userInfo?._id
+                            ? "#0084ff"
+                            : "#e4e6eb",
                         borderRadius: "1rem",
                         padding: "8px 16px",
                         width: "fit-content",
+                        color:
+                          message.userId === userInfo?._id ? "white" : "#000",
                       }}
                     >
                       {message?.content}
