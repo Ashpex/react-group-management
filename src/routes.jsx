@@ -11,7 +11,6 @@ import GroupDetail from "./pages/groups/details";
 import JoinGroup from "./pages/groups/join";
 import GroupsPage from "./pages/groups/list";
 import Home from "./pages/home";
-import EditPresentation from "./pages/presentation/edit";
 import PresentationList from "./pages/presentation/list";
 import ChangePasswordForm from "./pages/user/changePassword";
 
@@ -20,8 +19,6 @@ import ProfileEditor from "./pages/user/editProfile";
 import { APP_LOGOUT_EVENT } from "./utils/constants";
 
 import Layout from "./layout/Layout";
-import GuestPresentation from "./pages/presentation/active/guestPresentation";
-import HostPresentation from "./pages/presentation/active/hostPresentation";
 import UserProfile from "./pages/user/userProfile";
 import VerifyEmail from "./pages/user/verifyEmail";
 import PresentationDetail from "./pages/presentation/detail";
@@ -68,21 +65,6 @@ export const AUTHORIZED_ROUTES = [
     path: "/presentations",
     name: "Presentations",
     element: <PresentationList />,
-  },
-  {
-    path: "/presentation/:presentationId/:slideId/edit",
-    name: "Presentation",
-    element: <EditPresentation />,
-  },
-  {
-    path: "/presentation/active/:presentationId",
-    name: "Present",
-    element: <HostPresentation />,
-  },
-  {
-    path: "/presentation/join/",
-    name: "Join Present",
-    element: <GuestPresentation />,
   },
   {
     path: "/slides/:slideId",

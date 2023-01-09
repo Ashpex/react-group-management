@@ -1,9 +1,8 @@
 import { Box } from "@mantine/core";
 import React from "react";
 import { Bar } from "react-chartjs-2";
-export default function PresentationContent({ sx, slide }) {
 
- 
+export default function PresentationContent({ sx, slide }) {
   const labels = (slide?.options || []).map((v) => v.value);
 
   const options = {

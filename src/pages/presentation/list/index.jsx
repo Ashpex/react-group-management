@@ -1,7 +1,6 @@
 import {
   Container,
   Text,
-  Group,
   Tooltip,
   Center,
   Loader,
@@ -14,7 +13,6 @@ import {
 } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons";
 import { useState, useEffect } from "react";
-import TimeAgo from "react-timeago";
 
 import PresentationListHeader from "./header";
 
@@ -42,11 +40,6 @@ const useStyles = createStyles(() => ({
 export default function PresentationList() {
   const { classes } = useStyles();
   const [dataSource, setDataSource] = useState([]);
-  const [selectedPresentation, setSelectedPresentation] = useState({
-    name: "",
-    id: "",
-  });
-  const [opened, setOpened] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const { userInfo } = useUserInfo();
 
@@ -69,94 +62,6 @@ export default function PresentationList() {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleDeletePresentation = async (presentationId) => {
-    try {
-      const { data: response } = await presentationApi.deletePresentation(
-        presentationId
-      );
-
-      notificationManager.showSuccess("", response.message);
-      setOpened(false);
-      fetchData();
-    } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
-    }
-  };
-
-  const handleOpenModal = (presentationName, presentationId) => {
-    setOpened(true);
-    setSelectedPresentation({ name: presentationName, id: presentationId });
-  };
-
-  const handleCloseModal = () => {
-    setOpened(false);
-  };
-
-  const COLUMNS = [
-    {
-      accessor: "name",
-      title: "Name",
-      width: 400,
-      render: (record) => <Text>{record.name}</Text>,
-    },
-    {
-      accessor: "description",
-      title: "Description",
-      render: (record) => <Text>{record.description}</Text>,
-    },
-    {
-      accessor: "createdAt",
-      title: "Created",
-      render: (record) => (
-        <Tooltip label={new Date(record.updatedAt).toLocaleString("en-US")}>
-          <Text>
-            <TimeAgo date={record.createdAt} title="" />
-          </Text>
-        </Tooltip>
-      ),
-    },
-    {
-      accessor: "action",
-      title: "",
-      width: 100,
-      render: (record) => (
-        <Group position="center">
-          {/* <Menu shadow="sm" width={100}>
-            <Menu.Target>
-              <ActionIcon>
-                <IconDots />
-              </ActionIcon>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item
-                component={Link}
-                to={`/presentation/${record._id}/${record.slides[0]._id}/edit`}
-                icon={<IconEdit size={18} />}
-              >
-                Edit
-              </Menu.Item>
-              <Link to={`/presentation/active/${record._id}`}>
-                <Menu.Item icon={<IconPresentation size={18} />}>
-                  Present
-                </Menu.Item>
-              </Link>
-              <Menu.Divider />
-              <Menu.Item
-                color="red"
-                icon={<IconTrash size={18} />}
-                onClick={() => handleOpenModal(record.name, record._id)}
-              >
-                Delete
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu> */}
-        </Group>
-      ),
-    },
-  ];
 
   return (
     <Container size="lg">
