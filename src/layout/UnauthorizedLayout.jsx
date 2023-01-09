@@ -6,10 +6,7 @@ export default function UnauthorizedLayout({ children }) {
     <AppShell
       styles={(theme) => ({
         main: {
-          backgroundColor:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[4]
-              : theme.colors.gray[0],
+          backgroundColor: theme.colors.gray[0],
         },
       })}
     >

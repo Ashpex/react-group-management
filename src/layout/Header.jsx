@@ -17,7 +17,6 @@ import { Link } from "react-router-dom";
 import BlackLogo from "../assets/logo-low-res-black.png";
 
 import useUserInfo from "./../hooks/useUserInfo";
-import ThemeSwitcher from "../pages/common/buttons/ThemeSwitcher";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -42,10 +41,6 @@ const useStyles = createStyles((theme) => ({
       backgroundColor: theme.colors.gray[0],
     }),
   },
-
-  hiddenMobile: { [theme.fn.smallerThan("sm")]: { display: "none" } },
-
-  hiddenDesktop: { [theme.fn.largerThan("sm")]: { display: "none" } },
 }));
 
 const UserAvatar = (userInfo) => (
@@ -75,7 +70,6 @@ const RightButtons = () => {
 
   return (
     <>
-      {/* <ThemeSwitcher /> */}
       {userInfo ? (
         <Link to="/user/profile">
           <UserAvatar userInfo={userInfo} />
@@ -88,7 +82,7 @@ const RightButtons = () => {
 export default function HeaderMegaMenu() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
-  const { classes, theme } = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Box>
