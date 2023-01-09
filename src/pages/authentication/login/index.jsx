@@ -59,9 +59,7 @@ const LoginPage = () => {
 
       navigate("/");
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", error.response?.data.message);
     }
   };
 
