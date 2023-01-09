@@ -3,14 +3,9 @@ import {
   Avatar,
   Header,
   Group,
-  Divider,
   Box,
-  Burger,
-  Drawer,
   Image,
-  ScrollArea,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 
 import { Link } from "react-router-dom";
 
@@ -80,8 +75,6 @@ const RightButtons = () => {
 };
 
 export default function HeaderMegaMenu() {
-  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
-    useDisclosure(false);
   const { classes } = useStyles();
 
   return (
@@ -103,33 +96,8 @@ export default function HeaderMegaMenu() {
           <Group className={classes.hiddenMobile}>
             <RightButtons />
           </Group>
-
-          <Burger
-            opened={drawerOpened}
-            onClick={toggleDrawer}
-            className={classes.hiddenDesktop}
-          />
         </Group>
       </Header>
-
-      <Drawer
-        opened={drawerOpened}
-        onClose={closeDrawer}
-        size="100%"
-        padding="md"
-        title="Navigation"
-        className={classes.hiddenDesktop}
-        zIndex={1_000_000}
-      >
-        <ScrollArea sx={{ height: "calc(100vh - 60px)" }} mx="-md">
-          <Divider my="sm" color={"gray.1"} />
-          <NavLinks />
-          <Divider my="sm" color={"gray.1"} />
-          <Group position="center" grow pb="xl" px="md">
-            <RightButtons />
-          </Group>
-        </ScrollArea>
-      </Drawer>
     </Box>
   );
 }

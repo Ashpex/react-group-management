@@ -49,8 +49,7 @@ export default function PresentationDetail() {
 
       setSlides(response.data);
     } catch (error) {
-      console.log(error);
-      notificationManager.showFail("", error.response?.data.message);
+      notificationManager.showFail("", "Get all slides failed");
     }
   }, []);
 
@@ -59,8 +58,7 @@ export default function PresentationDetail() {
       await presentationApi.createSlide(presentationId);
       getAllSlides();
     } catch (error) {
-      console.log(error);
-      notificationManager.showFail("", error.response?.data.message);
+      notificationManager.showFail("", "Create slide failed");
     }
   };
 
@@ -69,8 +67,7 @@ export default function PresentationDetail() {
       await presentationApi.deleteSlide(presentationId, slideId);
       getAllSlides();
     } catch (error) {
-      console.log(error);
-      notificationManager.showFail("", error.response?.data.message);
+      notificationManager.showFail("", "Delete slide failed");
     }
   };
 

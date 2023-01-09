@@ -3,7 +3,6 @@ import { createBrowserRouter, Outlet, useNavigate } from "react-router-dom";
 
 import UnauthorizedLayout from "./layout/UnauthorizedLayout";
 import LoginPage from "./pages/authentication/login";
-import LoginGoogle from "./pages/authentication/login/loginGoogle";
 import Logout from "./pages/authentication/logout";
 import RegisterPage from "./pages/authentication/register";
 import NotFoundPage from "./pages/errorPage/notFound";
@@ -104,11 +103,6 @@ const UNAUTHORIZED_ROUTES = [
     path: "/login",
     name: "Login",
     element: <LoginPage />,
-  },
-  {
-    path: "/login/google",
-    name: "Login Google",
-    element: <LoginGoogle />,
   },
   {
     path: "/group/join",
