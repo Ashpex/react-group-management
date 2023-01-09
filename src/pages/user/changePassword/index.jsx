@@ -58,9 +58,7 @@ export default function ChangePasswordForm() {
       notificationManager.showSuccess("", "Password changed successfully");
       navigate("/user/profile");
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", "Password changed failed");
     }
   };
 

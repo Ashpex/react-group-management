@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Avatar,
   Button,
@@ -42,14 +43,11 @@ export default function ProfileEditor() {
         form.setValues(response);
         setEmail(response.email);
       } catch (error) {
-        if (isAxiosError(error)) {
-          notificationManager.showFail("", error.response?.data.message);
-        }
+        notificationManager.showFail("", error.response?.data.message);
       }
     };
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmitForm = async (values) => {
@@ -76,10 +74,7 @@ export default function ProfileEditor() {
         withBorder
         p="lg"
         sx={(theme) => ({
-          backgroundColor:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[5]
-              : theme.colors.white,
+          backgroundColor: theme.colors.white,
         })}
       >
         <Stack>
@@ -89,10 +84,7 @@ export default function ProfileEditor() {
               withBorder
               p="lg"
               sx={(theme) => ({
-                backgroundColor:
-                  theme.colorScheme === "dark"
-                    ? theme.colors.dark[4]
-                    : theme.colors.gray[0],
+                backgroundColor: theme.colors.gray[0],
                 width: "fit-content",
               })}
             >

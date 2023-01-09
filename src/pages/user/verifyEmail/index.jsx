@@ -29,7 +29,7 @@ export default function VerifyEmail() {
       }, 3000);
     } catch (error) {
       setError(error);
-      notificationManager.showFail("", error.response?.data?.message);
+      notificationManager.showFail("", "Verify email failed");
     }
     setLoading(false);
   };
