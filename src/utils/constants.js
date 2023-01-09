@@ -28,9 +28,3 @@ export const COLORS = [
   "rgba(255, 159, 64, 0.3)",
   "rgba(255, 205, 86, 0.3)",
 ];
-
-export const SlideType = {
-  MultipleChoice: "MULTIPLE_CHOICE",
-  Heading: "HEADING",
-  Paragraph: "PARAGRAPH",
-};
