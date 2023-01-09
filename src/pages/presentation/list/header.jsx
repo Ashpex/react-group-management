@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import presentationApi from "../../../api/presentation";
 import * as notificationManager from "../../common/notificationManager";
-import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import useUserInfo from "../../../hooks/useUserInfo";
 
 export default function PresentationListHeader({ fetchData }) {
@@ -35,9 +34,7 @@ export default function PresentationListHeader({ fetchData }) {
       handleCloseModal();
       fetchData();
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", error.response?.data.message);
     }
   };
 
@@ -71,10 +68,7 @@ export default function PresentationListHeader({ fetchData }) {
         <Title
           order={3}
           sx={(theme) => ({
-            color:
-              theme.colorScheme === "dark"
-                ? theme.colors.gray[1]
-                : theme.colors.dark[4],
+            color: theme.colors.dark[4],
           })}
         >
           My presentations

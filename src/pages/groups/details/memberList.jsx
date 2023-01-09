@@ -11,7 +11,6 @@ import {
 } from "../../common/confirmPopover";
 import * as notificationManager from "../../common/notificationManager";
 import { sortMemberListByRole } from "../../../utils";
-import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import { USER_ROLE } from "../../../utils/constants";
 import useUserInfo from "../../../hooks/useUserInfo";
 
@@ -36,9 +35,7 @@ export default function MemberList({ role, setRole }) {
       setRole(user?.role || "");
       setDataSource(sortMemberListByRole(convertedData));
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", "Something went wrong");
     }
 
     setFetching(false);
@@ -55,9 +52,7 @@ export default function MemberList({ role, setRole }) {
       notificationManager.showSuccess("", "Assign role successfully");
       fetchData();
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", "Something went wrong");
     }
   };
 
@@ -68,9 +63,7 @@ export default function MemberList({ role, setRole }) {
       notificationManager.showSuccess("", "Kick out member successfully");
       fetchData();
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", "Something went wrong");
     }
   };
 

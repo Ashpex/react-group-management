@@ -81,10 +81,7 @@ const RegisterPage = () => {
         sx={(theme) => ({
           fontFamily: `Greycliff CF, ${theme.fontFamily}`,
           fontWeight: 900,
-          color:
-            theme.colorScheme === "dark"
-              ? theme.colors.gray[1]
-              : theme.colors.dark[4],
+          color: theme.colors.dark[4],
         })}
       >
         Welcome to Classroom Management!

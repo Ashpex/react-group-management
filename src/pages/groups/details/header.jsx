@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
   Group,
@@ -125,9 +126,7 @@ export default function Header({ role }) {
       await messageApi.createMessage(groupId, content, userInfo._id);
       socketRef.current.emit("getMessages", { groupId });
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", "Failed to send message");
-      }
+      notificationManager.showFail("", "Failed to send message");
     }
   };
 

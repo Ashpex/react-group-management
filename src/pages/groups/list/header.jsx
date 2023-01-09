@@ -15,7 +15,6 @@ import { useState } from "react";
 
 import groupApi from "../../../api/group";
 import * as notificationManager from "../../common/notificationManager";
-import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import { GROUP_FILTER_TYPE, USER_ROLE } from "../../../utils/constants";
 import useUserInfo from "../../../hooks/useUserInfo";
 
@@ -99,9 +98,7 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
       );
       fetchData();
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", error.response?.data.message);
     } finally {
       setButtonLoading(false);
       handleCloseCreateGroupModal();
@@ -129,9 +126,7 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
       );
       fetchData();
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", error.response?.data.message);
     } finally {
       setButtonLoading(false);
       handleCloseJoinGroupModal();
@@ -190,10 +185,7 @@ export default function Header({ fetchData, groupFilter, setGroupFilter }) {
         <Title
           order={3}
           sx={(theme) => ({
-            color:
-              theme.colorScheme === "dark"
-                ? theme.colors.gray[1]
-                : theme.colors.dark[4],
+            color: theme.colors.dark[4],
           })}
         >
           Groups
