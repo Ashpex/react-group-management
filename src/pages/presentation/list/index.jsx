@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Container,
   Text,
@@ -51,9 +52,7 @@ export default function PresentationList() {
       );
       setDataSource(response);
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", "Something went wrong");
     }
 
     setLoading(false);
