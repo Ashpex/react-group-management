@@ -71,9 +71,9 @@ export default function SlideQuestion() {
     socketRef.current = socketIOClient.connect(process.env.REACT_APP_BACKEND);
 
     socketRef.current.on("updateOptions", () => {
-      //   if (slideId) {
-      getSlideById(slideId);
-      //   }
+      if (slideId) {
+        getSlideById(slideId);
+      }
     });
 
     return () => {
