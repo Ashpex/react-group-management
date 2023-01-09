@@ -8,22 +8,12 @@ const groupApi = {
       createdUserId,
     }),
 
-  getAll: (params) => {
-    const pageSize =
-      params.pageSize && params.pageSize > 0 ? params.pageSize : 10;
-    const page = params.page && params.page > 0 ? params.page : 1;
-
-    return axiosClient.get(`/group?size=${pageSize}&page=${page}`);
-  },
-
   getGroupById: (id) => axiosClient.get(`/groups/${id}`),
 
   getGroupsOwner: (createdUserId) =>
     axiosClient.get(`/groups/owner/${createdUserId}`),
 
   getAllGroupsByUserId: (userId) => axiosClient.get(`/groups/users/${userId}`),
-
-  getInvitationLink: (id) => axiosClient.get(`/group/${id}/get-invite-link`),
 
   inviteUserByEmail: (groupId, email, userRole) =>
     axiosClient.post(`/groups/invite/${groupId}`, {
@@ -33,8 +23,6 @@ const groupApi = {
 
   joinGroup: (groupId, email, userRole) =>
     axiosClient.post(`/groups/joinGroup/${groupId}`, { email, userRole }),
-
-  getAllMembers: (id) => axiosClient.get(`/group/${id}`),
 
   changeRoleMember: (groupId, userId, userRole) =>
     axiosClient.post(`/groups/${groupId}/changeRole/${userId}`, {
