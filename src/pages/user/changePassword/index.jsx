@@ -7,7 +7,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 import userApi from "../../../api/user";
 import * as notificationManager from "../../common/notificationManager";
-import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import useUserInfo from "../../../hooks/useUserInfo";
 
 export default function ChangePasswordForm() {

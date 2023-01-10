@@ -19,7 +19,6 @@ import PresentationListHeader from "./header";
 
 import presentationApi from "../../../api/presentation";
 import * as notificationManager from "../../common/notificationManager";
-import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import useUserInfo from "../../../hooks/useUserInfo";
 import { Link } from "react-router-dom";
 

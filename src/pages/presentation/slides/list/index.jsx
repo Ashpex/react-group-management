@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Box, CloseButton, Image, Title } from "@mantine/core";
 import React from "react";
 import BarChart from "../../../../assets/bar-chart.svg";

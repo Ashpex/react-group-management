@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Button, createStyles, Radio, Title } from "@mantine/core";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";

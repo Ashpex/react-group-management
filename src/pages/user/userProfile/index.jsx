@@ -17,7 +17,6 @@ import { Link } from "react-router-dom";
 import userApi from "../../../api/user";
 import useUserInfo from "../../../hooks/useUserInfo";
 import * as notificationManager from "../../common/notificationManager";
-import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import Cookies from "js-cookie";
 
 function TrueUserProfile(info) {
