@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
 import { Box, CloseButton, Image, Title } from "@mantine/core";
 import React from "react";
 import BarChart from "../../../../assets/bar-chart.svg";
-import PresentationContent from "../../content";
 
 export default function PresentationSlides({
   sx,
@@ -53,22 +51,10 @@ export default function PresentationSlides({
               gap: "4px",
             }}
           >
-            <PresentationContent
-              sx={{
-                width: "100%",
-                height: "calc(100% - 8px)",
-                // height: "100%",
-                backgroundColor: "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              slide={slide}
-            />
-            {/* <Image src={BarChart} alt="image" width={50} height={50} /> */}
-            {/* <Title order={6} sx={{ fontWeight: "600" }}>
+            <Image src={BarChart} alt="image" width={50} height={50} />
+            <Title order={6} sx={{ fontWeight: "600" }}>
               Bar Chart
-            </Title> */}
+            </Title>
           </Box>
           <CloseButton
             onClick={(e) => {
