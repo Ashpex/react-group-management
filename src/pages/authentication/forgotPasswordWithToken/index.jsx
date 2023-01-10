@@ -1,26 +1,9 @@
-import {
-  TextInput,
-  PasswordInput,
-  Checkbox,
-  Anchor,
-  Paper,
-  Title,
-  Text,
-  Container,
-  Group,
-  Button,
-  Divider,
-  Stack,
-} from "@mantine/core";
+import { PasswordInput, Paper, Title, Container, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import Cookies from "js-cookie";
-import { useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import authApi from "../../../api/auth";
 import * as notificationManager from "../../common/notificationManager";
-import { isAxiosError } from "../../../utils/axiosErrorHandler";
-import { AUTH_COOKIE } from "../../../utils/constants";
 
 const ForgotPasswordWithToken = () => {
   const navigate = useNavigate();
@@ -35,10 +18,7 @@ const ForgotPasswordWithToken = () => {
 
   const handleSubmitForm = async (values) => {
     try {
-      const { data, response } = await authApi.resetPassword(
-        values.password,
-        token
-      );
+      await authApi.resetPassword(values.password, token);
 
       notificationManager.showSuccess("", "Đổi mật khẩu thành công");
       navigate("/");
