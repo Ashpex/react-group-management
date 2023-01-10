@@ -17,6 +17,11 @@ const authApi = {
     axiosClient.post("/auth/google", {
       tokenId,
     }),
+  forgotPassword: (email) =>
+    axiosClient.post("/auth/forgot-password", { email }),
+
+  resetPassword: (password, token) =>
+    axiosClient.post(`/auth/reset-password/${token}`, { password }),
 
   verifyEmail: (token) => axiosClient.get(`/auth/verify-email/${token}`),
 };

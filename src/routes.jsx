@@ -23,6 +23,7 @@ import VerifyEmail from "./pages/user/verifyEmail";
 import PresentationDetail from "./pages/presentation/detail";
 import SlideQuestion from "./pages/presentation/slides/question";
 import ForgotPassword from "./pages/authentication/forgotPassword";
+import ForgotPasswordWithToken from "./pages/authentication/forgotPasswordWithToken";
 
 export const AUTHORIZED_ROUTES = [
   {
@@ -103,7 +104,12 @@ const UNAUTHORIZED_ROUTES = [
   {
     path: "/forgot-password",
     name: "Forgot Password",
-    element: <ForgotPassword/>,
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/user/reset-password/:token",
+    name: "Reset Password With Token",
+    element: <ForgotPasswordWithToken />,
   },
   {
     path: "/login",
