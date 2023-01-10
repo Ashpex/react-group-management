@@ -24,6 +24,7 @@ import {
   IconDoorEnter,
   IconMessageCircle,
   IconSend,
+  IconPresentationAnalytics,
 } from "@tabler/icons";
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -32,9 +33,9 @@ import socketIOClient from "socket.io-client";
 import groupApi from "../../../api/group";
 import messageApi from "../../../api/message";
 import * as notificationManager from "../../common/notificationManager";
-import { isAxiosError } from "../../../utils/axiosErrorHandler";
 import { USER_ROLE } from "../../../utils/constants";
 import useUserInfo from "../../../hooks/useUserInfo";
+import presentationApi from "../../../api/presentation";
 
 const useStyles = createStyles((theme) => ({
   modal: {
@@ -59,10 +60,15 @@ export default function Header({ role }) {
   const [inviteViaEmailOpened, setInviteViaEmailOpened] = useState(false);
   const [joinSlideOpened, setJoinSlideOpened] = useState(false);
   const [groupData, setGroupData] = useState();
+  const [openConfirmWatchPresentation, setOpenConfirmWatchPresentation] =
+    useState(false);
   const [invitationLink, setInvitationLink] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [openChatBox, setOpenChatBox] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [presentations, setPresentations] = useState([]);
+  const [presentationId, setPresentationId] = useState("");
+  const [firstSlide, setFirstSlide] = useState("");
   const { groupId } = useParams();
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -89,9 +95,20 @@ export default function Header({ role }) {
 
   useEffect(() => {
     socketRef.current = socketIOClient.connect(process.env.REACT_APP_BACKEND);
+    getPresentationsByUserId();
 
     socketRef.current.on("getMessages", () => {
+      if (!openChatBox) {
+        setOpenChatBox(true);
+      }
       getAllMessages();
+    });
+
+    socketRef.current.on("createSlideShow", ({ data }) => {
+      if (role === USER_ROLE.MEMBER || !role) {
+        setPresentationId(data?.presentationId);
+        setOpenConfirmWatchPresentation(true);
+      }
     });
 
     return () => {
@@ -106,9 +123,7 @@ export default function Header({ role }) {
 
         setGroupData(response);
       } catch (error) {
-        if (isAxiosError(error)) {
-          notificationManager.showFail("", error.response?.data.message);
-        }
+        notificationManager.showFail("", error.response?.data.message);
       }
     };
 
@@ -139,9 +154,18 @@ export default function Header({ role }) {
       const { data: response } = await messageApi.getMessagesByGroupId(groupId);
       setMessages(response);
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", error.response?.data.message);
+    }
+  };
+
+  const getPresentationsByUserId = async () => {
+    try {
+      const { data: response } = await presentationApi.getPresentations(
+        userInfo._id
+      );
+      setPresentations(response);
+    } catch (error) {
+      notificationManager.showFail("", "Failed to get presentations");
     }
   };
 
@@ -196,9 +220,7 @@ export default function Header({ role }) {
 
       notificationManager.showSuccess("", response.message);
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", error.response?.data.message);
     }
 
     setLoading(false);
@@ -212,9 +234,7 @@ export default function Header({ role }) {
       notificationManager.showSuccess("", `You have left ${groupData?.name}`);
       navigate("/groups");
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", error.response?.data.message);
     }
   };
 
@@ -225,14 +245,72 @@ export default function Header({ role }) {
       notificationManager.showSuccess("", response.message);
       navigate("/groups");
     } catch (error) {
-      if (isAxiosError(error)) {
-        notificationManager.showFail("", error.response?.data.message);
-      }
+      notificationManager.showFail("", error.response?.data.message);
+    }
+  };
+
+  const handleOpenPresentation = (presentationId) => {
+    socketRef.current.emit("createSlideShow", { presentationId });
+    navigate(`/presentations/${presentationId}`);
+  };
+
+  const getFirstSlideFromPresentationId = async (presentationId) => {
+    try {
+      const { data: response } = await presentationApi.getFirstSlide(
+        presentationId
+      );
+
+      return response;
+    } catch (error) {
+      notificationManager.showFail("", error.response?.data.message);
     }
   };
 
   return (
     <>
+      {role === USER_ROLE.MEMBER && (
+        <Modal
+          centered
+          opened={openConfirmWatchPresentation}
+          onClose={() => setOpenConfirmWatchPresentation(false)}
+          title="Confirm"
+          size="lg"
+        >
+          <Title order={4}>
+            Your teacher are showing presentation. Do you want to join?
+          </Title>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              marginTop: "20px",
+              gap: "16px",
+            }}
+          >
+            <Button
+              color="red"
+              onClick={() => {
+                setOpenConfirmWatchPresentation(false);
+              }}
+            >
+              No
+            </Button>
+            <Button
+              onClick={async () => {
+                setOpenConfirmWatchPresentation(false);
+                const firstSlide = await getFirstSlideFromPresentationId(
+                  presentationId
+                );
+                navigate(`/slides/${firstSlide._id}`);
+              }}
+            >
+              Yes
+            </Button>
+          </Box>
+        </Modal>
+      )}
+
       <Modal
         title="Invitation link"
         opened={invitationModalOpened}
@@ -306,6 +384,26 @@ export default function Header({ role }) {
         </Breadcrumbs>
         {role === USER_ROLE.OWNER || role === USER_ROLE.CO_OWNER ? (
           <Group>
+            <Menu position="bottom-end" shadow="md">
+              <Menu.Target>
+                <Tooltip label="Create slideshow">
+                  <Button>
+                    <IconPresentationAnalytics />
+                  </Button>
+                </Tooltip>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {presentations?.map((presentation) => (
+                  <Menu.Item
+                    key={presentation._id}
+                    onClick={() => handleOpenPresentation(presentation._id)}
+                  >
+                    {presentation?.name}
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
+
             <Menu position="bottom-end" shadow="md">
               <Menu.Target>
                 <Tooltip label="Invite people">
@@ -414,7 +512,7 @@ export default function Header({ role }) {
               backgroundColor: "white",
               borderRadius: "1rem",
               border: "1px solid #e5e5e5",
-              padding: "14px",
+              padding: "16px",
             }}
           >
             <Box
@@ -426,13 +524,13 @@ export default function Header({ role }) {
               }}
             >
               <CloseButton
-                size="18"
-                iconSize={20}
+                size="14"
+                iconSize={16}
                 color="red"
                 variant="filled"
                 sx={{
                   borderRadius: "50%",
-                  padding: "8px",
+                  padding: "6px",
                 }}
                 onClick={() => {
                   setOpenChatBox(!openChatBox);
@@ -447,7 +545,7 @@ export default function Header({ role }) {
                 flexDirection: "column",
                 height: "calc(100% - 40px)",
                 width: "100%",
-                overflowY: "scroll",
+                overflowY: "auto",
               }}
             >
               {messages?.map((message, index) => {
