@@ -22,6 +22,7 @@ ChartJS.register(
 
 export default function PresentationContent({ sx, slide }) {
   const labels = (slide?.options || []).map((v) => v.value);
+  console.log("sile", slide);
 
   const options = {
     responsive: true,
@@ -55,7 +56,43 @@ export default function PresentationContent({ sx, slide }) {
         ...sx,
       }}
     >
-      {Boolean(slide?.question) && <Bar options={options} data={data} />}
+      {Boolean(slide?.type === "Multipe_Choice") && (
+        <Box>
+          {Boolean(slide?.question) && <Bar options={options} data={data} />}
+        </Box>
+      )}
+
+      {/* {Boolean(slide?.type === "Paragraph") && (
+        <Box>
+          <Title order={6} sx={{ fontWeight: "600" }}>
+            {slide?.heading}
+          </Title>
+          <Title order={6} sx={{ fontWeight: "600" }}>
+            {slide?.paragraph}
+          </Title>
+        </Box>
+      )} */}
+
+      {/* {Boolean(slide?.type === "Heading") && (
+        <Box>
+          <Title order={6} sx={{ fontWeight: "600" }}>
+            {slide?.heading}
+          </Title>
+          <Title order={6} sx={{ fontWeight: "600" }}>
+            {slide?.subHeading}
+          </Title>
+        </Box>
+      )} */}
+      {/* {Boolean(slide?.type === "Paragraph") && (
+        <Box>
+          <Title order={6} sx={{ fontWeight: "600" }}>
+            {slide?.heading}
+          </Title>
+          <Title order={6} sx={{ fontWeight: "600" }}>
+            {slide?.paragraph}
+          </Title>
+        </Box>
+      )} */}
     </Box>
   );
 }

@@ -24,6 +24,10 @@ const presentationApi = {
   updateSlide: (presentationId, slideId, data) =>
     axiosClient.put(`/presentations/slides/${slideId}`, {
       presentationId,
+      type: data.type,
+      heading: data.heading,
+      subHeading: data.subHeading,
+      parragraph: data.parragraph,
       question: data.question,
       options: data.options,
       answer: data.answer,

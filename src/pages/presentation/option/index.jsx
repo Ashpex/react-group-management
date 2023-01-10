@@ -21,10 +21,24 @@ export default function PresentationOption({
 }) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [type, setType] = useState("");
   const [options, setOptions] = useState([]);
   const [questionValueDebounce] = useDebounce(question, 400);
+  const [typeValueDebounce] = useDebounce(type, 400);
   const [answerValueDebounce] = useDebounce(answer, 400);
   const [optionValueDebounce] = useDebounce(options, 400);
+
+  //heading
+
+  const [heading, setHeading] = useState("");
+  const [subHeading, setSubHeading] = useState("");
+  //paragraph
+  const [paragraph, setParagraph] = useState("");
+
+  const [HeadingValueDebounce] = useDebounce(heading, 400);
+  const [SubHeadingValueDebounce] = useDebounce(subHeading, 400);
+  const [ParagraphValueDebounce] = useDebounce(paragraph, 400);
+
   const socketRef = useRef();
 
   const updateSlide = async (data) => {
@@ -50,29 +64,45 @@ export default function PresentationOption({
 
   useEffect(() => {
     if (slide) {
+      setHeading(slide?.heading);
+      setSubHeading(slide?.subHeading);
+      setParagraph(slide?.paragraph);
+      setType(slide?.type);
       setQuestion(slide?.question);
       setOptions(slide?.options);
       setAnswer(slide?.answer);
     }
-  }, [slide?.question, slide?.options]);
+  }, [slide?.type, slide?.question, slide?.options]);
 
   useEffect(() => {
     if (slide) {
       updateSlide({
+        heading: HeadingValueDebounce,
+        subHeading: SubHeadingValueDebounce,
+        paragraph: ParagraphValueDebounce,
+        type: typeValueDebounce,
         question: questionValueDebounce,
         options: optionValueDebounce,
         answer: answerValueDebounce,
       });
     }
-  }, [questionValueDebounce, optionValueDebounce, answerValueDebounce]);
+  }, [
+    HeadingValueDebounce,
+    SubHeadingValueDebounce,
+    ParagraphValueDebounce,
+    questionValueDebounce,
+    typeValueDebounce,
+    optionValueDebounce,
+    answerValueDebounce,
+  ]);
 
   return (
     <Box sx={sx}>
       <>
         <Title sx={{ fontSize: 20 }}>Id: {slide?._id}</Title>
-
         <Select
-          value={slide?.type}
+          value={type}
+          onChange={setType}
           label="Select type"
           placeholder="Select type"
           data={[
@@ -81,86 +111,123 @@ export default function PresentationOption({
             { value: "Paragraph", label: "Paragraph" },
           ]}
         />
-
-        <TextInput
-          label="Question"
-          placeholder="Your question"
-          required
-          value={question || ""}
-          onChange={(e) => setQuestion(e.target.value)}
-        />
-
-        {Boolean(options?.length) && (
-          <Select
-            mt={"md"}
-            label="Anwser"
-            placeholder="Choose anwser"
-            value={answer}
-            data={[
-              ...options.map((option, index) => ({
-                label: option.value,
-                value: option.value,
-              })),
-            ]}
-            onChange={(value) => setAnswer(value)}
-          />
+        {Boolean(type === "Multipe_Choice") && (
+          <Box>
+            <TextInput
+              label="Question"
+              placeholder="Your question"
+              required
+              value={question || ""}
+              onChange={(e) => setQuestion(e.target.value)}
+            />
+            {Boolean(options?.length) && (
+              <Select
+                mt={"md"}
+                label="Anwser"
+                placeholder="Choose anwser"
+                value={answer}
+                data={[
+                  ...options.map((option, index) => ({
+                    label: option.value,
+                    value: option.value,
+                  })),
+                ]}
+                onChange={(value) => setAnswer(value)}
+              />
+            )}
+            {options.map((option, index) => (
+              <OptionItem
+                key={index}
+                valueOption={option.value}
+                updateValueOption={(value) => {
+                  const newOptions = [...options];
+                  newOptions[index].value = value;
+                  setOptions(newOptions);
+                }}
+                removeOption={() => {
+                  const newOptions = [...options];
+                  newOptions.splice(index, 1);
+                  setOptions(newOptions);
+                }}
+                number={index + 1}
+              />
+            ))}
+            <Box mt="lg">
+              <Button
+                sx={{
+                  width: "100%",
+                }}
+                onClick={() => {
+                  setOptions([
+                    ...options,
+                    {
+                      value: "",
+                      quantity: 0,
+                    },
+                  ]);
+                }}
+              >
+                Add Option
+              </Button>
+            </Box>
+            <Box mt="lg">
+              <Button
+                sx={{
+                  width: "100%",
+                }}
+                color="red"
+                onClick={() => {
+                  setOptions([
+                    ...options.map((option) => ({
+                      ...option,
+                      quantity: 0,
+                    })),
+                  ]);
+                }}
+              >
+                Reset vote
+              </Button>
+            </Box>
+          </Box>
         )}
 
-        {options.map((option, index) => (
-          <OptionItem
-            key={index}
-            valueOption={option.value}
-            updateValueOption={(value) => {
-              const newOptions = [...options];
-              newOptions[index].value = value;
-              setOptions(newOptions);
-            }}
-            removeOption={() => {
-              const newOptions = [...options];
-              newOptions.splice(index, 1);
-              setOptions(newOptions);
-            }}
-            number={index + 1}
-          />
-        ))}
+        {Boolean(type === "Heading") && (
+          <Box>
+            <TextInput
+              label="Heading"
+              placeholder="Heading"
+              required
+              value={heading || ""}
+              onChange={(e) => setHeading(e.target.value)}
+            />
+            <TextInput
+              label="Sub Heading"
+              placeholder="Sub Heading"
+              required
+              value={subHeading || ""}
+              onChange={(e) => setSubHeading(e.target.value)}
+            />
+          </Box>
+        )}
 
-        <Box mt="lg">
-          <Button
-            sx={{
-              width: "100%",
-            }}
-            onClick={() => {
-              setOptions([
-                ...options,
-                {
-                  value: "",
-                  quantity: 0,
-                },
-              ]);
-            }}
-          >
-            Add Option
-          </Button>
-        </Box>
-
-        <Box mt="lg">
-          <Button
-            sx={{
-              width: "100%",
-            }}
-            color="red"
-            onClick={() => {
-              setOptions([
-                ...options.map((option) => ({
-                  ...option,
-                  quantity: 0,
-                })),
-              ]);
-            }}
-          >
-            Reset vote
-          </Button>
-        </Box>
+        {Boolean(type === "Paragraph") && (
+          <Box>
+            <TextInput
+              label="Heading"
+              placeholder="Heading"
+              required
+              value={heading || ""}
+              onChange={(e) => setHeading(e.target.value)}
+            />
+            <TextInput
+              label="Paragraph"
+              placeholder="Paragraph"
+              required
+              value={paragraph || ""}
+              onChange={(e) => setParagraph(e.target.value)}
+            />
+          </Box>
+        )}
       </>
     </Box>
   );

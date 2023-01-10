@@ -51,10 +51,34 @@ export default function PresentationSlides({
               gap: "4px",
             }}
           >
-            <Image src={BarChart} alt="image" width={50} height={50} />
-            <Title order={6} sx={{ fontWeight: "600" }}>
-              Bar Chart
-            </Title>
+            {Boolean(slide.type === "Multipe_Choice") && (
+              <Box>
+                <Image src={BarChart} alt="image" width={50} height={50} />
+                <Title order={6} sx={{ fontWeight: "600" }}>
+                  Bar Chart
+                </Title>
+              </Box>
+            )}
+            {Boolean(slide.type === "Paragraph") && (
+              <Box>
+                <Title order={6} sx={{ fontWeight: "600" }}>
+                  {slide.heading}
+                </Title>
+                <Title order={6} sx={{ fontWeight: "600" }}>
+                  {slide.paragraph}
+                </Title>
+              </Box>
+            )}
+            {Boolean(slide.type === "Heading") && (
+              <Box>
+                <Title order={6} sx={{ fontWeight: "600" }}>
+                  {slide.heading}
+                </Title>
+                <Title order={6} sx={{ fontWeight: "600" }}>
+                  {slide.subHeading}
+                </Title>
+              </Box>
+            )}
           </Box>
           <CloseButton
             onClick={(e) => {
