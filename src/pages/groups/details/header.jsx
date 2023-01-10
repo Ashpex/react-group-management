@@ -121,6 +121,10 @@ export default function Header({ role }) {
     }
   }, [groupId, openChatBox]);
 
+  useEffect(() => {
+    chatBoxRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const sendMessage = async (content) => {
     try {
       await messageApi.createMessage(groupId, content, userInfo._id);
@@ -134,7 +138,6 @@ export default function Header({ role }) {
     try {
       const { data: response } = await messageApi.getMessagesByGroupId(groupId);
       setMessages(response);
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     } catch (error) {
       if (isAxiosError(error)) {
         notificationManager.showFail("", error.response?.data.message);
@@ -446,7 +449,6 @@ export default function Header({ role }) {
                 width: "100%",
                 overflowY: "scroll",
               }}
-              ref={chatBoxRef}
             >
               {messages?.map((message, index) => {
                 return (
@@ -500,6 +502,7 @@ export default function Header({ role }) {
                   </Box>
                 );
               })}
+              <div ref={chatBoxRef}></div>
             </Box>
 
             <Box
