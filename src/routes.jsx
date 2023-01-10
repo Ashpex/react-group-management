@@ -22,6 +22,7 @@ import UserProfile from "./pages/user/userProfile";
 import VerifyEmail from "./pages/user/verifyEmail";
 import PresentationDetail from "./pages/presentation/detail";
 import SlideQuestion from "./pages/presentation/slides/question";
+import ForgotPassword from "./pages/authentication/forgotPassword";
 
 export const AUTHORIZED_ROUTES = [
   {
@@ -98,6 +99,11 @@ const UNAUTHORIZED_ROUTES = [
     path: "/register",
     name: "Register",
     element: <RegisterPage />,
+  },
+  {
+    path: "/forgot-password",
+    name: "Forgot Password",
+    element: <ForgotPassword/>,
   },
   {
     path: "/login",
