@@ -27,7 +27,7 @@ const presentationApi = {
       type: data.type,
       heading: data.heading,
       subHeading: data.subHeading,
-      parragraph: data.parragraph,
+      paragraph: data.paragraph,
       question: data.question,
       options: data.options,
       answer: data.answer,

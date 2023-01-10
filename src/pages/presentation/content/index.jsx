@@ -1,4 +1,4 @@
-import { Box } from "@mantine/core";
+import { Box, Title } from "@mantine/core";
 import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -6,7 +6,7 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  Title,
+  Title as TitleChart,
   Tooltip,
   Legend,
 } from "chart.js";
@@ -15,14 +15,13 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  Title,
+  TitleChart,
   Tooltip,
   Legend
 );
 
 export default function PresentationContent({ sx, slide }) {
   const labels = (slide?.options || []).map((v) => v.value);
-  console.log("sile", slide);
 
   const options = {
     responsive: true,
@@ -56,43 +55,33 @@ export default function PresentationContent({ sx, slide }) {
         ...sx,
       }}
     >
-      {Boolean(slide?.type === "Multipe_Choice") && (
+      {Boolean(slide?.type === "MULTIPLE_CHOICE") && (
         <Box>
           {Boolean(slide?.question) && <Bar options={options} data={data} />}
         </Box>
       )}
 
-      {/* {Boolean(slide?.type === "Paragraph") && (
+      {Boolean(slide?.type === "PARAGRAPH") && (
         <Box>
-          <Title order={6} sx={{ fontWeight: "600" }}>
+          <Title order={2} sx={{ fontWeight: "600" }}>
             {slide?.heading}
           </Title>
-          <Title order={6} sx={{ fontWeight: "600" }}>
+          <Title order={4} sx={{ fontWeight: "400" }}>
             {slide?.paragraph}
           </Title>
         </Box>
-      )} */}
+      )}
 
-      {/* {Boolean(slide?.type === "Heading") && (
+      {Boolean(slide?.type === "HEADING") && (
         <Box>
-          <Title order={6} sx={{ fontWeight: "600" }}>
+          <Title order={2} sx={{ fontWeight: "600" }}>
             {slide?.heading}
           </Title>
-          <Title order={6} sx={{ fontWeight: "600" }}>
+          <Title order={4} sx={{ fontWeight: "400" }}>
             {slide?.subHeading}
           </Title>
         </Box>
-      )} */}
-      {/* {Boolean(slide?.type === "Paragraph") && (
-        <Box>
-          <Title order={6} sx={{ fontWeight: "600" }}>
-            {slide?.heading}
-          </Title>
-          <Title order={6} sx={{ fontWeight: "600" }}>
-            {slide?.paragraph}
-          </Title>
-        </Box>
-      )} */}
+      )}
     </Box>
   );
 }

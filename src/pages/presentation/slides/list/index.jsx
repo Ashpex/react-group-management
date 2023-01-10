@@ -51,7 +51,7 @@ export default function PresentationSlides({
               gap: "4px",
             }}
           >
-            {Boolean(slide.type === "Multipe_Choice") && (
+            {Boolean(slide.type === "MULTIPLE_CHOICE") && (
               <Box>
                 <Image src={BarChart} alt="image" width={50} height={50} />
                 <Title order={6} sx={{ fontWeight: "600" }}>
@@ -59,23 +59,17 @@ export default function PresentationSlides({
                 </Title>
               </Box>
             )}
-            {Boolean(slide.type === "Paragraph") && (
+            {Boolean(slide.type === "PARAGRAPH") && (
               <Box>
                 <Title order={6} sx={{ fontWeight: "600" }}>
-                  {slide.heading}
-                </Title>
-                <Title order={6} sx={{ fontWeight: "600" }}>
-                  {slide.paragraph}
+                  Paragraph
                 </Title>
               </Box>
             )}
-            {Boolean(slide.type === "Heading") && (
+            {Boolean(slide.type === "HEADING") && (
               <Box>
                 <Title order={6} sx={{ fontWeight: "600" }}>
-                  {slide.heading}
-                </Title>
-                <Title order={6} sx={{ fontWeight: "600" }}>
-                  {slide.subHeading}
+                  Heading
                 </Title>
               </Box>
             )}

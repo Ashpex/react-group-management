@@ -35,9 +35,9 @@ export default function PresentationOption({
   //paragraph
   const [paragraph, setParagraph] = useState("");
 
-  const [HeadingValueDebounce] = useDebounce(heading, 400);
-  const [SubHeadingValueDebounce] = useDebounce(subHeading, 400);
-  const [ParagraphValueDebounce] = useDebounce(paragraph, 400);
+  const [headingValueDebounce] = useDebounce(heading, 400);
+  const [subHeadingValueDebounce] = useDebounce(subHeading, 400);
+  const [paragraphValueDebounce] = useDebounce(paragraph, 400);
 
   const socketRef = useRef();
 
@@ -49,7 +49,6 @@ export default function PresentationOption({
         slideId: slide._id,
       });
     } catch (error) {
-      console.log(error);
       notificationManager.showFail("", error.response?.data.message);
     }
   };
@@ -77,9 +76,9 @@ export default function PresentationOption({
   useEffect(() => {
     if (slide) {
       updateSlide({
-        heading: HeadingValueDebounce,
-        subHeading: SubHeadingValueDebounce,
-        paragraph: ParagraphValueDebounce,
+        heading: headingValueDebounce,
+        subHeading: subHeadingValueDebounce,
+        paragraph: paragraphValueDebounce,
         type: typeValueDebounce,
         question: questionValueDebounce,
         options: optionValueDebounce,
@@ -87,9 +86,9 @@ export default function PresentationOption({
       });
     }
   }, [
-    HeadingValueDebounce,
-    SubHeadingValueDebounce,
-    ParagraphValueDebounce,
+    headingValueDebounce,
+    subHeadingValueDebounce,
+    paragraphValueDebounce,
     questionValueDebounce,
     typeValueDebounce,
     optionValueDebounce,
@@ -101,17 +100,18 @@ export default function PresentationOption({
       <>
         <Title sx={{ fontSize: 20 }}>Id: {slide?._id}</Title>
         <Select
+          mt="lg"
           value={type}
           onChange={setType}
           label="Select type"
           placeholder="Select type"
           data={[
-            { value: "Multipe_Choice", label: "Multipe Choice" },
-            { value: "Heading", label: "Heading" },
-            { value: "Paragraph", label: "Paragraph" },
+            { value: "MULTIPLE_CHOICE", label: "Multipe Choice" },
+            { value: "HEADING", label: "Heading" },
+            { value: "PARAGRAPH", label: "Paragraph" },
           ]}
         />
-        {Boolean(type === "Multipe_Choice") && (
+        {Boolean(type === "MULTIPLE_CHOICE") && (
           <Box>
             <TextInput
               label="Question"
@@ -127,7 +127,7 @@ export default function PresentationOption({
                 placeholder="Choose anwser"
                 value={answer}
                 data={[
-                  ...options.map((option, index) => ({
+                  ...options.map((option) => ({
                     label: option.value,
                     value: option.value,
                   })),
@@ -191,8 +191,8 @@ export default function PresentationOption({
           </Box>
         )}
 
-        {Boolean(type === "Heading") && (
-          <Box>
+        {Boolean(type === "HEADING") && (
+          <Box mt="md">
             <TextInput
               label="Heading"
               placeholder="Heading"
@@ -201,8 +201,9 @@ export default function PresentationOption({
               onChange={(e) => setHeading(e.target.value)}
             />
             <TextInput
-              label="Sub Heading"
-              placeholder="Sub Heading"
+              mt="xs"
+              label="Sub heading"
+              placeholder="Sub heading"
               required
               value={subHeading || ""}
               onChange={(e) => setSubHeading(e.target.value)}
@@ -210,8 +211,8 @@ export default function PresentationOption({
           </Box>
         )}
 
-        {Boolean(type === "Paragraph") && (
-          <Box>
+        {Boolean(type === "PARAGRAPH") && (
+          <Box mt="md">
             <TextInput
               label="Heading"
               placeholder="Heading"
@@ -220,6 +221,7 @@ export default function PresentationOption({
               onChange={(e) => setHeading(e.target.value)}
             />
             <TextInput
+              mt="xs"
               label="Paragraph"
               placeholder="Paragraph"
               required
