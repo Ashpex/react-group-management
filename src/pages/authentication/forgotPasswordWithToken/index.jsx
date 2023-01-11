@@ -23,7 +23,6 @@ const ForgotPasswordWithToken = () => {
       notificationManager.showSuccess("", "Đổi mật khẩu thành công");
       navigate("/");
     } catch (error) {
-      console.log("error", error);
       notificationManager.showFail("", error.response?.data.message);
     }
   };

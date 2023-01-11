@@ -53,6 +53,13 @@ export default function PresentationDetail() {
     }
   }, []);
 
+  useEffect(() => {
+    const slide = slides[selectedSlide];
+    if (slide?._id) {
+      socketRef.current.emit("changeSlide", { slideId: slide._id });
+    }
+  }, [selectedSlide]);
+
   const createSlide = async () => {
     try {
       await presentationApi.createSlide(presentationId);

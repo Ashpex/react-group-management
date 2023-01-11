@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Button, createStyles, Radio, Title } from "@mantine/core";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import presentationApi from "../../../../api/presentation";
 import * as notificationManager from "../../../common/notificationManager";
 import socketIOClient from "socket.io-client";
@@ -40,6 +40,7 @@ export default function SlideQuestion() {
   const [isError, setIsError] = useState(false);
   const { classes } = useStyles();
   const socketRef = useRef();
+  const navigate = useNavigate();
 
   const submit = async () => {
     try {
@@ -66,14 +67,21 @@ export default function SlideQuestion() {
     if (slideId) {
       getSlideById(slideId);
     }
-  }, []);
+  }, [slideId, navigate]);
 
   useEffect(() => {
     socketRef.current = socketIOClient.connect(process.env.REACT_APP_BACKEND);
 
-    socketRef.current.on("updateOptions", () => {
-      if (slideId) {
-        getSlideById(slideId);
+    socketRef.current.on("updateOptions", ({ data }) => {
+      if (data?.slideId) {
+        getSlideById(data?.slideId);
+      }
+    });
+
+    socketRef.current.on("changeSlide", ({ data }) => {
+      if (data.slideId) {
+        setHasAnswered(false);
+        navigate(`/slides/${data.slideId}`);
       }
     });
 
@@ -124,62 +132,118 @@ export default function SlideQuestion() {
         alignItems: "center",
       }}
     >
-      <Box
-        sx={{
-          width: "60%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-        }}
-      >
-        <Title
-          sx={{
-            fontSize: "3rem",
-            textAlign: "center",
-          }}
-        >
-          Question: {slide?.question}
-        </Title>
-
+      {Boolean(slide?.type === "MULTIPLE_CHOICE") && (
         <Box
           sx={{
-            width: "40%",
-            marginTop: "2rem",
+            width: "60%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
           }}
         >
-          <Radio.Group
-            value={value}
-            onChange={setValue}
-            name="favoriteFramework"
-            orientation="vertical"
-          >
-            {(slide?.options || []).map((v, index) => (
-              <Radio
-                className={classes.root}
-                key={index}
-                value={v._id}
-                label={v.value}
-              />
-            ))}
-          </Radio.Group>
-
-          <Button
+          <Title
             sx={{
-              width: "100%",
-              marginTop: "2rem",
-              height: "48px",
-              borderRadius: "8px",
+              fontSize: "3rem",
+              textAlign: "center",
             }}
-            className={classes.label}
-            onClick={submit}
-            disabled={hasAnswered || !value}
           >
-            Submit
-          </Button>
+            Question: {slide?.question}
+          </Title>
+
+          <Box
+            sx={{
+              width: "40%",
+              marginTop: "2rem",
+            }}
+          >
+            <Radio.Group
+              value={value}
+              onChange={setValue}
+              name="favoriteFramework"
+              orientation="vertical"
+            >
+              {(slide?.options || []).map((v, index) => (
+                <Radio
+                  className={classes.root}
+                  key={index}
+                  value={v._id}
+                  label={v.value}
+                />
+              ))}
+            </Radio.Group>
+
+            <Button
+              sx={{
+                width: "100%",
+                marginTop: "2rem",
+                height: "48px",
+                borderRadius: "8px",
+              }}
+              className={classes.label}
+              onClick={submit}
+              disabled={hasAnswered || !value}
+            >
+              Submit
+            </Button>
+          </Box>
         </Box>
-      </Box>
+      )}
+
+      {Boolean(slide?.type === "PARAGRAPH") && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <Title
+            order={2}
+            sx={{
+              fontWeight: 600,
+            }}
+          >
+            Heading: {slide?.heading}
+          </Title>
+          <Title
+            order={4}
+            sx={{
+              fontWeight: 400,
+            }}
+          >
+            Paragraph: {slide?.paragraph}
+          </Title>
+        </Box>
+      )}
+
+      {Boolean(slide?.type === "HEADING") && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <Title
+            order={2}
+            sx={{
+              fontWeight: 600,
+            }}
+          >
+            Heading: {slide?.heading}
+          </Title>
+          <Title
+            order={4}
+            sx={{
+              fontWeight: 400,
+            }}
+          >
+            Subheading: {slide?.subHeading}
+          </Title>
+        </Box>
+      )}
     </Box>
   );
 }

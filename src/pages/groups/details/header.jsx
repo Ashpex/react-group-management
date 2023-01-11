@@ -68,7 +68,6 @@ export default function Header({ role }) {
   const [messages, setMessages] = useState([]);
   const [presentations, setPresentations] = useState([]);
   const [presentationId, setPresentationId] = useState("");
-  const [firstSlide, setFirstSlide] = useState("");
   const { groupId } = useParams();
   const navigate = useNavigate();
   const { classes } = useStyles();
