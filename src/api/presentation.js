@@ -9,7 +9,8 @@ const presentationApi = {
 
   getPresentationById: (id) => axiosClient.get(`/presentations/${id}`),
 
-  deletePresentation: (id) => axiosClient.delete(`/presentation/${id}`),
+  deletePresentation: (presentationId) =>
+    axiosClient.delete(`/presentations/${presentationId}`),
 
   getFirstSlide: (presentationId) =>
     axiosClient.get(
