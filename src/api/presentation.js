@@ -46,9 +46,10 @@ const presentationApi = {
       presentationId,
     }),
 
-  submitAnswer: (slideId, answerId) => {
+  submitAnswer: (slideId, answerId, userId) => {
     return axiosClient.post(`/presentations/slides/${slideId}/answer`, {
       answerId,
+      userId,
     });
   },
 };

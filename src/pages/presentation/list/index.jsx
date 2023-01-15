@@ -17,7 +17,7 @@ import {
   Button,
   Modal,
 } from "@mantine/core";
-import { IconAlertCircle, IconSettings, IconTrash } from "@tabler/icons";
+import { IconAlertCircle, IconTrash } from "@tabler/icons";
 import { useState, useEffect } from "react";
 
 import PresentationListHeader from "./header";

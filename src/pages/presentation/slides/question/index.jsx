@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import presentationApi from "../../../../api/presentation";
 import * as notificationManager from "../../../common/notificationManager";
 import socketIOClient from "socket.io-client";
+import useUserInfo from "../../../../hooks/useUserInfo";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -38,13 +39,14 @@ export default function SlideQuestion() {
   const [value, setValue] = useState("");
   const [hasAnswered, setHasAnswered] = useState(false);
   const [isError, setIsError] = useState(false);
+  const { userInfo } = useUserInfo();
   const { classes } = useStyles();
   const socketRef = useRef();
   const navigate = useNavigate();
 
   const submit = async () => {
     try {
-      await presentationApi.submitAnswer(slideId, value);
+      await presentationApi.submitAnswer(slideId, value, userInfo._id);
       notificationManager.showSuccess("", "Submit answer successfully");
       socketRef.current.emit("memberAnswer", { slideId });
       setHasAnswered(true);

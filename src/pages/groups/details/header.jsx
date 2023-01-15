@@ -385,7 +385,13 @@ export default function Header({ role }) {
           <Group>
             <Menu position="bottom-end" shadow="md">
               <Menu.Target>
-                <Tooltip label="Create slideshow">
+                <Tooltip
+                  label={
+                    presentations?.length
+                      ? "Create slideshow"
+                      : "You don't have any presentation "
+                  }
+                >
                   <Button>
                     <IconPresentationAnalytics />
                   </Button>
