@@ -1,11 +1,4 @@
-import {
-  createStyles,
-  Avatar,
-  Header,
-  Group,
-  Box,
-  Image,
-} from "@mantine/core";
+import { createStyles, Avatar, Header, Group, Box, Image } from "@mantine/core";
 
 import { Link } from "react-router-dom";
 
@@ -17,6 +10,7 @@ const useStyles = createStyles((theme) => ({
   link: {
     display: "flex",
     alignItems: "center",
+
     height: "100%",
     paddingLeft: theme.spacing.md,
     paddingRight: theme.spacing.md,
